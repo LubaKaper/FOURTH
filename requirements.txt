@@ -1,0 +1,6 @@
+strands-agents
+openai
+pandas
+requests
+python-dotenv
+pytest

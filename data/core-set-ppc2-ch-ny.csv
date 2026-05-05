@@ -1,0 +1,16 @@
+"Exported from the Centers for Medicare & Medicaid Services (CMS) Medicaid and Children's Health Insurance Program (CHIP) Core Set Data Dashboard, https://www.medicaid.gov/medicaid/quality-of-care/core-set-data-dashboard/. If the user sorted these data on the website, the sorting will not carry over into this file.",""
+"Opening this file in Excel may alter the formatting of some values. In particular, Excel may add or remove trailing zeros in decimal places regardless of original formatting. Please open the file in a text editor or equivalent to see the values as they were exported.",""
+Date of download: 04/27/2026,""
+Measure name:,"Prenatal and Postpartum Care: Under Age 21 (PPC2-CH)"
+Measure description:,"Percentage of live birth deliveries to women under age 21 that had (1) a prenatal care visit in the first trimester, on or before the Medicaid or CHIP enrollment start date, or within 42 days of enrollment, and (2) a postpartum visit on or between 7 and 84 days after delivery. This measure is mandatory for 2024 Child Core Set reporting."
+Rate,"Prenatal Care"
+Data source:,"Child Core Set"
+Value directionality:,"Higher values are better"
+
+State,Core Set Year,Population,Methodology,"Percentage of Women Under Age 21 Delivering a Live Birth with a Prenatal Care Visit in the First Trimester, on or before the Enrollment Start Date, or within 42 Days of Enrollment in Medicaid or CHIP",Note
+New York,2024,"Medicaid (Title XIX), Title XXI-funded Medicaid Expansion CHIP, Separate CHIP (Title XXI)",Administrative & Hybrid,80.5%,State-specific comments: Rate combines the Medicaid and separate CHIP data reported by the state in the QMR system. See Medicaid and separate CHIP state-specific comments for information about the data reported for each population.
+Minimum,2024,,,25.8%,
+First quartile,2024,,,51.5%,
+Median,2024,,,64.0%,
+Third quartile,2024,,,70.1%,
+Maximum,2024,,,83.9%,

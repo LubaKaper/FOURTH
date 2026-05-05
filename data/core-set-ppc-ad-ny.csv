@@ -1,0 +1,15 @@
+"Exported from the Centers for Medicare & Medicaid Services (CMS) Medicaid and Children's Health Insurance Program (CHIP) Core Set Data Dashboard, https://www.medicaid.gov/medicaid/quality-of-care/core-set-data-dashboard/. If the user sorted these data on the website, the sorting will not carry over into this file.",""
+"Opening this file in Excel may alter the formatting of some values. In particular, Excel may add or remove trailing zeros in decimal places regardless of original formatting. Please open the file in a text editor or equivalent to see the values as they were exported.",""
+Date of download: 04/27/2026,""
+Measure name:,"Prenatal and Postpartum Care: Postpartum Care (PPC-AD)"
+Measure description:,"Percentage of deliveries of live births with a postpartum visit on or between 7 and 84 days after delivery."
+Data source:,"Adult Core Set"
+Value directionality:,"Higher values are better"
+
+State,Core Set Year,Population,Methodology,Percentage of Women Delivering a Live Birth who had a Postpartum Care Visit on or Between 7 and 84 Days after Delivery,Note
+New York,2023,Medicaid,Hybrid,82.4%,"State-specific comments: Rate includes managed care population (26 MCOs). Denominator is the sample size; measure-eligible population is 90,218. Rate was audited or validated."
+Minimum,2023,,,30.1%,
+First quartile,2023,,,69.3%,
+Median,2023,,,75.6%,
+Third quartile,2023,,,79.2%,
+Maximum,2023,,,86.9%,

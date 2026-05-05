@@ -1,0 +1,38 @@
+# secrets
+.env
+
+# python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# data — ignore anything >10MB
+data/*.zip
+
+# logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# mac
+.DS_Store
+.claude/
+claude.local.md
+# local dependencies
+node_modules/
+
+# generated local artifacts
+outputs/
+dashboard/echo_dashboard.html
+
+# local PowerPoint inspection/copy artifacts
+tmp/

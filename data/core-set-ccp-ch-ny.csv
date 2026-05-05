@@ -1,0 +1,17 @@
+"Exported from the Centers for Medicare & Medicaid Services (CMS) Medicaid and Children's Health Insurance Program (CHIP) Core Set Data Dashboard, https://www.medicaid.gov/medicaid/quality-of-care/core-set-data-dashboard/. If the user sorted these data on the website, the sorting will not carry over into this file.",""
+"Opening this file in Excel may alter the formatting of some values. In particular, Excel may add or remove trailing zeros in decimal places regardless of original formatting. Please open the file in a text editor or equivalent to see the values as they were exported.",""
+Date of download: 04/27/2026,""
+Measure name:,"Contraceptive Care - Postpartum Women Ages 15 to 20 (CCP-CH)"
+Measure description:,"Percentage of postpartum women ages 15 to 20 who had a live birth and who were provided: (1) a most effective or moderately effective method of contraception within 3 and 90 days of delivery; (2) a long-acting reversible method of contraception (LARC) within 3 and 90 days of delivery. This measure is mandatory for 2024 Child Core Set reporting."
+Method of Contraception,"Most or Moderately Effective Contraceptive"
+Days Postpartum,"90-Days Postpartum"
+Data source:,"Child Core Set"
+Value directionality:,"Higher values are better"
+
+State,Core Set Year,Population,Methodology,Percentage of Postpartum Women with a Live Birth Provided a Most Effective or Moderately Effective Method of Contraception Within 90 Days of Delivery: Ages 15 to 20,Note
+New York,2024,Medicaid (Title XIX),Administrative,47.2%,"State-specific comments: Rates include FFS and managed care populations (15 MCOs). State reported that rates exclude the following populations: ""New York State received a one-year exemption from reporting for the CHIP population for this measure."" Rates were audited or validated."
+Minimum,2024,,,31.6%,
+First quartile,2024,,,43.1%,
+Median,2024,,,47.4%,
+Third quartile,2024,,,51.6%,
+Maximum,2024,,,69.6%,

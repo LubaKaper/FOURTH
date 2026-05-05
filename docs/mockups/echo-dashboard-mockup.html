@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ECHO, GTM Engineer Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --ink: #0b1220;
+    --ink-2: #2a3344;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --line-strong: #d1d5db;
+    --brand: #1d4ed8;
+    --brand-soft: #eef2ff;
+    --good: #047857;
+    --good-soft: #ecfdf5;
+    --warn: #b45309;
+    --warn-soft: #fffbeb;
+    --bad: #b91c1c;
+    --bad-soft: #fef2f2;
+    --crit: #7c1d1d;
+    --crit-bg: #fff1f2;
+    --shadow: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06);
+    --shadow-lg: 0 10px 30px rgba(15,23,42,0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  .display { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+  /* ============ PAGE FRAME ============ */
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .page-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 32px;
+    margin: 4px 0 0;
+    letter-spacing: -0.02em;
+  }
+  .page-sub {
+    color: var(--muted);
+    margin-top: 6px;
+    max-width: 640px;
+  }
+  .legend {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .legend strong { color: var(--ink); }
+
+  /* ============ TABS ============ */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 16px;
+    width: fit-content;
+    box-shadow: var(--shadow);
+  }
+  .tab {
+    padding: 8px 14px;
+    border-radius: 7px;
+    font-weight: 500;
+    color: var(--ink-2);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active {
+    background: var(--ink);
+    color: white;
+  }
+  .tab-num {
+    display: inline-block;
+    margin-right: 6px;
+    opacity: 0.6;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+  .mockup-caption {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--ink);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .mockup-caption strong { color: var(--ink); }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ============ APP CHROME (shared) ============ */
+  .app {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(to bottom, #fafbfc, #f6f7f9);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .brand-mark {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: var(--ink);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .brand-name { font-size: 15px; }
+  .brand-tag {
+    margin-left: 6px;
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 12px;
+  }
+  .app-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .pill {
+    background: var(--brand-soft);
+    color: var(--brand);
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+  .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1d4ed8, #6366f1);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .app-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 720px;
+  }
+  .sidebar {
+    border-right: 1px solid var(--line);
+    background: #fafbfc;
+    padding: 16px 12px;
+  }
+  .nav-section {
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 12px 10px 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: 6px;
+    color: var(--ink-2);
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 1px;
+  }
+  .nav-item:hover { background: rgba(0,0,0,0.04); }
+  .nav-item.active {
+    background: var(--ink);
+    color: white;
+  }
+  .nav-item.active .nav-count { background: rgba(255,255,255,0.18); color: white; }
+  .nav-icon {
+    width: 16px; height: 16px;
+    margin-right: 9px;
+    opacity: 0.75;
+  }
+  .nav-label { flex: 1; }
+  .nav-count {
+    background: var(--line);
+    color: var(--ink-2);
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .main { padding: 0; min-width: 0; }
+
+  /* ============ VIEW 1: DAILY 10 (table-style) ============ */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .toolbar-left h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .toolbar-meta {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .toolbar-meta .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--good);
+    margin-right: 6px;
+    vertical-align: 1px;
+    animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+  .toolbar-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn {
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
+    background: white;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--ink-2);
+  }
+  .btn:hover { background: var(--bg); }
+  .btn-primary {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: white;
+  }
+  .btn-primary:hover { background: #1f2937; }
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+
+  table.accounts {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.accounts th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--line);
+    background: #fafbfc;
+    position: sticky;
+    top: 0;
+  }
+  table.accounts td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.accounts tr:hover { background: #fafbfc; cursor: pointer; }
+  .rank {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .rank.top { color: var(--ink); font-weight: 600; }
+  .acct-name {
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .acct-loc {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .severity {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .sev-critical { background: var(--crit-bg); color: var(--crit); }
+  .sev-high     { background: var(--bad-soft); color: var(--bad); }
+  .sev-elevated { background: var(--warn-soft); color: var(--warn); }
+  .sev-watch    { background: var(--brand-soft); color: var(--brand); }
+  .sev-bar {
+    width: 6px; height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+  }
+
+  .mismatch-summary {
+    color: var(--ink-2);
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 360px;
+  }
+  .mismatch-summary .mm-tag {
+    display: inline-block;
+    background: white;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-right: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .delta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .delta.neg { color: var(--bad); }
+  .delta.pos { color: var(--good); }
+
+  .signals {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .signal-dot {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    color: white;
+  }
+  .signal-aim   { background: #1e3a8a; }
+  .signal-cms   { background: #047857; }
+  .signal-pqc   { background: #7c3aed; }
+  .signal-jc    { background: #be123c; }
+  .signal-press { background: #b45309; }
+
+  /* Stats strip above table */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .stat {
+    background: white;
+    padding: 14px 18px;
+  }
+  .stat-label {
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 4px;
+    letter-spacing: -0.01em;
+  }
+  .stat-trend {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .stat-trend.up { color: var(--bad); }
+
+  /* ============ VIEW 2: BRIEFING CARD ============ */
+  .briefing {
+    padding: 0;
+  }
+  .brief-head {
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .brief-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+  .brief-meta {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .brief-meta span + span::before {
+    content: "·";
+    margin: 0 8px;
+    opacity: 0.5;
+  }
+  .brief-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .brief-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    min-height: 580px;
+  }
+  .brief-main { padding: 22px 28px; }
+  .brief-side {
+    background: #fafbfc;
+    border-left: 1px solid var(--line);
+    padding: 22px 24px;
+  }
+
+  .section-label {
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .mismatch-card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+    background: white;
+    transition: border-color 0.2s;
+  }
+  .mismatch-card:hover { border-color: var(--line-strong); }
+  .mismatch-card.is-critical {
+    border-left: 4px solid var(--crit);
+    padding-left: 16px;
+  }
+  .mm-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+  .mm-title {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 15px;
+  }
+  .mm-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 12px;
+    padding: 9px 0;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .mm-row:first-of-type { border-top: 1px solid #f1f3f5; }
+  .mm-key {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    padding-top: 1px;
+  }
+  .mm-val { color: var(--ink-2); }
+  .mm-val a { color: var(--brand); text-decoration: none; font-size: 12px; }
+  .mm-val a:hover { text-decoration: underline; }
+  .quote {
+    background: var(--bg);
+    border-left: 2px solid var(--line-strong);
+    padding: 8px 12px;
+    margin-top: 4px;
+    font-style: italic;
+    color: var(--ink-2);
+    font-size: 13px;
+    border-radius: 0 4px 4px 0;
+  }
+  .gap-bar {
+    margin-top: 12px;
+    background: var(--bg);
+    border-radius: 6px;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+  .gap-side {
+    text-align: center;
+  }
+  .gap-num {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .gap-num.bad { color: var(--bad); }
+  .gap-num.good { color: var(--good); }
+  .gap-lbl {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .gap-arrow {
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .judgment {
+    background: var(--warn-soft);
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #78350f;
+  }
+  .judgment strong { color: var(--warn); }
+
+  /* Side panel */
+  .side-block { margin-bottom: 22px; }
+  .commit-list { list-style: none; padding: 0; margin: 0; }
+  .commit-item {
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .commit-item:first-child { border-top: none; padding-top: 0; }
+  .commit-item .ci-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    background: white;
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--ink-2);
+    margin-right: 6px;
+  }
+  .commit-item .ci-date { color: var(--muted); font-size: 11px; }
+
+  .context-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .context-row:first-child { border-top: none; padding-top: 0; }
+  .context-label { color: var(--ink-2); }
+  .context-val {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .context-val.flag { color: var(--bad); font-weight: 600; }
+
+  .conf-bar {
+    background: var(--line);
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .conf-fill {
+    height: 100%;
+    background: var(--good);
+    border-radius: 2px;
+  }
+  .conf-fill.med { background: var(--warn); }
+
+  /* ============ VIEW 3: SIGNAL FEED ============ */
+  .feed-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    min-height: 720px;
+  }
+  .feed-main { border-right: 1px solid var(--line); }
+  .feed-toolbar {
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #fafbfc;
+  }
+  .feed-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .feed-tab {
+    padding: 5px 11px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    background: white;
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .feed-tab.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .feed-tab .ft-num {
+    font-family: 'IBM Plex Mono', monospace;
+    margin-left: 4px;
+    opacity: 0.7;
+    font-size: 10px;
+  }
+
+  .feed-list { padding: 0; }
+  .feed-item {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 14px;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .feed-item:hover { background: #fafbfc; }
+  .feed-item.unread { background: #fefdf8; }
+  .feed-item.unread:hover { background: #fdfbf0; }
+
+  .feed-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 11px;
+    color: white;
+    align-self: start;
+  }
+  .fi-press { background: #b45309; }
+  .fi-data  { background: #047857; }
+  .fi-news  { background: #be123c; }
+  .fi-aim   { background: #1e3a8a; }
+  .fi-pqc   { background: #7c3aed; }
+
+  .feed-body { min-width: 0; }
+  .feed-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .feed-account {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .feed-type-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    background: white;
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .feed-text {
+    color: var(--ink-2);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .feed-text .qt {
+    color: var(--ink);
+    font-style: italic;
+  }
+  .feed-text .vs {
+    background: var(--bad-soft);
+    color: var(--bad);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .feed-foot {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .feed-foot a {
+    color: var(--brand);
+    text-decoration: none;
+  }
+  .feed-foot a:hover { text-decoration: underline; }
+  .feed-time {
+    text-align: right;
+    color: var(--muted);
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    align-self: start;
+    padding-top: 2px;
+    white-space: nowrap;
+  }
+  .feed-sev {
+    margin-top: 6px;
+  }
+
+  .feed-side {
+    background: #fafbfc;
+    padding: 18px 18px;
+  }
+  .feed-side h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  .ts-list { list-style: none; padding: 0; margin: 0 0 22px; }
+  .ts-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+  }
+  .ts-item:first-child { border-top: none; }
+  .ts-name { color: var(--ink-2); }
+  .ts-count {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .ts-count strong { color: var(--ink); }
+
+  .filter-list .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .filter-list input[type="checkbox"] {
+    accent-color: var(--ink);
+  }
+  .filter-list .fr-count {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  /* tiny svg arrow */
+  .arr {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-right: 1.5px solid currentColor;
+    border-top: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    vertical-align: 1px;
+  }
+
+  /* Footnote */
+  .footnote {
+    margin-top: 24px;
+    padding: 16px 18px;
+    background: var(--panel);
+    border: 1px dashed var(--line-strong);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .footnote strong { color: var(--ink-2); }
+
+  /* ============ VIEW 4: GMAIL-STYLE INBOX ============ */
+  .gmail {
+    background: white;
+    font-family: 'Google Sans', 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  .gmail-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--line);
+    background: #f6f8fc;
+  }
+  .gmail-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: #5f6368;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .gmail-logo-mark {
+    width: 22px; height: 16px;
+    border-radius: 2px;
+    background: linear-gradient(135deg, #4285f4 0%, #ea4335 50%, #fbbc04 100%);
+    position: relative;
+  }
+  .gmail-logo-mark::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: white;
+    border-radius: 1px;
+    clip-path: polygon(0 0, 100% 0, 50% 50%, 0 0);
+  }
+  .gmail-search {
+    flex: 1;
+    max-width: 720px;
+    background: #eaf1fb;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 14px;
+    color: #5f6368;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .gmail-search-icon {
+    width: 16px; height: 16px;
+    border: 2px solid #5f6368;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .gmail-search-icon::after {
+    content: '';
+    position: absolute;
+    width: 7px; height: 2px;
+    background: #5f6368;
+    bottom: -3px; right: -4px;
+    transform: rotate(45deg);
+  }
+  .gmail-user {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1d4ed8, #6366f1);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  .gmail-body {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    min-height: 720px;
+  }
+  .gmail-nav {
+    padding: 14px 8px;
+    border-right: 1px solid var(--line);
+  }
+  .gmail-compose {
+    background: #c2e7ff;
+    color: #001d35;
+    border: none;
+    border-radius: 16px;
+    padding: 14px 20px 14px 16px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 8px 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .gmail-compose:hover { background: #b3deff; }
+  .gmail-compose-icon {
+    width: 18px; height: 18px;
+    background: #001d35;
+    -webkit-mask: linear-gradient(45deg, transparent 35%, currentColor 35% 38%, transparent 38% 47%, currentColor 47% 53%, transparent 53% 62%, currentColor 62% 65%, transparent 65%);
+    border-radius: 2px;
+  }
+  .gmail-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 16px 6px 24px;
+    border-radius: 0 16px 16px 0;
+    margin-right: 8px;
+    color: #1f1f1f;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .gmail-nav-item:hover { background: #e8eaed; }
+  .gmail-nav-item.active {
+    background: #d3e3fd;
+    font-weight: 700;
+  }
+  .gmail-nav-item .nav-count-g {
+    margin-left: auto;
+    font-size: 12px;
+    color: #5f6368;
+    font-weight: 500;
+  }
+  .gmail-nav-item.active .nav-count-g { color: #001d35; font-weight: 700; }
+
+  .gmail-main {
+    display: flex;
+    flex-direction: column;
+  }
+  .gmail-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--line);
+    color: #5f6368;
+    font-size: 13px;
+  }
+  .gmail-icon-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: #5f6368;
+    font-size: 14px;
+  }
+  .gmail-icon-btn:hover { background: #e8eaed; }
+  .gmail-toolbar-spacer { flex: 1; }
+  .gmail-pagination {
+    color: #5f6368;
+    font-size: 12px;
+  }
+
+  .gmail-list {
+    border-bottom: 1px solid var(--line);
+  }
+  .gmail-row {
+    display: grid;
+    grid-template-columns: 56px 28px 220px 1fr 80px;
+    align-items: center;
+    padding: 0 16px;
+    height: 40px;
+    border-bottom: 1px solid #f1f3f4;
+    cursor: pointer;
+    font-size: 14px;
+    color: #202124;
+  }
+  .gmail-row:hover {
+    box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    z-index: 2;
+    position: relative;
+  }
+  .gmail-row.unread { background: #ffffff; font-weight: 700; }
+  .gmail-row.read { background: #f2f6fc; color: #5f6368; font-weight: 400; }
+  .gmail-row.selected {
+    background: #c2dbff;
+    font-weight: 700;
+    color: #202124;
+  }
+  .gmail-checkbox {
+    width: 18px; height: 18px;
+    border: 2px solid #5f6368;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .gmail-star {
+    color: #dadce0;
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .gmail-star.starred { color: #f9ab00; }
+  .gmail-from {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 12px;
+  }
+  .gmail-subject-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 12px;
+  }
+  .gmail-subject-line .gs-subject { color: #202124; }
+  .gmail-row.read .gmail-subject-line .gs-subject { color: #5f6368; }
+  .gmail-subject-line .gs-snippet {
+    color: #5f6368;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  .gmail-label {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 6px;
+    border: 1px solid;
+  }
+  .gl-echo { background: #fef7e0; border-color: #f9ab00; color: #b06000; }
+  .gl-outreach { background: #e6f4ea; border-color: #34a853; color: #137333; }
+  .gl-followup { background: #e8f0fe; border-color: #4285f4; color: #1967d2; }
+  .gmail-time {
+    text-align: right;
+    font-size: 12px;
+    color: #5f6368;
+  }
+  .gmail-row.unread .gmail-time { color: #202124; font-weight: 700; }
+
+  .gmail-divider {
+    background: #f1f3f4;
+    color: #5f6368;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Open email panel */
+  .gmail-open {
+    background: white;
+    padding: 24px 64px 24px 88px;
+    border-bottom: 1px solid var(--line);
+  }
+  .gmail-open-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .gmail-open-subject {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #202124;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .gmail-open-subject .open-tag {
+    background: #e6f4ea;
+    color: #137333;
+    border: 1px solid #34a853;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+    vertical-align: 4px;
+    font-weight: 500;
+  }
+  .gmail-open-actions {
+    display: flex;
+    gap: 4px;
+    color: #5f6368;
+  }
+
+  .gmail-from-block {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .gmail-from-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1d4ed8, #6366f1);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  .gmail-from-info { font-size: 13px; line-height: 1.5; }
+  .gmail-from-name { font-weight: 700; color: #202124; font-size: 14px; }
+  .gmail-from-name .from-email { color: #5f6368; font-weight: 400; margin-left: 4px; }
+  .gmail-to { color: #5f6368; }
+  .gmail-to .to-arrow { color: #5f6368; margin: 0 4px; }
+  .gmail-meta-right {
+    color: #5f6368;
+    font-size: 12px;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  .gmail-message {
+    color: #202124;
+    font-size: 14px;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+  .gmail-message p { margin: 0 0 14px; }
+  .gmail-message .evidence-strip {
+    background: #fef7e0;
+    border-left: 3px solid #f9ab00;
+    border-radius: 0 4px 4px 0;
+    padding: 12px 14px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: #5d4500;
+  }
+  .gmail-message .evidence-strip .es-label {
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: #b06000;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .gmail-message a {
+    color: #1a73e8;
+    text-decoration: none;
+  }
+  .gmail-message a:hover { text-decoration: underline; }
+
+  .gmail-signature {
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    color: #5f6368;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .gmail-signature strong { color: #202124; }
+  .gmail-signature a { color: #1a73e8; text-decoration: none; }
+
+  .gmail-reply-bar {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .gmail-reply-btn {
+    border: 1px solid #dadce0;
+    background: white;
+    color: #1a73e8;
+    border-radius: 18px;
+    padding: 8px 22px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .gmail-reply-btn:hover { background: #f8fafe; }
+
+  .echo-callout {
+    margin: 18px 64px 24px 88px;
+    padding: 14px 16px;
+    background: #fef7e0;
+    border: 1px dashed #f9ab00;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #5d4500;
+    line-height: 1.6;
+  }
+  .echo-callout strong { color: #b06000; text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px; }
+
+  /* Email variant switcher */
+  .variant-switcher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 64px 12px 88px;
+    background: #fafbfc;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .vs-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .vs-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
+    background: white;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .vs-btn:hover { background: var(--bg); border-color: #9ca3af; }
+  .vs-btn.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .vs-btn .vs-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 11px;
+    background: rgba(0,0,0,0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .vs-btn.active .vs-letter { background: rgba(255,255,255,0.18); }
+  .vs-btn .vs-persona {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .vs-btn.active .vs-persona { color: rgba(255,255,255,0.7); }
+  .vs-spacer { flex: 1; }
+  .vs-meta {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .email-variant { display: none; }
+  .email-variant.active { display: block; }
+
+  /* Make accounts table rows visibly clickable */
+  table.accounts tbody tr {
+    transition: background 0.12s;
+  }
+  table.accounts tbody tr:hover .acct-name {
+    color: var(--brand);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 980px) {
+    .app-body { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .brief-grid { grid-template-columns: 1fr; }
+    .brief-side { border-left: none; border-top: 1px solid var(--line); }
+    .feed-layout { grid-template-columns: 1fr; }
+    .feed-side { display: none; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    .gmail-body { grid-template-columns: 1fr; }
+    .gmail-nav { display: none; }
+    .gmail-open { padding: 18px 20px; }
+    .echo-callout { margin: 14px 20px; }
+    .variant-switcher { padding: 12px 20px; }
+    .gmail-row { grid-template-columns: 28px 28px 140px 1fr 60px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="page-head">
+    <div>
+      <div class="eyebrow">ECHO · GTM Engineer Mockups</div>
+      <h1 class="page-title">Three views, one workflow</h1>
+      <p class="page-sub">Built to feel like the tools GTM Engineers already live in: account list view (Salesforce), account detail (Outreach), signal feed (Gong). Familiar grammar so adoption is friction-free.</p>
+    </div>
+    <div class="legend">
+      <strong>Aesthetic anchors:</strong><br>
+      Dense data, left-rail nav, sticky table headers, color-coded severity, monospace metrics. No surprises in the layout, only in what's surfaced.
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-view="v1"><span class="tab-num">01</span>Daily 10, Account List</button>
+    <button class="tab" data-view="v2"><span class="tab-num">02</span>Briefing Card, Account Detail</button>
+    <button class="tab" data-view="v3"><span class="tab-num">03</span>Signal Feed, Live Updates</button>
+    <button class="tab" data-view="v4"><span class="tab-num">04</span>Outreach Email, Inbox View</button>
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- VIEW 1: DAILY 10 -->
+  <!-- ===================================================== -->
+  <section class="view active" id="v1">
+    <div class="mockup-caption">
+      <strong>Mockup 01.</strong> The morning open. Looks like a Salesforce list view or Outreach queue. The GTM Engineer scans rank, severity, and the one-line mismatch summary. Click a row to drop into the briefing card (Mockup 02).
+    </div>
+
+    <div class="app">
+      <div class="app-header">
+        <div class="brand">
+          <div class="brand-mark">E</div>
+          <div>
+            <div class="brand-name">ECHO <span class="brand-tag">/ Maternal Accountability Intelligence</span></div>
+          </div>
+        </div>
+        <div class="app-controls">
+          <span class="pill">Territory · Northeast</span>
+          <span>Last refresh 06:14 ET</span>
+          <div class="avatar">JR</div>
+        </div>
+      </div>
+
+      <div class="app-body">
+        <aside class="sidebar">
+          <div class="nav-section">Workspace</div>
+          <div class="nav-item active">
+            <span class="nav-label">Daily 10</span>
+            <span class="nav-count">10</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-label">All Accounts</span>
+            <span class="nav-count">847</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-label">Watchlist</span>
+            <span class="nav-count">23</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-label">Suppressed</span>
+            <span class="nav-count">7</span>
+          </div>
+
+          <div class="nav-section">Intelligence</div>
+          <div class="nav-item">
+            <span class="nav-label">Signal Feed</span>
+            <span class="nav-count">14</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-label">Commitments</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-label">Outcomes</span>
+          </div>
+
+          <div class="nav-section">Pipeline</div>
+          <div class="nav-item">
+            <span class="nav-label">Outreach Queue</span>
+            <span class="nav-count">4</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-label">Active Conversations</span>
+            <span class="nav-count">11</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-label">Closed Won</span>
+            <span class="nav-count">2</span>
+          </div>
+        </aside>
+
+        <main class="main">
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <h2>Today's Critical 10 · Northeast Territory</h2>
+              <div class="toolbar-meta">
+                <span class="dot"></span>10 of 847 hospitals selected · monitored against AIM, CMS, NNPQC, Joint Commission, March of Dimes
+              </div>
+            </div>
+            <div class="toolbar-right">
+              <span class="filter-chip">Severity: All</span>
+              <span class="filter-chip">Region: NE</span>
+              <button class="btn">Export</button>
+              <button class="btn-primary btn">Open in CRM</button>
+            </div>
+          </div>
+
+          <div class="stats-strip">
+            <div class="stat">
+              <div class="stat-label">Critical mismatches</div>
+              <div class="stat-value">4</div>
+              <div class="stat-trend up">+1 vs. yesterday</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">High severity</div>
+              <div class="stat-value">3</div>
+              <div class="stat-trend">flat</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">New commitments tracked</div>
+              <div class="stat-value">12</div>
+              <div class="stat-trend">past 7 days</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Avg. confidence</div>
+              <div class="stat-value">87<span style="font-size:14px;color:var(--muted);">%</span></div>
+              <div class="stat-trend">3 of 10 flagged</div>
+            </div>
+          </div>
+
+          <table class="accounts">
+            <thead>
+              <tr>
+                <th style="width:36px;">#</th>
+                <th>Hospital</th>
+                <th>Severity</th>
+                <th>Top mismatch</th>
+                <th>Outcome Δ</th>
+                <th>Signals</th>
+                <th>Conf.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rank top">01</td>
+                <td>
+                  <div class="acct-name">Mount Sinai Hospital</div>
+                  <div class="acct-loc">New York, NY · CCN 330024</div>
+                </td>
+                <td><span class="severity sev-critical"><span class="sev-bar"></span>CRITICAL</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">AIM</span>Postpartum hemorrhage bundle commitment (2023) vs. SMM rate in 4th quartile statewide
+                </td>
+                <td><span class="delta neg">+34%</span><div class="acct-loc">vs. peer avg</div></td>
+                <td><div class="signals"><div class="signal-dot signal-aim">A</div><div class="signal-dot signal-cms">C</div><div class="signal-dot signal-press">P</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">94%</td>
+              </tr>
+              <tr>
+                <td class="rank top">02</td>
+                <td>
+                  <div class="acct-name">NewYork-Presbyterian / Columbia</div>
+                  <div class="acct-loc">New York, NY · CCN 330101</div>
+                </td>
+                <td><span class="severity sev-critical"><span class="sev-bar"></span>CRITICAL</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">PRESS</span>"Eliminate disparities by 2025" pledge vs. 2.1× Black/white SMM ratio (2024)
+                </td>
+                <td><span class="delta neg">2.1×</span><div class="acct-loc">disparity ratio</div></td>
+                <td><div class="signals"><div class="signal-dot signal-press">P</div><div class="signal-dot signal-cms">C</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">91%</td>
+              </tr>
+              <tr>
+                <td class="rank top">03</td>
+                <td>
+                  <div class="acct-name">Brigham and Women's Hospital</div>
+                  <div class="acct-loc">Boston, MA · CCN 220110</div>
+                </td>
+                <td><span class="severity sev-critical"><span class="sev-bar"></span>CRITICAL</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">CMS</span>Birthing-Friendly designation (2024) vs. 30-day postpartum readmission +18% YoY
+                </td>
+                <td><span class="delta neg">+18%</span><div class="acct-loc">YoY readmit</div></td>
+                <td><div class="signals"><div class="signal-dot signal-cms">C</div><div class="signal-dot signal-jc">J</div><div class="signal-dot signal-pqc">Q</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">88%</td>
+              </tr>
+              <tr>
+                <td class="rank top">04</td>
+                <td>
+                  <div class="acct-name">Yale New Haven Hospital</div>
+                  <div class="acct-loc">New Haven, CT · CCN 070022</div>
+                </td>
+                <td><span class="severity sev-critical"><span class="sev-bar"></span>CRITICAL</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">NNPQC</span>CT PQC postpartum hypertension initiative vs. ED revisit rate above state median
+                </td>
+                <td><span class="delta neg">+22%</span><div class="acct-loc">ED revisits</div></td>
+                <td><div class="signals"><div class="signal-dot signal-pqc">Q</div><div class="signal-dot signal-cms">C</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">82%</td>
+              </tr>
+              <tr>
+                <td class="rank">05</td>
+                <td>
+                  <div class="acct-name">Massachusetts General Hospital</div>
+                  <div class="acct-loc">Boston, MA · CCN 220071</div>
+                </td>
+                <td><span class="severity sev-high"><span class="sev-bar"></span>HIGH</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">AIM</span>Severe hypertension bundle (2022) vs. timely treatment compliance 78%
+                </td>
+                <td><span class="delta neg">−12pt</span><div class="acct-loc">vs. AIM target</div></td>
+                <td><div class="signals"><div class="signal-dot signal-aim">A</div><div class="signal-dot signal-jc">J</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">86%</td>
+              </tr>
+              <tr>
+                <td class="rank">06</td>
+                <td>
+                  <div class="acct-name">Hospital of the Univ. of Pennsylvania</div>
+                  <div class="acct-loc">Philadelphia, PA · CCN 390027</div>
+                </td>
+                <td><span class="severity sev-high"><span class="sev-bar"></span>HIGH</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">PRESS</span>$50M maternal equity investment (Q1 2025) vs. flat 4th-trimester outcomes (3 yrs)
+                </td>
+                <td><span class="delta neg">0.0%</span><div class="acct-loc">3-yr SMM trend</div></td>
+                <td><div class="signals"><div class="signal-dot signal-press">P</div><div class="signal-dot signal-cms">C</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">79%</td>
+              </tr>
+              <tr>
+                <td class="rank">07</td>
+                <td>
+                  <div class="acct-name">NYU Langone Tisch Hospital</div>
+                  <div class="acct-loc">New York, NY · CCN 330214</div>
+                </td>
+                <td><span class="severity sev-high"><span class="sev-bar"></span>HIGH</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">JC</span>Perinatal Care Certification active vs. 6-week visit completion rate 51%
+                </td>
+                <td><span class="delta neg">−24pt</span><div class="acct-loc">vs. national avg</div></td>
+                <td><div class="signals"><div class="signal-dot signal-jc">J</div><div class="signal-dot signal-aim">A</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">85%</td>
+              </tr>
+              <tr>
+                <td class="rank">08</td>
+                <td>
+                  <div class="acct-name">Hartford Hospital</div>
+                  <div class="acct-loc">Hartford, CT · CCN 070008</div>
+                </td>
+                <td><span class="severity sev-elevated"><span class="sev-bar"></span>ELEVATED</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">NNPQC</span>PQC postpartum depression screening vs. screen-to-referral rate 41%
+                </td>
+                <td><span class="delta neg">−19pt</span><div class="acct-loc">screen→refer</div></td>
+                <td><div class="signals"><div class="signal-dot signal-pqc">Q</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">73%</td>
+              </tr>
+              <tr>
+                <td class="rank">09</td>
+                <td>
+                  <div class="acct-name">Maine Medical Center</div>
+                  <div class="acct-loc">Portland, ME · CCN 200001</div>
+                </td>
+                <td><span class="severity sev-elevated"><span class="sev-bar"></span>ELEVATED</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">CMS</span>Birthing-Friendly designation pending vs. rural access gap (2 PP visits avg)
+                </td>
+                <td><span class="delta neg">−1.4</span><div class="acct-loc">visits vs. recmd.</div></td>
+                <td><div class="signals"><div class="signal-dot signal-cms">C</div><div class="signal-dot signal-press">P</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">68%</td>
+              </tr>
+              <tr>
+                <td class="rank">10</td>
+                <td>
+                  <div class="acct-name">Tufts Medical Center</div>
+                  <div class="acct-loc">Boston, MA · CCN 220001</div>
+                </td>
+                <td><span class="severity sev-watch"><span class="sev-bar"></span>WATCH</span></td>
+                <td class="mismatch-summary">
+                  <span class="mm-tag">PRESS</span>Maternal mental health initiative (Mar 2026) vs. baseline data not yet reported
+                </td>
+                <td><span class="delta" style="color:var(--muted);">—</span><div class="acct-loc">awaiting Q2 data</div></td>
+                <td><div class="signals"><div class="signal-dot signal-press">P</div><div class="signal-dot signal-pqc">Q</div></div></td>
+                <td class="mono" style="color:var(--ink-2);">61%</td>
+              </tr>
+            </tbody>
+          </table>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <!-- VIEW 2: BRIEFING CARD -->
+  <!-- ===================================================== -->
+  <section class="view" id="v2">
+    <div class="mockup-caption">
+      <strong>Mockup 02.</strong> The pre-call read. Looks like a Salesforce account detail or Outreach prospect view. Shows the mismatches with sources, the supporting commitment list, contextual flags, and confidence. Crucially: no draft outreach. The agent surfaces, the human writes.
+    </div>
+
+    <div class="app">
+      <div class="app-header">
+        <div class="brand">
+          <div class="brand-mark">E</div>
+          <div>
+            <div class="brand-name">ECHO <span class="brand-tag">/ Account Briefing</span></div>
+          </div>
+        </div>
+        <div class="app-controls">
+          <span style="color:var(--brand);cursor:pointer;font-weight:500;">← Back to Daily 10</span>
+          <div class="avatar">JR</div>
+        </div>
+      </div>
+
+      <div class="briefing">
+        <div class="brief-head">
+          <div>
+            <div class="eyebrow" style="margin-bottom:6px;">RANK 01 / 10 · CRITICAL</div>
+            <h2 class="brief-title">Mount Sinai Hospital</h2>
+            <div class="brief-meta">
+              <span>New York, NY</span>
+              <span>CCN 330024</span>
+              <span>Mount Sinai Health System</span>
+              <span>1,134 beds</span>
+              <span>3,847 deliveries / yr</span>
+            </div>
+          </div>
+          <div class="brief-actions">
+            <button class="btn">Suppress</button>
+            <button class="btn">Add to Watchlist</button>
+            <button class="btn-primary btn">Open in Salesforce →</button>
+          </div>
+        </div>
+
+        <div class="brief-grid">
+          <div class="brief-main">
+            <div class="section-label">Commitment-Outcome Mismatches · 3 surfaced</div>
+
+            <div class="mismatch-card is-critical">
+              <div class="mm-head">
+                <div class="mm-title">Postpartum hemorrhage bundle commitment vs. severe maternal morbidity rate</div>
+                <span class="severity sev-critical"><span class="sev-bar"></span>CRITICAL</span>
+              </div>
+
+              <div class="mm-row">
+                <div class="mm-key">Commitment</div>
+                <div class="mm-val">
+                  Joined AIM PPH bundle, March 2023.
+                  <div class="quote">"Mount Sinai is implementing the AIM Postpartum Hemorrhage safety bundle across all five Mount Sinai birthing facilities."</div>
+                  <a href="#">saferbirth.org/aim-participation →</a>
+                </div>
+              </div>
+              <div class="mm-row">
+                <div class="mm-key">Outcome</div>
+                <div class="mm-val">
+                  Severe Maternal Morbidity rate: 198 per 10,000 deliveries (2024). NY state 4th quartile. Peer hospital average (academic, urban, NE): 148 / 10,000.
+                  <a href="#">data.cms.gov/maternal-morbidity →</a>
+                </div>
+              </div>
+              <div class="mm-row">
+                <div class="mm-key">Recency</div>
+                <div class="mm-val">Commitment 32 mo old · Outcome data Q3 2025 (5 mo old)</div>
+              </div>
+
+              <div class="gap-bar">
+                <div class="gap-side">
+                  <div class="gap-num good">PPH bundle</div>
+                  <div class="gap-lbl">Committed Mar '23</div>
+                </div>
+                <div class="gap-arrow mono">→</div>
+                <div class="gap-side">
+                  <div class="gap-num bad">+34%</div>
+                  <div class="gap-lbl">vs. peer SMM avg</div>
+                </div>
+              </div>
+
+              <div class="judgment">
+                <strong>Judgment call.</strong> Mount Sinai issued a follow-up statement in Aug 2025 attributing rising SMM partly to acuity mix from referral patterns. Worth acknowledging in outreach, do not lead with the gap as if unexamined.
+              </div>
+            </div>
+
+            <div class="mismatch-card">
+              <div class="mm-head">
+                <div class="mm-title">Health equity press commitment vs. Black/white maternal disparity ratio</div>
+                <span class="severity sev-high"><span class="sev-bar"></span>HIGH</span>
+              </div>
+              <div class="mm-row">
+                <div class="mm-key">Commitment</div>
+                <div class="mm-val">
+                  System-wide health equity report, Sept 2024.
+                  <div class="quote">"Reducing racial disparities in maternal outcomes is a board-level priority."</div>
+                  <a href="#">mountsinai.org/newsroom →</a>
+                </div>
+              </div>
+              <div class="mm-row">
+                <div class="mm-key">Outcome</div>
+                <div class="mm-val">
+                  Black SMM rate is 2.4× white SMM rate (2024 hospital data, NY State DOH SPARCS).
+                  <a href="#">health.ny.gov/sparcs →</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="mismatch-card">
+              <div class="mm-head">
+                <div class="mm-title">CMS Birthing-Friendly designation vs. 30-day postpartum readmission</div>
+                <span class="severity sev-elevated"><span class="sev-bar"></span>ELEVATED</span>
+              </div>
+              <div class="mm-row">
+                <div class="mm-key">Commitment</div>
+                <div class="mm-val">CMS Birthing-Friendly designation earned 2024.<br><a href="#">data.cms.gov/birthing-friendly →</a></div>
+              </div>
+              <div class="mm-row">
+                <div class="mm-key">Outcome</div>
+                <div class="mm-val">30-day postpartum readmission 7.8%. National median for academic centers: 6.1%.</div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="brief-side">
+            <div class="side-block">
+              <div class="section-label">All Tracked Commitments</div>
+              <ul class="commit-list">
+                <li class="commit-item">
+                  <span class="ci-tag">AIM</span>PPH bundle
+                  <div class="ci-date">Joined Mar 2023</div>
+                </li>
+                <li class="commit-item">
+                  <span class="ci-tag">AIM</span>Severe hypertension bundle
+                  <div class="ci-date">Joined Mar 2023</div>
+                </li>
+                <li class="commit-item">
+                  <span class="ci-tag">CMS</span>Birthing-Friendly designation
+                  <div class="ci-date">Earned 2024</div>
+                </li>
+                <li class="commit-item">
+                  <span class="ci-tag">NNPQC</span>NY State PQC member
+                  <div class="ci-date">Active since 2019</div>
+                </li>
+                <li class="commit-item">
+                  <span class="ci-tag">JC</span>Perinatal Care certified
+                  <div class="ci-date">Active</div>
+                </li>
+                <li class="commit-item">
+                  <span class="ci-tag">PRESS</span>Equity report
+                  <div class="ci-date">Sept 2024</div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="side-block">
+              <div class="section-label">Context Signals</div>
+              <div class="context-row">
+                <span class="context-label">Maternity care desert</span>
+                <span class="context-val">No</span>
+              </div>
+              <div class="context-row">
+                <span class="context-label">State PP Medicaid coverage</span>
+                <span class="context-val">12 mo (NY)</span>
+              </div>
+              <div class="context-row">
+                <span class="context-label">Recent leadership change</span>
+                <span class="context-val">None</span>
+              </div>
+              <div class="context-row">
+                <span class="context-label">Active litigation flag</span>
+                <span class="context-val">None</span>
+              </div>
+              <div class="context-row">
+                <span class="context-label">Known competitive vendor</span>
+                <span class="context-val flag">⚠ Babyscripts (2024)</span>
+              </div>
+              <div class="context-row">
+                <span class="context-label">Recent news sensitivity</span>
+                <span class="context-val">Low</span>
+              </div>
+            </div>
+
+            <div class="side-block">
+              <div class="section-label">Confidence</div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2);margin-bottom:4px;">
+                <span>Mismatch #1 (PPH)</span><span class="mono">94%</span>
+              </div>
+              <div class="conf-bar"><div class="conf-fill" style="width:94%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2);margin:10px 0 4px;">
+                <span>Mismatch #2 (Equity)</span><span class="mono">88%</span>
+              </div>
+              <div class="conf-bar"><div class="conf-fill" style="width:88%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2);margin:10px 0 4px;">
+                <span>Mismatch #3 (Readmit)</span><span class="mono">71%</span>
+              </div>
+              <div class="conf-bar"><div class="conf-fill med" style="width:71%"></div></div>
+              <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;">
+                Mismatch #3 confidence reduced: peer benchmark uses 2023 academic-center data; 2024 data partial.
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <!-- VIEW 3: SIGNAL FEED -->
+  <!-- ===================================================== -->
+  <section class="view" id="v3">
+    <div class="mockup-caption">
+      <strong>Mockup 03.</strong> The between-calls scan. Looks like Gong's deal alerts or Outreach's signal feed. Real-time stream of new commitments, new outcome data, and news that should suppress an account. Tells the GTM Engineer what changed, without re-scoring the whole list.
+    </div>
+
+    <div class="app">
+      <div class="app-header">
+        <div class="brand">
+          <div class="brand-mark">E</div>
+          <div>
+            <div class="brand-name">ECHO <span class="brand-tag">/ Signal Feed</span></div>
+          </div>
+        </div>
+        <div class="app-controls">
+          <span class="pill">14 new today</span>
+          <span>Northeast Territory</span>
+          <div class="avatar">JR</div>
+        </div>
+      </div>
+
+      <div class="feed-layout">
+        <div class="feed-main">
+          <div class="feed-toolbar">
+            <div class="feed-tabs">
+              <button class="feed-tab active">All<span class="ft-num">14</span></button>
+              <button class="feed-tab">Press / Commitments<span class="ft-num">5</span></button>
+              <button class="feed-tab">Outcome data<span class="ft-num">4</span></button>
+              <button class="feed-tab">News (sensitivity)<span class="ft-num">3</span></button>
+              <button class="feed-tab">AIM / PQC / JC<span class="ft-num">2</span></button>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn">Mark all read</button>
+              <button class="btn">Filters</button>
+            </div>
+          </div>
+
+          <div class="feed-list">
+
+            <div class="feed-item unread">
+              <div class="feed-icon fi-press">PR</div>
+              <div class="feed-body">
+                <div class="feed-head">
+                  <span class="feed-account">Brigham and Women's Hospital</span>
+                  <span class="feed-type-tag">Press · New commitment</span>
+                  <span class="severity sev-critical feed-sev"><span class="sev-bar"></span>RAISES SEVERITY</span>
+                </div>
+                <div class="feed-text">
+                  System-wide newsroom statement <span class="qt">"committing to a 25% reduction in postpartum readmissions by 2027"</span>. New commitment registered against current readmission trend of <span class="vs">+18% YoY</span>. Mismatch widened.
+                </div>
+                <div class="feed-foot">
+                  <a href="#">brighamhealth.org/newsroom →</a>
+                  <span>·</span>
+                  <span>Account moved Rank 04 → Rank 03</span>
+                </div>
+              </div>
+              <div class="feed-time">2h ago<br><span style="opacity:0.6;">06:14 ET</span></div>
+            </div>
+
+            <div class="feed-item unread">
+              <div class="feed-icon fi-data">DT</div>
+              <div class="feed-body">
+                <div class="feed-head">
+                  <span class="feed-account">Mount Sinai Hospital</span>
+                  <span class="feed-type-tag">CMS · Quarterly outcome update</span>
+                  <span class="severity sev-high feed-sev"><span class="sev-bar"></span>NEW DATA</span>
+                </div>
+                <div class="feed-text">
+                  Q3 2025 SMM data published. Rate of 198 per 10,000 deliveries (prior quarter: 184). Now in <span class="vs">4th quartile statewide</span>. PPH bundle commitment unchanged. Mismatch confidence raised from 87% → 94%.
+                </div>
+                <div class="feed-foot">
+                  <a href="#">data.cms.gov/maternal-morbidity →</a>
+                  <span>·</span>
+                  <span>3 mismatches re-scored</span>
+                </div>
+              </div>
+              <div class="feed-time">4h ago<br><span style="opacity:0.6;">04:02 ET</span></div>
+            </div>
+
+            <div class="feed-item unread">
+              <div class="feed-icon fi-news">!</div>
+              <div class="feed-body">
+                <div class="feed-head">
+                  <span class="feed-account">Boston Medical Center</span>
+                  <span class="feed-type-tag">News · Sensitivity flag</span>
+                  <span class="severity sev-watch feed-sev"><span class="sev-bar"></span>SUPPRESSED</span>
+                </div>
+                <div class="feed-text">
+                  Local news coverage of a maternal mortality case filed against the hospital's L&D unit (Boston Globe, Apr 23). Account auto-suppressed for 14 days. Reason: <span class="qt">tone-deaf risk if outreach lands during litigation news cycle</span>.
+                </div>
+                <div class="feed-foot">
+                  <a href="#">bostonglobe.com →</a>
+                  <span>·</span>
+                  <a href="#">Override suppression</a>
+                </div>
+              </div>
+              <div class="feed-time">6h ago<br><span style="opacity:0.6;">02:41 ET</span></div>
+            </div>
+
+            <div class="feed-item unread">
+              <div class="feed-icon fi-aim">AM</div>
+              <div class="feed-body">
+                <div class="feed-head">
+                  <span class="feed-account">Yale New Haven Hospital</span>
+                  <span class="feed-type-tag">AIM · Bundle joined</span>
+                </div>
+                <div class="feed-text">
+                  Newly registered with AIM Postpartum Discharge Transition bundle. Commitment date: Apr 15, 2026. No outcome data reported against this bundle yet. Tracked for 90-day baseline.
+                </div>
+                <div class="feed-foot">
+                  <a href="#">saferbirth.org/aim-participation →</a>
+                  <span>·</span>
+                  <span>Mismatch detection paused 90d</span>
+                </div>
+              </div>
+              <div class="feed-time">Yesterday<br><span style="opacity:0.6;">17:08</span></div>
+            </div>
+
+            <div class="feed-item">
+              <div class="feed-icon fi-press">PR</div>
+              <div class="feed-body">
+                <div class="feed-head">
+                  <span class="feed-account">Hospital of the Univ. of Pennsylvania</span>
+                  <span class="feed-type-tag">Press · Investment announcement</span>
+                  <span class="severity sev-high feed-sev"><span class="sev-bar"></span>NEW MISMATCH</span>
+                </div>
+                <div class="feed-text">
+                  $50M maternal equity investment announced (Q1 2025, system-wide). Cross-referenced against 3-year SMM trend: <span class="vs">flat 0.0%</span>. Investment-to-outcome lag flagged.
+                </div>
+                <div class="feed-foot">
+                  <a href="#">pennmedicine.org/newsroom →</a>
+                  <span>·</span>
+                  <span>Confidence: 79%</span>
+                </div>
+              </div>
+              <div class="feed-time">Yesterday<br><span style="opacity:0.6;">14:22</span></div>
+            </div>
+
+            <div class="feed-item">
+              <div class="feed-icon fi-pqc">PQ</div>
+              <div class="feed-body">
+                <div class="feed-head">
+                  <span class="feed-account">Hartford Hospital</span>
+                  <span class="feed-type-tag">PQC · Initiative launched</span>
+                </div>
+                <div class="feed-text">
+                  CT Perinatal Quality Collaborative announced postpartum depression screening initiative. Hartford named participating site. Screen-to-referral baseline: 41%. Watch for next reporting cycle.
+                </div>
+                <div class="feed-foot">
+                  <a href="#">nnpqc.org/ct →</a>
+                </div>
+              </div>
+              <div class="feed-time">Yesterday<br><span style="opacity:0.6;">11:17</span></div>
+            </div>
+
+            <div class="feed-item">
+              <div class="feed-icon fi-data">DT</div>
+              <div class="feed-body">
+                <div class="feed-head">
+                  <span class="feed-account">Maine Medical Center</span>
+                  <span class="feed-type-tag">March of Dimes · Geographic context</span>
+                </div>
+                <div class="feed-text">
+                  Catchment area updated: 6 surrounding counties reclassified as maternity care deserts. Outcome interpretation adjusted (workforce shortage now weighted in mismatch scoring).
+                </div>
+                <div class="feed-foot">
+                  <a href="#">marchofdimes.org/peristats →</a>
+                </div>
+              </div>
+              <div class="feed-time">2 days ago</div>
+            </div>
+
+          </div>
+        </div>
+
+        <aside class="feed-side">
+          <h3>Top Sources Today</h3>
+          <ul class="ts-list">
+            <li class="ts-item"><span class="ts-name">Hospital newsrooms</span><span class="ts-count"><strong>5</strong></span></li>
+            <li class="ts-item"><span class="ts-name">CMS quarterly</span><span class="ts-count"><strong>4</strong></span></li>
+            <li class="ts-item"><span class="ts-name">News (sensitivity)</span><span class="ts-count"><strong>3</strong></span></li>
+            <li class="ts-item"><span class="ts-name">AIM registry</span><span class="ts-count"><strong>1</strong></span></li>
+            <li class="ts-item"><span class="ts-name">NNPQC</span><span class="ts-count"><strong>1</strong></span></li>
+          </ul>
+
+          <h3>Filters</h3>
+          <div class="filter-list">
+            <label class="filter-row"><input type="checkbox" checked /> Severity raised<span class="fr-count">3</span></label>
+            <label class="filter-row"><input type="checkbox" checked /> New commitment<span class="fr-count">5</span></label>
+            <label class="filter-row"><input type="checkbox" checked /> New outcome data<span class="fr-count">4</span></label>
+            <label class="filter-row"><input type="checkbox" checked /> Sensitivity flags<span class="fr-count">3</span></label>
+            <label class="filter-row"><input type="checkbox" /> AIM / PQC enrollment</label>
+            <label class="filter-row"><input type="checkbox" /> Leadership changes</label>
+            <label class="filter-row"><input type="checkbox" /> Vendor partnerships</label>
+          </div>
+
+          <h3 style="margin-top:22px;">Watchlist</h3>
+          <ul class="ts-list">
+            <li class="ts-item"><span class="ts-name">Mount Sinai</span><span class="ts-count">CRIT</span></li>
+            <li class="ts-item"><span class="ts-name">NYP / Columbia</span><span class="ts-count">CRIT</span></li>
+            <li class="ts-item"><span class="ts-name">Yale New Haven</span><span class="ts-count">CRIT</span></li>
+            <li class="ts-item"><span class="ts-name">+ 20 more</span><span class="ts-count">→</span></li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <!-- VIEW 4: GMAIL-STYLE OUTREACH INBOX -->
+  <!-- ===================================================== -->
+  <section class="view" id="v4">
+    <div class="mockup-caption">
+      <strong>Mockup 04.</strong> The outreach itself. ECHO does not draft this email, that is the GTM Engineer's irreplaceable skill. What ECHO contributes is the evidence threaded through it: the specific commitment quote, the specific outcome metric, the source links. The GTM Engineer picks the angle, sets the tone, makes the ask.
+    </div>
+
+    <div class="app">
+      <div class="gmail">
+        <div class="gmail-bar">
+          <div class="gmail-logo"><span class="gmail-logo-mark"></span> Gmail</div>
+          <div class="gmail-search">
+            <span class="gmail-search-icon"></span>
+            <span>Search mail</span>
+          </div>
+          <div class="gmail-icon-btn">⚙</div>
+          <div class="gmail-user">JR</div>
+        </div>
+
+        <div class="gmail-body">
+          <nav class="gmail-nav">
+            <button class="gmail-compose">
+              <span style="font-size:18px;line-height:1;">✎</span> Compose
+            </button>
+            <div class="gmail-nav-item active">
+              <span>Inbox</span>
+              <span class="nav-count-g">14</span>
+            </div>
+            <div class="gmail-nav-item">
+              <span>Starred</span>
+            </div>
+            <div class="gmail-nav-item">
+              <span>Snoozed</span>
+            </div>
+            <div class="gmail-nav-item">
+              <span>Sent</span>
+            </div>
+            <div class="gmail-nav-item">
+              <span>Drafts</span>
+              <span class="nav-count-g">3</span>
+            </div>
+            <div style="height:1px;background:var(--line);margin:10px 16px 8px 24px;"></div>
+            <div class="gmail-nav-item">
+              <span>ECHO digest</span>
+              <span class="nav-count-g">1</span>
+            </div>
+            <div class="gmail-nav-item">
+              <span>Outreach</span>
+              <span class="nav-count-g">7</span>
+            </div>
+            <div class="gmail-nav-item">
+              <span>Replies</span>
+              <span class="nav-count-g">4</span>
+            </div>
+          </nav>
+
+          <main class="gmail-main">
+            <div class="gmail-toolbar">
+              <div class="gmail-icon-btn">☐</div>
+              <div class="gmail-icon-btn">↻</div>
+              <div class="gmail-icon-btn">⋮</div>
+              <div class="gmail-toolbar-spacer"></div>
+              <span class="gmail-pagination">1–14 of 247</span>
+              <div class="gmail-icon-btn">‹</div>
+              <div class="gmail-icon-btn">›</div>
+            </div>
+
+            <div class="gmail-list">
+
+              <div class="gmail-divider">Today</div>
+
+              <div class="gmail-row selected">
+                <div class="gmail-checkbox" style="background:#1a73e8;border-color:#1a73e8;"></div>
+                <div class="gmail-star starred">★</div>
+                <div class="gmail-from">Me, Dr. Chen <span style="color:#5f6368;font-weight:400;">(2)</span></div>
+                <div class="gmail-subject-line">
+                  <span class="gmail-label gl-outreach">Outreach</span>
+                  <span class="gs-subject">PPH bundle commitment + your Q3 SMM data, short question</span>
+                  <span class="gs-snippet">· Dr. Chen, ECHO surfaced Mount Sinai this morning as the territory's top postpartum gap...</span>
+                </div>
+                <div class="gmail-time">10:42 AM</div>
+              </div>
+
+              <div class="gmail-row unread">
+                <div class="gmail-checkbox"></div>
+                <div class="gmail-star">☆</div>
+                <div class="gmail-from">ECHO Daily Brief</div>
+                <div class="gmail-subject-line">
+                  <span class="gmail-label gl-echo">ECHO</span>
+                  <span class="gs-subject">Today's Critical 10 · Northeast · 4 critical, 3 high</span>
+                  <span class="gs-snippet">· Mount Sinai moved to Rank 01. Brigham added new commitment, severity raised. Boston Medical auto-suppressed...</span>
+                </div>
+                <div class="gmail-time">6:14 AM</div>
+              </div>
+
+              <div class="gmail-row unread">
+                <div class="gmail-checkbox"></div>
+                <div class="gmail-star">☆</div>
+                <div class="gmail-from">Maria Alvarez, RN</div>
+                <div class="gmail-subject-line">
+                  <span class="gmail-label gl-followup">Reply</span>
+                  <span class="gs-subject">Re: Brigham postpartum readmission, happy to talk</span>
+                  <span class="gs-snippet">· Jonel, your note caught me at the right moment. We've been internally debating the readmission trend...</span>
+                </div>
+                <div class="gmail-time">9:28 AM</div>
+              </div>
+
+              <div class="gmail-divider">Yesterday</div>
+
+              <div class="gmail-row read">
+                <div class="gmail-checkbox"></div>
+                <div class="gmail-star">☆</div>
+                <div class="gmail-from">Me</div>
+                <div class="gmail-subject-line">
+                  <span class="gmail-label gl-outreach">Outreach</span>
+                  <span class="gs-subject">Yale New Haven, CT PQC postpartum hypertension question</span>
+                  <span class="gs-snippet">· Hi Dr. Park, ECHO flagged Yale this week for the gap between the CT PQC initiative and ED revisit data...</span>
+                </div>
+                <div class="gmail-time">4:11 PM</div>
+              </div>
+
+              <div class="gmail-row read">
+                <div class="gmail-checkbox"></div>
+                <div class="gmail-star">☆</div>
+                <div class="gmail-from">Daniel Park, MD</div>
+                <div class="gmail-subject-line">
+                  <span class="gmail-label gl-followup">Reply</span>
+                  <span class="gs-subject">Re: NYU 6-week visit completion, thanks for the data</span>
+                  <span class="gs-snippet">· Appreciate you sending this over. The 51% number tracks with what we've been seeing internally...</span>
+                </div>
+                <div class="gmail-time">2:33 PM</div>
+              </div>
+
+              <div class="gmail-row read">
+                <div class="gmail-checkbox"></div>
+                <div class="gmail-star">☆</div>
+                <div class="gmail-from">Me</div>
+                <div class="gmail-subject-line">
+                  <span class="gmail-label gl-outreach">Outreach</span>
+                  <span class="gs-subject">Penn Medicine, quick note on the $50M maternal equity announcement</span>
+                  <span class="gs-snippet">· Saw the Q1 announcement. Wanted to share what ECHO is showing on the 3-year SMM trend...</span>
+                </div>
+                <div class="gmail-time">11:02 AM</div>
+              </div>
+
+            </div>
+
+            <!-- VARIANT SWITCHER -->
+            <div class="variant-switcher">
+              <span class="vs-label">Email variants</span>
+              <button class="vs-btn active" data-variant="moral">
+                <span class="vs-letter">A</span> Moral lead <span class="vs-persona">· CMO / CNO</span>
+              </button>
+              <button class="vs-btn" data-variant="clinical">
+                <span class="vs-letter">B</span> Clinical lead <span class="vs-persona">· VP Quality / Patient Safety</span>
+              </button>
+              <button class="vs-btn" data-variant="financial">
+                <span class="vs-letter">C</span> Financial lead <span class="vs-persona">· CFO / VP Revenue Cycle</span>
+              </button>
+              <span class="vs-spacer"></span>
+              <span class="vs-meta">Same evidence · 3 angles</span>
+            </div>
+
+            <!-- ============ VARIANT A: MORAL LEAD ============ -->
+            <div class="email-variant active" data-variant="moral">
+              <div class="gmail-open">
+                <div class="gmail-open-head">
+                  <h2 class="gmail-open-subject">
+                    Your March 2023 commitment, and what the Q3 data is showing
+                    <span class="open-tag">Outreach · A</span>
+                  </h2>
+                  <div class="gmail-open-actions">
+                    <div class="gmail-icon-btn">↩</div>
+                    <div class="gmail-icon-btn">↪</div>
+                    <div class="gmail-icon-btn">⋮</div>
+                  </div>
+                </div>
+
+                <div class="gmail-from-block">
+                  <div class="gmail-from-avatar">JR</div>
+                  <div class="gmail-from-info">
+                    <div class="gmail-from-name">Jonel Richardson <span class="from-email">&lt;jonel@fourthtrimester.health&gt;</span></div>
+                    <div class="gmail-to">
+                      to <strong>Dr. Lisa Chen, CMO</strong> <span class="to-arrow">·</span>
+                      cc <strong>Aisha Patel, CNO</strong>
+                    </div>
+                  </div>
+                  <div class="gmail-meta-right">
+                    10:42 AM<br>
+                    <a href="#" style="color:#1a73e8;text-decoration:none;">Reply</a> · <a href="#" style="color:#1a73e8;text-decoration:none;">Forward</a>
+                  </div>
+                </div>
+
+                <div class="gmail-message">
+                  <p>Dr. Chen,</p>
+
+                  <p>In March 2023, Mount Sinai signed onto the AIM Postpartum Hemorrhage safety bundle across all five birthing facilities. That was a public commitment, and it was the right one.</p>
+
+                  <div class="evidence-strip">
+                    <div class="es-label">The gap I am looking at</div>
+                    Q3 2025 CMS data shows the system's severe maternal morbidity rate at 198 per 10,000 deliveries, the fourth quartile statewide, roughly 34% above the academic-center peer average. The bundle is in place. The outcome trend is moving the wrong direction.
+                  </div>
+
+                  <p>I read your team's August 2025 statement attributing part of this to acuity mix from referral patterns, and I think that is a fair point that does not get enough room in these conversations. I am not writing to suggest the bundle is failing.</p>
+
+                  <p>I am writing because the bundle ends at discharge, and the women showing up in those Q3 numbers are the ones the bundle was meant to protect. The 12 weeks after delivery are where the protective effect either compounds or fades, and right now Mount Sinai's commitment effectively ends at the curb.</p>
+
+                  <p>Twenty minutes. I will bring the peer benchmarks. You tell me whether closing that gap is something the institution is ready to take on, or whether the conversation is premature.</p>
+
+                  <p>Sources, so you can pressure-test before we talk:<br>
+                 , <a href="#">AIM bundle participation registry (saferbirth.org)</a><br>
+                 , <a href="#">CMS maternal morbidity Q3 2025 (data.cms.gov)</a><br>
+                 , <a href="#">Mount Sinai equity report, Sept 2024</a></p>
+
+                  <p>Jonel</p>
+
+                  <div class="gmail-signature">
+                    <strong>Jonel Richardson</strong><br>
+                    Solutions Engineer, Northeast · Fourth Trimester Health<br>
+                    <a href="mailto:jonel@fourthtrimester.health">jonel@fourthtrimester.health</a> · <a href="#">linkedin.com/in/jonel-richardson</a>
+                  </div>
+
+                  <div class="gmail-reply-bar">
+                    <button class="gmail-reply-btn">↩ Reply</button>
+                    <button class="gmail-reply-btn">↪ Forward</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="echo-callout">
+                <strong>Why this version, why this persona:</strong> the moral lead opens with the institution's own commitment language, then frames the gap as a question of follow-through rather than failure. CMOs and CNOs are the signatories on AIM bundles and equity statements, they own the public commitment, and they respond to "you said this, here is what is happening, what do we do about it." Avoid this angle with finance personas; it reads as preachy.
+              </div>
+            </div>
+
+            <!-- ============ VARIANT B: CLINICAL LEAD ============ -->
+            <div class="email-variant" data-variant="clinical">
+              <div class="gmail-open">
+                <div class="gmail-open-head">
+                  <h2 class="gmail-open-subject">
+                    Mount Sinai SMM rate Q3 2025, peer benchmark question
+                    <span class="open-tag">Outreach · B</span>
+                  </h2>
+                  <div class="gmail-open-actions">
+                    <div class="gmail-icon-btn">↩</div>
+                    <div class="gmail-icon-btn">↪</div>
+                    <div class="gmail-icon-btn">⋮</div>
+                  </div>
+                </div>
+
+                <div class="gmail-from-block">
+                  <div class="gmail-from-avatar">JR</div>
+                  <div class="gmail-from-info">
+                    <div class="gmail-from-name">Jonel Richardson <span class="from-email">&lt;jonel@fourthtrimester.health&gt;</span></div>
+                    <div class="gmail-to">
+                      to <strong>Dr. Marcus Reed, VP Quality &amp; Patient Safety</strong>
+                    </div>
+                  </div>
+                  <div class="gmail-meta-right">
+                    10:42 AM<br>
+                    <a href="#" style="color:#1a73e8;text-decoration:none;">Reply</a> · <a href="#" style="color:#1a73e8;text-decoration:none;">Forward</a>
+                  </div>
+                </div>
+
+                <div class="gmail-message">
+                  <p>Dr. Reed,</p>
+
+                  <p>Pulling the Q3 2025 CMS maternal morbidity release this week and Mount Sinai sat in a place that surprised me, given the AIM PPH bundle implementation date. Wanted to share the cut and ask a specific question.</p>
+
+                  <div class="evidence-strip">
+                    <div class="es-label">The numbers I am working with</div>
+                    SMM rate: 198 per 10,000 deliveries (Q3 2025). Academic-center peer mean: 148 per 10,000. NY state quartile: 4th. PPH bundle implementation: March 2023, system-wide. Trend over the last four quarters: +7.6% net. Acuity mix adjustment per your August 2025 statement: noted, not yet quantified in the public data.
+                  </div>
+
+                  <p>Two things I would want to know if I were in your seat. First, of the SMM cases driving the Q3 number, what is the postpartum-period split, events at delivery versus events between discharge and 6 weeks? In our cohort across 31 academic centers, the post-discharge share has been climbing as delivery-period bundles mature. Second, has the team modeled what fraction of the trend is acuity-mix versus what is genuinely happening to your patients in the fourth trimester?</p>
+
+                  <p>The reason I ask: when we work with Quality teams at peer institutions, the AIM bundle data tells us delivery-period care is getting safer. The post-discharge data tells us we are losing ground on a different surface. Different problem, different intervention.</p>
+
+                  <p>Twenty minutes if useful. I will bring the cohort breakdown. No pitch, no deck, your numbers, your read.</p>
+
+                  <p>Sources for your team:<br>
+                 , <a href="#">CMS maternal morbidity dataset Q3 2025</a><br>
+                 , <a href="#">AIM PPH bundle implementation guide</a><br>
+                 , <a href="#">Peer cohort methodology (PDF)</a></p>
+
+                  <p>Jonel</p>
+
+                  <div class="gmail-signature">
+                    <strong>Jonel Richardson</strong><br>
+                    Solutions Engineer, Northeast · Fourth Trimester Health<br>
+                    <a href="mailto:jonel@fourthtrimester.health">jonel@fourthtrimester.health</a> · <a href="#">linkedin.com/in/jonel-richardson</a>
+                  </div>
+
+                  <div class="gmail-reply-bar">
+                    <button class="gmail-reply-btn">↩ Reply</button>
+                    <button class="gmail-reply-btn">↪ Forward</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="echo-callout">
+                <strong>Why this version, why this persona:</strong> the clinical lead opens with the data and skips the moral framing entirely. Quality and Patient Safety leaders live in numerators and denominators; they trust outreach that respects their literacy. Two specific clinical questions (postpartum-period split, acuity-mix decomposition) signal the sender is in the work, not selling at it. Avoid this angle with CMOs unless they have a clinical research background.
+              </div>
+            </div>
+
+            <!-- ============ VARIANT C: FINANCIAL LEAD ============ -->
+            <div class="email-variant" data-variant="financial">
+              <div class="gmail-open">
+                <div class="gmail-open-head">
+                  <h2 class="gmail-open-subject">
+                    NY 12-mo postpartum Medicaid + your Q3 readmit data, quick math
+                    <span class="open-tag">Outreach · C</span>
+                  </h2>
+                  <div class="gmail-open-actions">
+                    <div class="gmail-icon-btn">↩</div>
+                    <div class="gmail-icon-btn">↪</div>
+                    <div class="gmail-icon-btn">⋮</div>
+                  </div>
+                </div>
+
+                <div class="gmail-from-block">
+                  <div class="gmail-from-avatar">JR</div>
+                  <div class="gmail-from-info">
+                    <div class="gmail-from-name">Jonel Richardson <span class="from-email">&lt;jonel@fourthtrimester.health&gt;</span></div>
+                    <div class="gmail-to">
+                      to <strong>Robert Kim, CFO</strong> <span class="to-arrow">·</span>
+                      cc <strong>Sarah Donnelly, VP Revenue Cycle</strong>
+                    </div>
+                  </div>
+                  <div class="gmail-meta-right">
+                    10:42 AM<br>
+                    <a href="#" style="color:#1a73e8;text-decoration:none;">Reply</a> · <a href="#" style="color:#1a73e8;text-decoration:none;">Forward</a>
+                  </div>
+                </div>
+
+                <div class="gmail-message">
+                  <p>Robert,</p>
+
+                  <p>New York's 12-month postpartum Medicaid extension changed the math on fourth-trimester care, and looking at Mount Sinai's Q3 2025 numbers, I wanted to put the financial frame in front of you before someone else does.</p>
+
+                  <div class="evidence-strip">
+                    <div class="es-label">The financial picture, drawn from public data</div>
+                    Mount Sinai delivers ~3,847 babies per year. 30-day postpartum readmission sitting at 7.8% (national academic median: 6.1%). At an average DRG-weighted readmit cost of ~$13,400, the 1.7-point gap above peer median translates to roughly $876K in avoidable readmission cost annually, and under the NY 12-month extension, the Medicaid coverage window now overlaps the SMM events, which means the system is absorbing more of that cost.
+                  </div>
+
+                  <p>The CMS Birthing-Friendly designation Mount Sinai earned in 2024 is real, and I am not here to discount it. The designation measures structure. Readmission and SMM measure outcomes. Right now those two are pulling in opposite directions, and the financial exposure sits with you.</p>
+
+                  <p>Two questions worth a 20-minute conversation:</p>
+
+                  <p>First, what is the current attribution of postpartum readmits in the system's value-based contracts, pure FFS, shared savings, or downside risk? The answer changes the ROI math by an order of magnitude.</p>
+
+                  <p>Second, has Revenue Cycle modeled the 12-month Medicaid extension's effect on the postpartum loss ratio? Most CFOs I talk to have not seen that number isolated yet.</p>
+
+                  <p>Happy to bring our cost-of-readmission model and walk through it. No pitch attached.</p>
+
+                  <p>Sources:<br>
+                 , <a href="#">KFF Medicaid postpartum coverage tracker (NY)</a><br>
+                 , <a href="#">CMS Hospital Compare readmission data</a><br>
+                 , <a href="#">Mount Sinai CMS Birthing-Friendly designation</a></p>
+
+                  <p>Jonel</p>
+
+                  <div class="gmail-signature">
+                    <strong>Jonel Richardson</strong><br>
+                    Solutions Engineer, Northeast · Fourth Trimester Health<br>
+                    <a href="mailto:jonel@fourthtrimester.health">jonel@fourthtrimester.health</a> · <a href="#">linkedin.com/in/jonel-richardson</a>
+                  </div>
+
+                  <div class="gmail-reply-bar">
+                    <button class="gmail-reply-btn">↩ Reply</button>
+                    <button class="gmail-reply-btn">↪ Forward</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="echo-callout">
+                <strong>Why this version, why this persona:</strong> the financial lead leans on the KFF state-policy tool and CMS readmission data to translate the same gap into dollars. CFOs and Revenue Cycle leaders do not respond to disparity language; they respond to avoidable cost, contract attribution, and exposure. The state Medicaid extension is the wedge here, most finance teams have not isolated its effect on the postpartum loss ratio. Avoid this angle with clinical personas; they will read it as crass.
+              </div>
+            </div>
+
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footnote">
+    <strong>Notes for the deck.</strong> All hospital names, CCNs, and metrics shown are placeholder examples for the mockup. The structure (data sources, mismatch logic, severity tiers) maps to ECHO's documented agent loop. Real demo data should pull from the v1 sources listed in the brief: CMS Provider Data Catalog, AIM (saferbirth.org), NNPQC, March of Dimes Peristats, KFF Medicaid Postpartum Tracker.
+  </div>
+
+</div>
+
+<script>
+  // -------- Tab switching (top-level) --------
+  const tabs = document.querySelectorAll('.tab');
+  const views = document.querySelectorAll('.view');
+
+  function activateView(viewId) {
+    tabs.forEach(x => x.classList.remove('active'));
+    views.forEach(v => v.classList.remove('active'));
+    const targetTab = document.querySelector(`.tab[data-view="${viewId}"]`);
+    const targetView = document.getElementById(viewId);
+    if (targetTab) targetTab.classList.add('active');
+    if (targetView) targetView.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  tabs.forEach(t => {
+    t.addEventListener('click', () => activateView(t.dataset.view));
+  });
+
+  // -------- Hospital row → Briefing card --------
+  // Clicking any account row in Mockup 01 opens Mockup 02 (briefing)
+  const accountRows = document.querySelectorAll('table.accounts tbody tr');
+  accountRows.forEach(row => {
+    row.style.cursor = 'pointer';
+    row.setAttribute('title', 'Open briefing card');
+    row.addEventListener('click', () => activateView('v2'));
+  });
+
+  // -------- Email variant switcher (Mockup 04) --------
+  const variantBtns = document.querySelectorAll('.vs-btn');
+  const variantBodies = document.querySelectorAll('.email-variant');
+  variantBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.variant;
+      variantBtns.forEach(b => b.classList.remove('active'));
+      variantBodies.forEach(body => body.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.querySelector(`.email-variant[data-variant="${v}"]`);
+      if (target) target.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
