@@ -5,9 +5,9 @@
 
 ## Problem Statement
 
-**Who is affected:** GTM Engineers and Solutions Engineers at postpartum software companies (remote monitoring, care navigation, fourth trimester platforms) who sell into hospital and health system buyers.
+**Who is affected:** GTM Engineers and Solutions Engineers at NurtureBridge Health, a fictional postpartum health company selling Postpartum Handoff Navigation into hospital and health system buyers.
 
-**What's broken:** Hospitals publicly commit to maternal quality improvement through federal programs like the CMS Birthing-Friendly designation, then send women home with a paper pamphlet and a six-week appointment. The fourth trimester is where the system goes silent. GTM Engineers selling postpartum software are walking into hospitals that have made the commitment but don't know the outcomes have not followed. There is no tool that surfaces this gap at the hospital territory level.
+**What's broken:** Hospitals publicly commit to maternal quality improvement through federal programs like the CMS Birthing-Friendly designation, then send women home with a paper pamphlet and a six-week appointment. The fourth trimester is where the system goes silent. NurtureBridge GTM Engineers are walking into hospitals that have made the commitment but don't know the outcomes have not followed. There is no tool that surfaces this gap at the hospital territory level.
 
 **How we know it's real:**
 - 2,265 hospitals have earned the CMS Birthing-Friendly designation (CMS Provider Data Catalog, 2025)
@@ -17,9 +17,11 @@
 
 ## Target User
 
-**Primary user:** GTM Engineer or Solutions Engineer at a postpartum software company (Maven, Pomelo Care, Mahmee, Babyscripts, Midi, Elektra, similar). They work a territory of 30 to 200 hospital accounts. Their day is finite. Their first decision every morning is which accounts deserve outreach today.
+**Primary user:** GTM Engineer or Solutions Engineer at NurtureBridge Health. They work a territory of 30 to 200 hospital accounts. Their day is finite. Their first decision every morning is which accounts deserve outreach today.
 
-**Secondary user:** Sales leadership at the same company who needs visibility into territory health and how the GTM team is prioritizing.
+**Seller context:** NurtureBridge sells Postpartum Handoff Navigation to hospitals. The service gives maternity teams a shared discharge-to-postpartum follow-up work queue, patient check-ins, escalation routing, and visit-readiness tracking so teams can see which patients need follow-up work after discharge.
+
+**Secondary user:** NurtureBridge sales leadership, who needs visibility into territory health and how the GTM team is prioritizing.
 
 **How they solve this today:** Manually. They use territory lists from CRMs, public news searches, and gut instinct. No one is cross-referencing CMS Birthing-Friendly designations against state-aggregate and hospital-level outcome data daily. The synthesis work doesn't exist as a tool.
 
@@ -32,7 +34,7 @@
 
 ## Solution
 
-**One-liner:** ECHO is an agent that finds Birthing-Friendly hospitals where commitments aren't translating to patient experience, and arms GTM Engineers with the daily 10 most critical accounts plus three drafted outreach variants per account.
+**One-liner:** ECHO is an agent that finds Birthing-Friendly hospitals where commitments aren't translating to patient experience, and arms NurtureBridge GTM Engineers with the daily 10 most critical accounts plus three drafted outreach variants for Postpartum Handoff Navigation.
 
 **Core mismatch logic (within-state comparison):**
 
@@ -88,6 +90,7 @@ The state aggregate becomes the *expectation* hospitals should be meeting. Hospi
 - **Multiple commitment sources.** v1 uses CMS Birthing-Friendly designation only, and every v1 hospital shares one default commitment tag. v2 adds curated per-hospital tags from AIM bundle participation, NNPQC PQC membership, Joint Commission Perinatal Care certification, and hospital newsroom press releases.
 - **Hospital-level Medicaid mix.** v1's financial email variant uses state-level Medicaid context (NY's 12-month postpartum coverage from KFF) instead of hospital-level Medicaid payer mix. Hospital-level Medicaid mix is v2.
 - **Outreach angle expansion beyond the three v1 variants.** v1 ships moral, clinical, and financial leads. v2 may add cost-of-poor-outcomes, peer benchmarking, and regulatory pressure variants.
+- **Automated sending.** Automated sending is a long-term direction only. It requires better prompt reliability, claim validation, source grounding, safety checks, approval/suppression controls, throttling, audit logs, and send controls before implementation.
 - **National territory display.** v1 demos NY-only (101 Birthing-Friendly hospitals). Backend ingests national data and could display all states; the NY filter is a demo choice, not a data limitation.
 - **Patient-facing surface.** ECHO never communicates with patients. The agent's only audience is the GTM Engineer.
 - **Leapfrog Hospital Survey data.** Licensed data not included in v1.
@@ -143,7 +146,7 @@ The state aggregate becomes the *expectation* hospitals should be meeting. Hospi
 | **Coverage** | Manual review covers maybe 10–20% of territory accounts in detail | Agent monitors 100% of Birthing-Friendly hospitals daily | Full territory coverage vs. partial |
 | **Build cost** | — | ~3 weeks build time across 3-person team; free OpenRouter tier in v1 | Demo Day deliverable |
 
-**One-line pitch:** ECHO replaces manual cross-referencing of fragmented federal maternal health data with a daily ranked list of the 10 Birthing-Friendly hospitals in a GTM Engineer's territory whose patient experience is dragging behind their state's strength, plus three drafted outreach variants per account ready to copy and send.
+**One-line pitch:** ECHO replaces manual cross-referencing of fragmented federal maternal health data with a daily ranked list of the 10 Birthing-Friendly hospitals in a NurtureBridge GTM Engineer's territory whose patient experience is dragging behind their state's strength, plus three drafted Postpartum Handoff Navigation outreach variants per account ready to review and send.
 
 ## Stakeholder Concerns
 
@@ -156,6 +159,7 @@ The state aggregate becomes the *expectation* hospitals should be meeting. Hospi
 - Onboarding for a real GTM Engineer would require importing their territory and tuning the urgency formula and prompt templates to their preferences. Out of scope for v1.
 - Most common confusion will be "why is this hospital ranked above that one" — the briefing card's confidence breakdown and judgment call callout are designed to answer that
 - Email quality issues (tone off, claim wrong, source missing) will be the top support burden once real users adopt
+- Automated sending would increase support and compliance risk unless approvals, suppressions, claim validation, throttling, and audit trails are built first
 
 **Operations / Engineering:**
 - All v1 outcome and commitment data sources are free public CSVs and APIs. No HIPAA-sensitive data. No PII.
@@ -170,9 +174,10 @@ The state aggregate becomes the *expectation* hospitals should be meeting. Hospi
 - Hospital names are public; CCN identifiers are public; outcome data is published by CMS/CDC for public use
 - AI-generated emails: ECHO cites only ECHO-verified data. Prompt design constraints prevent the model from inventing claims about hospitals.
 - The human reviews and sends, so accountability for what's actually communicated stays with the GTM Engineer
+- Future send automation must preserve accountability with explicit approvals, logged claims, source grounding, suppression lists, throttles, and kill switches.
 
 **Marketing / Communications:**
-- One-sentence description: "ECHO finds Birthing-Friendly hospitals whose patient experience lags their state's strength, surfaces the daily 10 a GTM Engineer should contact today, and drafts three outreach variants per account ready to send."
+- One-sentence description: "ECHO finds Birthing-Friendly hospitals whose patient experience lags their state's strength, surfaces the daily 10 a NurtureBridge GTM Engineer should contact today, and drafts three Postpartum Handoff Navigation outreach variants per account ready for review."
 - Visual hook: the briefing card showing a hospital's commitment date next to the within-state outcome gap, with source links beneath every claim, and three email tabs at the bottom
 - Sensitivity concern: maternal mortality and racial disparity data carry real weight; the language across the dashboard and generated emails should be precise and non-sensationalized
 - Story arc: hospitals committed publicly → state achieves the standard → this hospital lags behind → ECHO surfaces the gap → ECHO drafts the outreach → the human walks into the room

@@ -45,6 +45,18 @@ Jonel (Tools 1+2) → Luba (Tools 3+4) → Paula (Tools 5+6) → Human
 
 Jonel must finish first. Luba cannot score without Jonel's output. Paula cannot generate emails without Luba's scores.
 
+Historical owner names above describe the original class project sequence. In this standalone repo, Luba owns the current codebase and can update any file while preserving pipeline contracts.
+
+---
+
+## Seller/Service Context — Tool 5 Copy Grounding
+
+ECHO's concrete v1 seller is **NurtureBridge Health**.
+
+The GTM Engineer sells **Postpartum Handoff Navigation** to hospitals: a discharge-to-postpartum service with a shared follow-up work queue, patient check-ins, escalation routing, and visit-readiness tracking.
+
+This context is not a hospital dict field and does not change the schema below. It is stable product context for outbound copy. Hospital-specific claims still must come only from fields in this schema and cited source files. Do not invent outcomes, financial impact, clinical recommendations, customer proof, or implementation claims.
+
 ---
 
 ## The Hospital Dict — Full Schema
@@ -347,6 +359,7 @@ These are **NOT** in v1:
 - Hospital-level Medicaid payer mix
 - Per-hospital curated commitment tags (all v1 hospitals share one default tag)
 - Silent Gap mode
+- Automated email sending; this is a long-term direction only after prompt reliability, claim validation, source grounding, safety checks, approvals, suppressions, throttling, audit logs, and send controls exist
 
 ---
 
@@ -365,14 +378,16 @@ These get reintroduced when their data sources are wired up:
 
 ## File Ownership
 
-| File | Owner | Depends on |
-|------|-------|-----------|
-| `commitment_ingester.py` | Jonel | `Birthing_Friendly_Hospitals_Geocoded.csv` + `HCAHPS-Hospital-NY.csv` (for CCN crosswalk) |
-| `outcome_scorer.py` | Jonel | `HCAHPS-Hospital-NY.csv` + state constants module |
-| `gap_calculator.py` | Luba | Output of `outcome_scorer.py` |
-| `urgency_ranker.py` | Luba | Output of `gap_calculator.py` + KFF + NCHS constants |
-| `outbound_generator.py` | Paula | Output of `urgency_ranker.py` + OpenRouter |
-| `human_checkpoint.py` | Paula | Output of `outbound_generator.py` |
+Current owner for all files in the standalone repo is Luba. Historical owner names in older docs are origin/history only.
+
+| File | Depends on |
+|------|-----------|
+| `commitment_ingester.py` | `Birthing_Friendly_Hospitals_Geocoded.csv` + `HCAHPS-Hospital-NY.csv` (for CCN crosswalk) |
+| `outcome_scorer.py` | `HCAHPS-Hospital-NY.csv` + state constants module |
+| `gap_calculator.py` | Output of `outcome_scorer.py` |
+| `urgency_ranker.py` | Output of `gap_calculator.py` + KFF + NCHS constants |
+| `outbound_generator.py` | Output of `urgency_ranker.py` + OpenRouter |
+| `human_checkpoint.py` | Output of `outbound_generator.py` |
 
 ---
 
@@ -390,5 +405,5 @@ Every field above traces to a real file:
 
 ---
 
-*Last updated: April 28, 2026 — Team Female, Pursuit AI-Native Cycle 3*
-*v0.2 changes: schema rewritten by Jonel after data ingestion, pending Luba and Paula review.*
+*Last updated: May 5, 2026 — ECHO Standalone*
+*v0.2 schema preserved; standalone seller/service context added for Tool 5 copy grounding.*

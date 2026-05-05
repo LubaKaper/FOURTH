@@ -1,6 +1,22 @@
-# AGENTS.md — ECHO
+# AGENTS.md — ECHO Standalone
 
 Instructions for AI coding assistants working in this repo.
+
+## Standalone Context
+
+This is Luba's standalone continuation of ECHO after the original team moved to a different project. Treat this repo as a solo product/codebase. Historical docs may mention Jonel/Paula/team ownership, but current work does not require cross-person approval.
+
+Default owner for all files: Luba.
+
+## Seller/Service Context
+
+ECHO's GTM Engineer works for **NurtureBridge Health**, a fictional postpartum health company used as the concrete v1 seller context.
+
+NurtureBridge sells **Postpartum Handoff Navigation** to hospitals: a discharge-to-postpartum service that gives maternity teams a shared work queue for postpartum follow-up, patient check-ins, escalation routing, and visit-readiness tracking after discharge.
+
+Outbound should become specific to that seller and service. Avoid generic vendor placeholders when the implementation is updated; ground claims in the hospital dict and describe the service only in terms ECHO can support.
+
+Long-term direction is automated sending, but only after prompt reliability, claim validation, source grounding, safety checks, suppressions, approvals, throttling, audit logs, and send controls exist. v1 remains human-reviewed drafts only.
 
 ## Read These First
 
@@ -8,8 +24,9 @@ Before touching any file:
 
 1. `prd.md` — what we are building and why.
 2. `SCHEMA.md` — exact field names, types, allowed values, source files, and null rules.
-3. `PLAN.md` — build order, file ownership, test requirements, done criteria.
-4. `tests/fixtures.py` — shared test hospitals. Import from here; do not define your own.
+3. `PLAN.md` — original build order, test requirements, done criteria.
+4. `STANDALONE_CONTEXT.md` — current status and next steps for this standalone repo.
+5. `tests/fixtures.py` — shared test hospitals. Import from here; do not define your own.
 
 ## Pipeline Order — Hard Constraint
 
@@ -79,18 +96,7 @@ A hospital with only one HCAHPS star null still gets a real OpenRouter email. Th
 
 ## File Ownership
 
-| File | Owner |
-|------|-------|
-| `tests/fixtures.py` | Luba |
-| `src/commitment_ingester.py` | Jonel |
-| `src/outcome_scorer.py` | Jonel |
-| `src/gap_calculator.py` | Luba |
-| `src/urgency_ranker.py` | Luba |
-| `src/dashboard_generator.py` | Luba |
-| `src/outbound_generator.py` | Paula |
-| `src/human_checkpoint.py` | Paula |
-
-Do not modify another person's file without flagging it. If a cross-file fix is needed, note it in the commit message and tell the owner.
+This standalone repo is owned by Luba. Historical team ownership from the original class project is no longer a blocker. Still keep changes scoped and note cross-file contract changes in commits.
 
 ## v1 Scope — Do Not Build
 
