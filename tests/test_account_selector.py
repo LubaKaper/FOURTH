@@ -68,6 +68,36 @@ def test_select_top_accounts_keeps_low_confidence_visible_during_tuning():
     assert [h["facility_id"] for h in selected] == ["low-confidence", "high-confidence"]
 
 
+# ── Task 5: data_confidence gate ─────────────────────────────────────────────
+
+def test_select_top_accounts_excludes_low_confidence_when_gate_required():
+    """With require_high_confidence=True, low-confidence hospitals are excluded even with high gap_score."""
+    hospitals = [
+        _hospital("high-confidence", 80.0, data_confidence="high"),
+        _hospital("low-confidence", 90.0, data_confidence="low"),
+    ]
+
+    selected = select_top_accounts(hospitals, limit=10, require_high_confidence=True)
+    facility_ids = [h["facility_id"] for h in selected]
+
+    assert "low-confidence" not in facility_ids
+    assert "high-confidence" in facility_ids
+
+
+def test_select_top_accounts_tuning_mode_still_includes_low_confidence():
+    """Default (tuning) behavior: low-confidence hospitals remain visible for review."""
+    hospitals = [
+        _hospital("high-confidence", 80.0, data_confidence="high"),
+        _hospital("low-confidence", 90.0, data_confidence="low"),
+    ]
+
+    selected = select_top_accounts(hospitals, limit=10)
+    facility_ids = [h["facility_id"] for h in selected]
+
+    assert "low-confidence" in facility_ids
+    assert "high-confidence" in facility_ids
+
+
 def test_select_top_accounts_uses_adr_lead_angle_tiebreaker():
     hospitals = [
         _hospital("state", 90.0, lead_angle="state_strength_vs_hospital_lag"),

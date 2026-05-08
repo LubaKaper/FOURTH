@@ -110,3 +110,39 @@ NO_COMMITMENT = {
     "medicaid_extended": True,
     "mmsm_participant": False,
 }
+
+# Isolates smm_rate_gap angle: elevated SMM, no well_baby data, no HCAHPS gap
+SMM_ONLY = {
+    **BASE_IDENTITY,
+    "facility_id": "330106",
+    "facility_name": "Test SMM Only Hospital",
+    "postpartum_visit_pct": 78.0,
+    "well_baby_visit_pct": None,       # no hospital-level well-baby source
+    "state_postpartum_avg": 82.4,
+    "smm_rate": 180.0,                 # elevated above 150 threshold
+    "hcahps_care_transition_star": 4,  # no HCAHPS gap (>= 3)
+    "hcahps_overall_star": 4,
+    "readmission_penalty": False,
+    "state_mortality_rank": "middle",
+    "racial_disparity_flag": False,
+    "medicaid_extended": False,
+    "mmsm_participant": False,
+}
+
+# Isolates financial_unrealized angle: Medicaid extended, no SMM, no HCAHPS gap, no baby-mother data
+FINANCIAL_ONLY = {
+    **BASE_IDENTITY,
+    "facility_id": "330107",
+    "facility_name": "Test Financial Only Hospital",
+    "postpartum_visit_pct": 81.0,
+    "well_baby_visit_pct": None,       # no hospital-level well-baby source
+    "state_postpartum_avg": 82.4,
+    "smm_rate": None,                  # no SMM data
+    "hcahps_care_transition_star": 4,  # no HCAHPS gap
+    "hcahps_overall_star": 4,
+    "readmission_penalty": False,
+    "state_mortality_rank": "middle",
+    "racial_disparity_flag": False,
+    "medicaid_extended": True,         # triggers financial_unrealized
+    "mmsm_participant": False,
+}

@@ -1,4 +1,10 @@
-# ECHO v1 Build Plan
+# ECHO v1 Build Plan — HISTORICAL
+
+> **This document is a historical artifact from the original class project (ECHO v0.1/v0.2).**
+> It references old field names, old team ownership, and a NurtureBridge seller context that no longer applies.
+> **Do not use this as a live guide.** Current source of truth: `ADR.md`, `SCHEMA.md`, `CLAUDE.md`.
+
+---
 
 This plan follows `prd.md` and `SCHEMA.md`. If there is a conflict, `SCHEMA.md` wins for field names, allowed values, null handling, and pipeline contracts.
 
