@@ -34,6 +34,8 @@ REQUIRED_EMAIL_KEYS = {
     "urgency_tier",
     "sent_at",
     "status",
+    "claim_validation",
+    "data_confidence",
 }
 
 VALID_RECIPIENT_ROLES = {"CMO", "VP Patient Experience"}

@@ -352,18 +352,19 @@ One send-ready email object per hospital. `angle_reason` is a deterministic one-
 
 ```python
 {
-  "facility_id":      str,
-  "facility_name":    str,
-  "recipient_role":   str,       # "CMO" | "VP Patient Experience"
-  "subject":          str,
-  "email_body":       str,
-  "product":          str,       # exactly "Babyscripts"
-  "lead_angle":       str,
-  "angle_reason":     str,       # e.g. "Care transition 2/5 stars — below 3-star threshold"
-  "gap_score":        float,
-  "urgency_tier":     str,
-  "sent_at":          None,      # populated on send
-  "status":           str,       # "pending_review" | "ready_to_send"
+  "facility_id":        str,
+  "facility_name":      str,
+  "recipient_role":     str,       # "CMO" | "VP Patient Experience"
+  "subject":            str,
+  "email_body":         str,
+  "product":            str,       # exactly "Babyscripts"
+  "lead_angle":         str,
+  "angle_reason":       str,       # e.g. "Care transition 2/5 stars — below 3-star threshold"
+  "gap_score":          float,
+  "urgency_tier":       str,
+  "sent_at":            None,      # populated on send
+  "status":             str,       # "pending_review" | "ready_to_send"
+  "claim_validation":   str,       # "passed" | "failed" — set by outbound_generator
 }
 ```
 

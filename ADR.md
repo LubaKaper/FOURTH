@@ -19,6 +19,16 @@ Fourth uses an orchestrator to make conditional routing decisions based on inter
 
 The Human Checkpoint exists during the tuning phase only — as a temporary safety gate while tools, agents, and prompts are being calibrated. The end goal is a pipeline trusted enough to send automatically with no human review. Removing the Human Checkpoint is the definition of done.
 
+**Auto-approve criteria (Phase 3 target):** An email is eligible for automatic send — no human review — when all three conditions are met:
+
+| Condition | Required value |
+|---|---|
+| `gap_score` | `>= 70` |
+| `data_confidence` | `"high"` |
+| `claim_validation` | `"passed"` |
+
+The approval module (`src/approvals.py`) enforces this gate and is a bypassable layer: during tuning it leaves non-qualifying emails at `status = "pending_review"` for Human Checkpoint review; qualifying emails are promoted to `status = "ready_to_send"`. Once the pipeline is fully trusted, the orchestrator will call `run_approvals()` directly and route `ready_to_send` emails to the mailer — no human step.
+
 ---
 
 ## 2. Two Strongest Arguments For This Choice

@@ -320,6 +320,8 @@ def _email_object(hospital: dict[str, Any], email_body: str) -> dict[str, Any]:
         "urgency_tier": hospital["urgency_tier"],
         "sent_at": None,
         "status": "pending_review",
+        "claim_validation": "passed",
+        "data_confidence": hospital["data_confidence"],
     }
 
 

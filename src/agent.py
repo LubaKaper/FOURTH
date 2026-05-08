@@ -22,6 +22,7 @@ from gap_calculator import calculate_gap_score
 from urgency_ranker import add_urgency
 from account_selector import select_top_accounts
 from outbound_generator import generate_outbound_email
+from approvals import run_approvals
 from human_checkpoint import display_checkpoint
 from dashboard_generator import generate_dashboard
 
@@ -66,9 +67,13 @@ def run_pipeline(state: str) -> int:
     log.info("Account selector — Selected top %d accounts", len(selected_hospitals))
 
     emails = generate_outbound_email(selected_hospitals)
+    emails = run_approvals(emails)
     statuses = Counter(e["status"] for e in emails)
     status_summary = ", ".join(f"{k}={v}" for k, v in statuses.items()) or "none"
     log.info("Tool 5 — Generated %d emails (%s)", len(emails), status_summary)
+    ready = statuses.get("ready_to_send", 0)
+    if ready:
+        log.info("Approvals — %d email(s) auto-approved (ready_to_send)", ready)
 
     display_checkpoint(selected_hospitals, emails)
     log.info("Tool 6 — Checkpoint displayed")
