@@ -26,6 +26,7 @@ data/*.zip
 # mac
 .DS_Store
 .claude/
+CLAUDE.md
 claude.local.md
 # local dependencies
 node_modules/
@@ -33,6 +34,7 @@ node_modules/
 # generated local artifacts
 outputs/
 dashboard/echo_dashboard.html
+dashboard/fourth_dashboard.html
 
 # local PowerPoint inspection/copy artifacts
 tmp/

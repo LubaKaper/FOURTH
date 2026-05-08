@@ -1,6 +1,6 @@
 # data/
 
-All CSVs and PDFs ECHO depends on. Files are committed to the repo so a fresh clone can run the full pipeline without re-downloading anything.
+All CSVs and PDFs Fourth depends on. Files are committed to the repo so a fresh clone can run the full pipeline without re-downloading anything.
 
 All sources are public domain (CMS, CDC, KFF, NCHS) or open-access peer-reviewed (Cureus, CC-BY 4.0).
 
@@ -10,6 +10,8 @@ All sources are public domain (CMS, CDC, KFF, NCHS) or open-access peer-reviewed
 |---|---|---|---|
 | `Birthing_Friendly_Hospitals_Geocoded.csv` | CMS Provider Data Catalog | April 2026 | Annual |
 | `HCAHPS-Hospital-NY.csv` | CMS Provider Data Catalog (NY-filtered via `scripts/filter_hcahps_to_ny.py`) | April 2026 | Quarterly |
+| `Maternal_Health-Hospital.csv` | CMS Provider Data Catalog | May 2026 | Quarterly |
+| `FY_2026_Hospital_Readmissions_Reduction_Program_Hospital.csv` | CMS Provider Data Catalog | May 2026 | Annual |
 | `core-set-ppc-ad-ny.csv` | CMS Medicaid Core Set Data Dashboard (PPC-AD, NY filter) | April 2026 | Annual |
 | `core-set-ppc-ch-ny.csv` | CMS Medicaid Core Set Data Dashboard (PPC-CH timeliness, NY filter) | April 2026 | Annual |
 | `core-set-ppc2-ad-ny.csv` | CMS Medicaid Core Set Data Dashboard (PPC2-AD age 21+, NY filter) | April 2026 | Annual |
@@ -29,6 +31,8 @@ For refreshing files when they get out of date.
 - **Birthing-Friendly registry:** https://data.cms.gov/provider-data/dataset/yfqv-i3dy
 - **HCAHPS-Hospital (full national file):** https://data.cms.gov/provider-data/dataset/dgck-syfz
   - After download, run `python scripts/filter_hcahps_to_ny.py` to produce the NY-only file. Do not commit the full national file (~102 MB).
+- **Maternal Health - Hospital:** https://data.cms.gov/provider-data/dataset/7jhg-6m2d
+- **Hospital Readmissions Reduction Program:** https://data.cms.gov/provider-data/topics/hospitals/hospital-readmissions
 - **Medicaid Core Set Data Dashboard:** https://www.medicaid.gov/medicaid/quality-of-care/core-set-data-dashboard/welcome
   - Pick measure (PPC-AD, PPC-CH, PPC2-AD, PPC2-CH, or CCP-CH), filter to NY, export CSV
 
@@ -64,8 +68,6 @@ If a file goes stale:
 
 These are referenced in PRD as v2 expansion sources but not committed in v1:
 
-- CMS Maternal Health Hospital file (severe maternal morbidity)
-- CMS FY2025 Hospital Readmissions Reduction Program
 - CMS Hospital Provider Cost Report (Medicaid payer mix)
 - CMS Medicaid Core Set: PCR-AD, PDS-AD, LRCD-AD
 - CDC WONDER state-level mortality exports
@@ -82,6 +84,14 @@ If you're building toward v2, download these from the URLs in PRD's "v2 expansio
 ### HCAHPS-Hospital-NY.csv
 
 NY-only filtered version. 161 facilities, ~10,900 measure rows, ~3.3 MB. Filtered from the full 102 MB CMS export using `scripts/filter_hcahps_to_ny.py`. Tool 2 reads three measures: `H_COMP_6_STAR_RATING`, `H_STAR_RATING`, `H_DISCH_HELP_Y_P`.
+
+### Maternal_Health-Hospital.csv
+
+National CMS Maternal Health file. Tool 2 reads `PC_07a` from `Score` for severe obstetric complications when reported, and `SM_7` from `Score` for maternal morbidity structural measure participation.
+
+### FY_2026_Hospital_Readmissions_Reduction_Program_Hospital.csv
+
+National CMS HRRP file. Tool 2 reads `Excess Readmission Ratio`; `readmission_penalty` is true when any reported ratio for the hospital is above 1.0.
 
 ### core-set-ppc-ad-ny.csv
 

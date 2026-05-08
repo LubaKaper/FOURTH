@@ -12,8 +12,6 @@ def _hospital(
     lead_angle: str = "state_strength_vs_hospital_lag",
     urgency_tier: str = "high",
     data_confidence: str = "high",
-    overall_star: int | None = 3,
-    discharge_info_star: int | None = 3,
 ) -> dict:
     return {
         "facility_id": facility_id,
@@ -22,20 +20,20 @@ def _hospital(
         "lead_angle": lead_angle,
         "urgency_tier": urgency_tier,
         "data_confidence": data_confidence,
-        "overall_star": overall_star,
-        "discharge_info_star": discharge_info_star,
+        "postpartum_visit_pct": 61.0,
+        "well_baby_visit_pct": 94.0,
     }
 
 
 def test_select_top_accounts_limits_to_10():
-    hospitals = [_hospital(str(i), float(i)) for i in range(20)]
+    hospitals = [_hospital(str(i), float(i + 40)) for i in range(20)]
 
     selected = select_top_accounts(hospitals)
 
     assert len(selected) == 10
 
 
-def test_select_top_accounts_sorts_by_gap_score_descending():
+def test_select_top_accounts_sorts_by_final_gap_score_descending():
     hospitals = [
         _hospital("low", 50.0),
         _hospital("high", 90.0),
@@ -47,10 +45,10 @@ def test_select_top_accounts_sorts_by_gap_score_descending():
     assert [h["facility_id"] for h in selected] == ["high", "medium", "low"]
 
 
-def test_select_top_accounts_excludes_low_confidence_and_low_urgency():
+def test_select_top_accounts_excludes_below_threshold_and_low_urgency():
     hospitals = [
         _hospital("eligible", 90.0),
-        _hospital("low-confidence", 100.0, data_confidence="low"),
+        _hospital("below-threshold", 39.0, urgency_tier="low"),
         _hospital("low-urgency", 100.0, urgency_tier="low"),
     ]
 
@@ -59,33 +57,32 @@ def test_select_top_accounts_excludes_low_confidence_and_low_urgency():
     assert [h["facility_id"] for h in selected] == ["eligible"]
 
 
-def test_select_top_accounts_uses_lead_angle_tiebreaker():
+def test_select_top_accounts_keeps_low_confidence_visible_during_tuning():
     hospitals = [
-        _hospital("default", 90.0, lead_angle="state_strength_vs_hospital_lag"),
-        _hospital("discharge", 90.0, lead_angle="hcahps_discharge_gap"),
-        _hospital("care", 90.0, lead_angle="hcahps_care_transition_gap"),
+        _hospital("high-confidence", 80.0, data_confidence="high"),
+        _hospital("low-confidence", 90.0, data_confidence="low"),
     ]
 
-    selected = select_top_accounts(hospitals, limit=3)
+    selected = select_top_accounts(hospitals, limit=10)
 
-    assert [h["facility_id"] for h in selected] == ["care", "discharge", "default"]
+    assert [h["facility_id"] for h in selected] == ["low-confidence", "high-confidence"]
 
 
-def test_select_top_accounts_uses_star_tiebreakers_then_name():
+def test_select_top_accounts_uses_adr_lead_angle_tiebreaker():
     hospitals = [
-        _hospital("b", 90.0, overall_star=3, discharge_info_star=3),
-        _hospital("a", 90.0, overall_star=3, discharge_info_star=3),
-        _hospital("worse-overall", 90.0, overall_star=2, discharge_info_star=5),
-        _hospital("worse-discharge", 90.0, overall_star=3, discharge_info_star=1),
+        _hospital("state", 90.0, lead_angle="state_strength_vs_hospital_lag"),
+        _hospital("financial", 90.0, lead_angle="financial_unrealized"),
+        _hospital("hcahps", 90.0, lead_angle="hcahps_care_transition_gap"),
+        _hospital("smm", 90.0, lead_angle="smm_rate_gap"),
+        _hospital("baby", 90.0, lead_angle="baby_vs_mother_contrast"),
     ]
-    hospitals[0]["facility_name"] = "Beta"
-    hospitals[1]["facility_name"] = "Alpha"
 
-    selected = select_top_accounts(hospitals, limit=4)
+    selected = select_top_accounts(hospitals, limit=5)
 
     assert [h["facility_id"] for h in selected] == [
-        "worse-overall",
-        "worse-discharge",
-        "a",
-        "b",
+        "baby",
+        "smm",
+        "hcahps",
+        "financial",
+        "state",
     ]

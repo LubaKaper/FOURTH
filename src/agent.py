@@ -1,7 +1,7 @@
 """
-agent.py — ECHO Pipeline Orchestrator
+agent.py — Fourth Pipeline Orchestrator
 
-Runs the seven-tool ECHO pipeline end-to-end for a given state.
+Runs the seven-tool Fourth pipeline end-to-end for a given state.
 Thin orchestration only; all business logic lives in the per-tool
 modules in src/. v1 is NY-only.
 
@@ -26,14 +26,14 @@ from human_checkpoint import display_checkpoint
 from dashboard_generator import generate_dashboard
 
 
-DASHBOARD_PATH = "dashboard/echo_dashboard.html"
+DASHBOARD_PATH = "dashboard/fourth_dashboard.html"
 
-log = logging.getLogger("echo.agent")
+log = logging.getLogger("fourth.agent")
 
 
 def run_pipeline(state: str) -> int:
-    """Execute the ECHO pipeline for `state`. Return process exit code."""
-    log.info("Starting ECHO pipeline for state=%s", state)
+    """Execute the Fourth pipeline for `state`. Return process exit code."""
+    log.info("Starting Fourth pipeline for state=%s", state)
 
     hospitals = get_hospital_commitments(state)
     log.info("Tool 1 — Loaded %d %s hospitals", len(hospitals), state)
@@ -66,9 +66,9 @@ def run_pipeline(state: str) -> int:
     log.info("Account selector — Selected top %d accounts", len(selected_hospitals))
 
     emails = generate_outbound_email(selected_hospitals)
-    methods = Counter(e["generation_method"] for e in emails)
-    methods_summary = ", ".join(f"{k}={v}" for k, v in methods.items()) or "none"
-    log.info("Tool 5 — Generated %d emails (%s)", len(emails), methods_summary)
+    statuses = Counter(e["status"] for e in emails)
+    status_summary = ", ".join(f"{k}={v}" for k, v in statuses.items()) or "none"
+    log.info("Tool 5 — Generated %d emails (%s)", len(emails), status_summary)
 
     display_checkpoint(selected_hospitals, emails)
     log.info("Tool 6 — Checkpoint displayed")
@@ -92,7 +92,7 @@ def main() -> int:
         format="[%(levelname)s] %(message)s",
     )
 
-    parser = argparse.ArgumentParser(description="ECHO pipeline orchestrator")
+    parser = argparse.ArgumentParser(description="Fourth pipeline orchestrator")
     parser.add_argument(
         "state",
         nargs="?",

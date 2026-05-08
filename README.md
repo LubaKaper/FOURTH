@@ -1,6 +1,8 @@
-# ECHO - Early Care Handoff Observer
+# Fourth - Account Intelligence for Maternal Health GTM
 
-ECHO is a GTM intelligence agent for maternal health software companies. It finds CMS Birthing-Friendly hospitals whose HCAHPS patient experience lags behind their state's postpartum visit strength, then drafts grounded outreach for a human to review and send.
+Fourth is a GTM intelligence agent built for maternal health software companies like Babyscripts. It finds CMS Birthing-Friendly hospitals whose postpartum outcome scores lag behind their public commitments, then drafts personalized outbound for a GTM Engineer to review and send. Babyscripts' GTM Engineer is the end user. Hospitals are the sales targets.
+
+Babyscripts' remote postpartum monitoring service includes BP monitoring kits, a mobile app, OB-specialized care managers, and RPM CPT billing support.
 
 ```text
 NY achieves 82.4% postpartum visit completion.
@@ -9,15 +11,15 @@ This Birthing-Friendly hospital scores 1 star on HCAHPS discharge information.
 
 ## What It Does
 
-ECHO gives a GTM Engineer today's top 10 high-confidence accounts and three outreach variants per account.
+Fourth gives a Babyscripts GTM Engineer today's top 10 high-confidence accounts and three outreach variants per account.
 
 The human stays in control:
 
-- ECHO ranks accounts.
-- ECHO explains the mismatch.
-- ECHO drafts outreach.
+- Fourth ranks accounts.
+- Fourth explains the mismatch.
+- Fourth drafts outreach.
 - The GTM Engineer reviews, edits, copies, and sends.
-- ECHO never sends email automatically.
+- Fourth never sends email automatically.
 
 ## v1 Scope
 
@@ -32,6 +34,8 @@ v1 is intentionally narrow:
 - Static HTML dashboard for human review.
 
 Hospital-level severe morbidity, readmissions, maternal quality scores, Medicaid payer mix, silent-gap mode, CRM integration, per-hospital curated commitment tags, and Anthropic are v2.
+
+Automated email sending is a long-term direction, not v1. It should wait until prompt reliability, claim validation, source grounding, safety checks, approvals, suppressions, throttling, audit logs, and send controls are designed and tested.
 
 ## Pipeline
 
@@ -78,18 +82,13 @@ Removed v0.1 fields such as `compared_to_national`, `postpartum_visit_pct`, `sev
 v1 includes a static HTML dashboard generated from hospital dicts and email objects. It is a visual review surface, not a web app:
 
 - No server, auth, CRM integration, or email sending.
-- Generated output: `dashboard/echo_dashboard.html`.
+- Generated output: `dashboard/fourth_dashboard.html`.
 - Mockup reference: `docs/mockups/echo-dashboard-mockup.html`.
 - The GTM Engineer reviews email variants, then copies/sends from their own tool.
 
-## Team Ownership
+## Standalone Ownership
 
-| Owner | Files |
-|---|---|
-| Jonel | `src/commitment_ingester.py`, `src/outcome_scorer.py` |
-| Luba | `tests/fixtures.py`, `src/gap_calculator.py`, `src/urgency_ranker.py`, `src/dashboard_generator.py` |
-| Paula | `src/outbound_generator.py`, `src/human_checkpoint.py` |
-| Team | `src/agent.py`, `tests/test_pipeline.py` |
+This is Luba's standalone continuation of Fourth. Historical docs and comments may mention the original class team, but current ownership for all files is Luba.
 
 ## Setup
 

@@ -104,21 +104,21 @@ def test_includes_lead_angle():
     assert h_high["lead_angle"] in result
 
 
-# ── email variants ─────────────────────────────────────────────────────────────
+# ── email body ─────────────────────────────────────────────────────────────────
 
-def test_all_three_variants_present():
+def test_email_body_status_present():
     hospitals, emails = _pipeline()
     result = display_checkpoint(hospitals, emails)
     lower = result.lower()
-    assert "moral" in lower
-    assert "clinical" in lower
-    assert "financial" in lower
+    assert "email body" in lower
+    assert "pending_review" in lower
 
 
 def test_email_body_content_present():
     hospitals, emails = _pipeline()
     result = display_checkpoint(hospitals, emails)
-    assert "[COMPANY_NAME]" in result
+    assert "Babyscripts" in result
+    assert "30-day postpartum visit" in result
 
 
 # ── edge cases ─────────────────────────────────────────────────────────────────

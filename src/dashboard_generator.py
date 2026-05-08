@@ -71,9 +71,11 @@ def _metric(label: str, value: Any) -> str:
 
 def _lead_angle_label(value: Any) -> str:
     labels = {
+        "baby_vs_mother_contrast": "Baby vs mother contrast",
         "hcahps_care_transition_gap": "Patient experience gap",
-        "hcahps_discharge_gap": "Discharge support gap",
         "state_strength_vs_hospital_lag": "State strength vs hospital lag",
+        "financial_unrealized": "Financial opportunity",
+        "smm_rate_gap": "Maternal morbidity gap",
     }
     return labels.get(str(value), value)
 
@@ -88,46 +90,21 @@ def _email_variants(email: dict[str, Any] | None) -> str:
         </section>
         """
 
-    variants = [
-        ("moral", "Moral", "Commitment gap", email.get("body_moral")),
-        ("clinical", "Clinical", "Patient-care signal", email.get("body_clinical")),
-        ("financial", "Financial", "Reimbursement context", email.get("body_financial")),
-    ]
-    tabs = "\n".join(
-        f"""
-          <button class="variant-tab{' active' if index == 0 else ''}" data-variant="{escape(key)}">
-            <span>{escape(label)}</span>
-            <small>{escape(hint)}</small>
-          </button>
-        """
-        for index, (key, label, hint, _body) in enumerate(variants)
-    )
-    variant_panels = "\n".join(
-        f"""
-        <article class="variant-content{' active' if index == 0 else ''}" data-variant-panel="{escape(key)}">
-          <div class="variant-label">{escape(label)} variant</div>
-          <p>{_safe(body)}</p>
-        </article>
-        """
-        for index, (key, label, _hint, body) in enumerate(variants)
-    )
     return f"""
       <section class="email-panel">
         <div class="email-meta">
           <div>
             <div class="eyebrow">Email review workspace</div>
             <h4>{_safe(email.get("subject"))}</h4>
-            <div class="email-role">Recommended contact: {_safe(email.get("to_role"))}</div>
+            <div class="email-role">Recommended contact: {_safe(email.get("recipient_role"))}</div>
           </div>
-          <span>{_safe(email.get("generation_method"))}</span>
+          <span>{_safe(email.get("status"))}</span>
         </div>
-        <div class="variant-tabs" role="tablist" aria-label="Email variants">
-          {tabs}
-        </div>
-        <div class="variant-stage">
-          {variant_panels}
-        </div>
-        <div class="copy-note">Review one variant, adapt it if needed, then copy it into your sending tool. ECHO does not send.</div>
+        <article class="variant-content active">
+          <div class="variant-label">{_safe(email.get("product"))} / {_safe(email.get("lead_angle"))}</div>
+          <p>{_safe(email.get("email_body"))}</p>
+        </article>
+        <div class="copy-note">Review one variant, adapt it if needed, then copy it into your sending tool. Fourth does not send.</div>
       </section>
     """
 
@@ -182,8 +159,8 @@ def _hospital_card(hospital: dict[str, Any], email: dict[str, Any] | None, is_ac
       <div class="metrics">
         {_metric("Lead angle", _lead_angle_label(hospital.get("lead_angle")))}
         {_metric("Commitment", hospital.get("commitment_tag"))}
-        {_metric("Discharge info star", hospital.get("discharge_info_star"))}
-        {_metric("Overall star", hospital.get("overall_star"))}
+        {_metric("Postpartum visit", hospital.get("postpartum_visit_pct"))}
+        {_metric("Well-baby visit", hospital.get("well_baby_visit_pct"))}
       </div>
 
       {_email_variants(email)}
@@ -212,7 +189,7 @@ def _render_html(hospitals: list[dict[str, Any]], emails: list[dict[str, Any]]) 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ECHO Dashboard</title>
+  <title>Fourth Dashboard</title>
   <style>
     :root {{
       --bg: #f6f7f9;
@@ -425,40 +402,6 @@ def _render_html(hospitals: list[dict[str, Any]], emails: list[dict[str, Any]]) 
       white-space: nowrap;
     }}
     .email-role {{ color: var(--muted); }}
-    .variant-tabs {{
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 10px;
-    }}
-    .variant-tab {{
-      appearance: none;
-      background: #f8fafc;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      color: var(--ink);
-      cursor: pointer;
-      font: inherit;
-      padding: 11px;
-      text-align: left;
-    }}
-    .variant-tab:hover,
-    .variant-tab.active {{
-      background: #0b1220;
-      border-color: #0b1220;
-      color: white;
-    }}
-    .variant-tab span,
-    .variant-tab small {{
-      display: block;
-    }}
-    .variant-tab span {{ font-weight: 800; }}
-    .variant-tab small {{
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 2px;
-    }}
-    .variant-tab.active small {{ color: #cbd5e1; }}
     .variant-stage {{
       border: 1px solid var(--line);
       border-radius: 12px;
@@ -491,7 +434,6 @@ def _render_html(hospitals: list[dict[str, Any]], emails: list[dict[str, Any]]) 
       .dashboard-grid {{ grid-template-columns: 1fr; }}
       .account-list {{ position: static; }}
       .metrics {{ grid-template-columns: 1fr; }}
-      .variant-tabs {{ grid-template-columns: 1fr; }}
       .score-block {{ margin-top: 12px; }}
     }}
   </style>
@@ -500,7 +442,7 @@ def _render_html(hospitals: list[dict[str, Any]], emails: list[dict[str, Any]]) 
   <main class="shell">
     <header class="topbar">
       <div>
-        <div class="eyebrow">ECHO / Human Review Dashboard</div>
+        <div class="eyebrow">Fourth / Human Review Dashboard</div>
         <h1>Today's Critical Accounts</h1>
         <p>Ranked by commitment-outcome mismatch using schema v0.2 fields.</p>
       </div>
@@ -529,24 +471,9 @@ def _render_html(hospitals: list[dict[str, Any]], emails: list[dict[str, Any]]) 
       }});
     }}
 
-    function selectVariant(card, variantName) {{
-      card.querySelectorAll(".variant-tab").forEach(function(tab) {{
-        tab.classList.toggle("active", tab.dataset.variant === variantName);
-      }});
-      card.querySelectorAll(".variant-content").forEach(function(panel) {{
-        panel.classList.toggle("active", panel.dataset.variantPanel === variantName);
-      }});
-    }}
-
     document.querySelectorAll(".account-row").forEach(function(row) {{
       row.addEventListener("click", function() {{
         selectHospital(row.dataset.target);
-      }});
-    }});
-
-    document.querySelectorAll(".variant-tab").forEach(function(tab) {{
-      tab.addEventListener("click", function() {{
-        selectVariant(tab.closest(".hospital-card"), tab.dataset.variant);
       }});
     }});
   </script>
@@ -558,7 +485,7 @@ def _render_html(hospitals: list[dict[str, Any]], emails: list[dict[str, Any]]) 
 def generate_dashboard(
     hospitals: list[dict[str, Any]],
     emails: list[dict[str, Any]],
-    output_path: str | Path = "dashboard/echo_dashboard.html",
+    output_path: str | Path = "dashboard/fourth_dashboard.html",
 ) -> Path:
     """Write a self-contained HTML dashboard and return the output path."""
     path = Path(output_path)

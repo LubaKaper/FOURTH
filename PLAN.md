@@ -22,6 +22,8 @@ CMS Birthing-Friendly commitment
 
 v1 uses local data files in `data/` for demo reliability. Do not build live scraping or rely on live API calls in the core pipeline. v1 uses OpenRouter for email generation with cached fallback. Anthropic is v2 only.
 
+The concrete seller context is **NurtureBridge Health**, which sells **Postpartum Handoff Navigation** to hospitals. Outbound should use that service context while keeping hospital-specific claims limited to ECHO's schema fields and source files.
+
 ## Source Of Truth
 
 Read in this order before implementation:
@@ -73,15 +75,15 @@ Valid v1 `generation_method` values:
 
 ## Ownership
 
-| Owner | Files | Responsibility |
-|---|---|---|
-| Jonel | `src/commitment_ingester.py`, `src/outcome_scorer.py`, `tests/test_commitment_ingester.py`, `tests/test_outcome_scorer.py` | Data layer |
-| Luba | `tests/fixtures.py`, `src/gap_calculator.py`, `src/urgency_ranker.py`, `tests/test_gap_calculator.py`, `tests/test_urgency_ranker.py` | Fixtures, scoring, ranking |
-| Paula | `src/outbound_generator.py`, `src/human_checkpoint.py`, `tests/test_outbound_generator.py`, `tests/test_human_checkpoint.py`, `data/email_cache.json` | Email generation and human review |
-| Luba | `src/dashboard_generator.py`, `tests/test_dashboard_generator.py`, `dashboard/echo_dashboard.html` | Static HTML dashboard |
-| Team | `src/agent.py`, `tests/test_pipeline.py` | End-to-end integration |
+This is now Luba's standalone repo. Historical owner names in older task headings are origin/history only.
 
-Do not edit another owner's files without flagging the reason.
+| Files | Responsibility |
+|---|---|
+| `src/commitment_ingester.py`, `src/outcome_scorer.py`, `tests/test_commitment_ingester.py`, `tests/test_outcome_scorer.py` | Data layer |
+| `tests/fixtures.py`, `src/gap_calculator.py`, `src/urgency_ranker.py`, `tests/test_gap_calculator.py`, `tests/test_urgency_ranker.py` | Fixtures, scoring, ranking |
+| `src/outbound_generator.py`, `src/human_checkpoint.py`, `tests/test_outbound_generator.py`, `tests/test_human_checkpoint.py`, `data/email_cache.json` | Email generation and human review |
+| `src/dashboard_generator.py`, `tests/test_dashboard_generator.py`, `dashboard/echo_dashboard.html` | Static HTML dashboard |
+| `src/agent.py`, `tests/test_pipeline.py` | End-to-end integration |
 
 ## Build Order
 
@@ -322,8 +324,8 @@ Test requirements:
 - `commitment_tag` is `None`.
 - A hospital with one null HCAHPS star but the other present is still high-confidence and eligible for OpenRouter email generation. The lead angle cascade uses the available star; if no severe star rule matches, it falls through to `state_strength_vs_hospital_lag`.
 - Financial variant uses state-level Medicaid context, not `medicaid_pct`.
-- No body contains hardcoded vendor names.
-- Bodies include `[COMPANY_NAME]` and `[SOCIAL_PROOF]` placeholders.
+- Bodies use the NurtureBridge Health / Postpartum Handoff Navigation seller context.
+- Bodies do not invent social proof, customer names, financial impact, clinical recommendations, or outcomes beyond ECHO-provided facts.
 - `urgency_tier` is copied from the hospital dict.
 
 Run:
@@ -350,7 +352,7 @@ Acceptance criteria:
 - Sets `generation_method` truthfully.
 - Skips low-confidence hospitals entirely.
 - Falls back to cached templates only on API failure or missing `commitment_tag`.
-- Generates three grounded variants per included hospital.
+- Generates three grounded variants per included hospital using NurtureBridge Health and Postpartum Handoff Navigation context.
 - Does not send email.
 
 Run:
@@ -492,6 +494,7 @@ Acceptance criteria:
 - Displays the human checkpoint.
 - Generates the static dashboard when dashboard dependencies are available.
 - Does not send email.
+- Automated sending remains out of scope until prompt reliability, claim validation, source grounding, safety checks, approvals, suppressions, throttling, audit logs, and send controls exist.
 
 Run:
 
