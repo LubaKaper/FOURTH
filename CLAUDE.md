@@ -4,7 +4,7 @@
 - **Name:** Fourth — Account Intelligence for Maternal Health GTM
 - **One-liner:** Finds CMS Birthing-Friendly hospitals with postpartum outcome gaps, ranks priority accounts, and drafts Babyscripts outbound for GTM review.
 - **Stack:** Python 3, pytest, static HTML dashboard, OpenRouter API, CMS/public CSV data.
-- **Deployment:** Local CLI/static dashboard for now. No production send path.
+- **Deployment:** Local CLI/static dashboard. Production send path built — requires SMTP env vars. Use `--send` flag to activate.
 - **Repo:** ECHO-standalone.
 - **Branch strategy:** Feature branches only. Never merge to main until complete.
 - **Branch naming:** `phase-N/short-description` when working in phases.
@@ -21,14 +21,19 @@
 Claude reads ONLY the files it needs. Update this index as files are added.
 ```text
 src/
-├── agent.py                 — Pipeline orchestrator
+├── agent.py                 — Pipeline orchestrator (--send flag for production mode)
 ├── commitment_ingester.py   — Loads Birthing-Friendly hospitals and matches CCNs
 ├── outcome_scorer.py        — Adds outcome/context fields from CMS/public CSVs
 ├── gap_calculator.py        — Calculates ADR Gap Score layers 1-2
 ├── urgency_ranker.py        — Adds urgency context and final tier
 ├── account_selector.py      — Selects ranked accounts for outbound
-├── outbound_generator.py    — Builds pending-review Babyscripts email objects
-├── human_checkpoint.py      — Prints review checkpoint; Fourth does not send
+├── outbound_generator.py    — Builds Babyscripts email objects with claim validation
+├── approvals.py             — Auto-approve gate (gap>=70, high confidence, passed validation)
+├── send_gate.py             — Final enforcement before mailer; raises on contract violations
+├── mailer.py                — SMTP delivery via smtplib; dry_run=True safe for review mode
+├── audit_logger.py          — Append-only send_log.csv; body_hash for integrity
+├── dedup.py                 — 30-day cooldown gate using audit log
+├── human_checkpoint.py      — Prints review checkpoint
 ├── dashboard_generator.py   — Writes static review dashboard
 ├── constants.py             — Shared constants and benchmarks
 └── name_matching.py         — Hospital name normalization/matching helpers
@@ -44,9 +49,15 @@ tests/
 ├── test_urgency_ranker.py
 ├── test_account_selector.py
 ├── test_outbound_generator.py
+├── test_approvals.py
+├── test_send_gate.py
+├── test_mailer.py
+├── test_audit_logger.py
+├── test_dedup.py
+├── test_send_mode.py
 ├── test_human_checkpoint.py
 ├── test_dashboard_generator.py
-└── test_pipeline.py
+└── test_pipeline.py         — Handoff contracts + Phase 3 integration tests
 ```
 
 **Docs/data:**
@@ -68,8 +79,14 @@ python3 -m venv .venv                         # Create local virtualenv
 .venv/bin/pip install -r requirements.txt     # Install dependencies
 .venv/bin/python -m pytest tests/ -v          # Full test suite
 .venv/bin/python -m pytest tests/test_name.py -v # Focused test file
-.venv/bin/python src/agent.py NY              # Run full NY pipeline
+.venv/bin/python src/agent.py NY              # Run full NY pipeline (review mode)
+.venv/bin/python src/agent.py NY --send       # Production send mode (requires SMTP env vars)
 open dashboard/fourth_dashboard.html          # Open generated dashboard locally
+```
+
+**SMTP env vars required for `--send`:**
+```bash
+SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM_EMAIL, SMTP_TO_EMAIL
 ```
 
 ## 5. Coding Conventions
@@ -98,7 +115,7 @@ open dashboard/fourth_dashboard.html          # Open generated dashboard locally
 - Do not invent hospital-specific claims.
 - OpenRouter may generate `email_body` only; deterministic code owns all other ADR contract fields.
 - `generation_method` is log/internal trace only, not part of the ADR email object and not part of `SCHEMA.md`.
-- Fourth does not send email.
+- Fourth sends email only via `--send` flag with valid SMTP credentials. Review mode never calls the mailer.
 
 ### Git
 - Commit messages: `type(scope): description` (e.g., `fix(outbound): restore openrouter generation`).
@@ -120,9 +137,9 @@ Each project is built in numbered phases. A phase is not complete until:
 ### Phases for This Project
 | Phase | Goal | Status |
 |-------|------|--------|
-| 1 | ADR/schema migration for Fourth and Babyscripts GTM context | In progress |
-| 2 | Prompt reliability, claim validation, source grounding, safety checks | In progress |
-| 3 | Send controls and automation readiness | Not started |
+| 1 | ADR/schema migration for Fourth and Babyscripts GTM context | ✅ Complete |
+| 2 | Prompt reliability, claim validation, source grounding, safety checks | ✅ Complete |
+| 3 | Send controls and automation readiness | ✅ Complete |
 
 > Add/remove phases as the project evolves.
 
