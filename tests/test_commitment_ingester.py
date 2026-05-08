@@ -3,7 +3,7 @@ Tests for Tool 1 — commitment_ingester.
 
 Runs against the real CSVs in data/. A module-scoped fixture invokes
 get_hospital_commitments() once; individual tests assert shape, types,
-and v1 default values per SCHEMA.md.
+and ADR-backed identity/commitment values per SCHEMA.md.
 """
 
 import os
@@ -33,26 +33,18 @@ TOOL_1_KEYS = {
     "commitment_year",
 }
 
-REMOVED_V01_FIELDS = {
-    "hcahps_discharge_score",
-    "hcahps_discharge_national_avg",
-    "hcahps_care_transition_score",
-    "state_postpartum_care_pct",
-    "state_avg_postpartum_pct",
-    "compared_to_national",
-    "severe_morbidity_rate",
+OUTCOME_FIELDS_NOT_IN_TOOL_1 = {
     "postpartum_visit_pct",
     "well_baby_visit_pct",
-    "maternal_quality_score",
+    "state_postpartum_avg",
+    "smm_rate",
+    "hcahps_care_transition_star",
+    "hcahps_overall_star",
     "readmission_penalty",
-    "excess_readmission_ratio",
-    "medicaid_pct",
-    "care_transition_score",
-    "has_commitment",
-    "hospital_type",
-    "hospital_ownership",
-    "state_mortality_rate",
     "state_mortality_rank",
+    "racial_disparity_flag",
+    "medicaid_extended",
+    "mmsm_participant",
 }
 
 V1_COMMITMENT_TAG = "Earned the CMS Birthing-Friendly designation"
@@ -132,10 +124,10 @@ def test_county_is_populated(hospitals):
         assert c.strip(), f"{h['facility_id']} has empty county"
 
 
-def test_no_v01_removed_fields(hospitals):
+def test_tool_1_does_not_add_outcome_fields(hospitals):
     for h in hospitals:
-        leaked = REMOVED_V01_FIELDS & set(h.keys())
-        assert not leaked, f"{h['facility_id']} has removed v0.1 fields: {leaked}"
+        leaked = OUTCOME_FIELDS_NOT_IN_TOOL_1 & set(h.keys())
+        assert not leaked, f"{h['facility_id']} has outcome fields too early: {leaked}"
 
 
 def test_non_ny_state_returns_empty_list():

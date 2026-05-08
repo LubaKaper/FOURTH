@@ -1,7 +1,7 @@
 """
-urgency_ranker.py - Tool 4 | Owner: Luba
+urgency_ranker.py - Tool 4
 
-Adds v0.2 urgency context and finalizes gap_score to 0-100.
+Adds ADR urgency context and finalizes gap_score to 0-100.
 """
 
 from typing import Any
@@ -31,10 +31,12 @@ def _add_urgency_context_fields(hospital: dict[str, Any]) -> None:
 
 def _urgency_context_points(hospital: dict[str, Any]) -> int:
     points = 0
-    if hospital.get("medicaid_extended"):
+    if hospital.get("state_mortality_rank") == "bottom_quartile":
         points += 10
     if hospital.get("racial_disparity_flag"):
-        points += 15
+        points += 8
+    if hospital.get("medicaid_extended"):
+        points += 7
     return min(points, 25)
 
 

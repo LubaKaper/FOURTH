@@ -17,14 +17,16 @@ def _finalized(fixture: dict) -> dict:
 def _email(facility_id: str, urgency_tier: str, lead_angle: str) -> dict:
     return {
         "facility_id": facility_id,
+        "facility_name": f"Hospital {facility_id}",
+        "recipient_role": "VP Patient Experience",
         "subject": "Close the postpartum follow-up gap",
-        "to_role": "VP of Women's Services",
-        "body_moral": "Moral variant for human review.",
-        "body_clinical": "Clinical variant for human review.",
-        "body_financial": "Financial variant for human review.",
-        "lead_angle_used": lead_angle,
+        "email_body": "Babyscripts email body for human review.",
+        "product": "Babyscripts",
+        "lead_angle": lead_angle,
+        "gap_score": 75.0,
         "urgency_tier": urgency_tier,
-        "generation_method": "openrouter_api",
+        "sent_at": None,
+        "status": "pending_review",
     }
 
 
@@ -86,15 +88,14 @@ def test_dashboard_has_clickable_hospital_navigation(tmp_path):
     assert "function selectHospital" in html
 
 
-def test_dashboard_shows_low_confidence_as_data_unavailable(tmp_path):
+def test_dashboard_excludes_low_confidence_low_tier_accounts(tmp_path):
     hospitals, emails = _dashboard_inputs()
     output_path = tmp_path / "echo_dashboard.html"
 
     generate_dashboard(hospitals, emails, output_path)
     html = output_path.read_text(encoding="utf-8")
 
-    assert "Test Null Data Hospital" in html
-    assert "data unavailable" in html
+    assert "Test Null Data Hospital" not in html
 
 
 def test_dashboard_displays_required_hospital_fields(tmp_path):
@@ -112,31 +113,28 @@ def test_dashboard_displays_required_hospital_fields(tmp_path):
     assert "Earned the CMS Birthing-Friendly designation" in html
 
 
-def test_dashboard_displays_all_email_variants_and_generation_method(tmp_path):
+def test_dashboard_displays_email_body_and_status(tmp_path):
     hospitals, emails = _dashboard_inputs()
     output_path = tmp_path / "echo_dashboard.html"
 
     generate_dashboard(hospitals, emails, output_path)
     html = output_path.read_text(encoding="utf-8")
 
-    assert "Moral variant for human review." in html
-    assert "Clinical variant for human review." in html
-    assert "Financial variant for human review." in html
-    assert "openrouter_api" in html
+    assert "Babyscripts email body for human review." in html
+    assert "Babyscripts" in html
+    assert "pending_review" in html
 
 
-def test_dashboard_uses_email_variant_tabs(tmp_path):
+def test_dashboard_uses_single_pending_review_email_panel(tmp_path):
     hospitals, emails = _dashboard_inputs()
     output_path = tmp_path / "echo_dashboard.html"
 
     generate_dashboard(hospitals, emails, output_path)
     html = output_path.read_text(encoding="utf-8")
 
-    assert '<button class="variant-tab active" data-variant="moral">' in html
-    assert '<button class="variant-tab" data-variant="clinical">' in html
-    assert '<button class="variant-tab" data-variant="financial">' in html
-    assert 'class="variant-content active" data-variant-panel="moral"' in html
-    assert "function selectVariant" in html
+    assert "Email review workspace" in html
+    assert "Recommended contact: VP Patient Experience" in html
+    assert '<button class="variant-tab' not in html
 
 
 def test_dashboard_states_human_must_review_and_send(tmp_path):

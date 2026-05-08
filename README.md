@@ -1,8 +1,8 @@
-# ECHO - Early Care Handoff Observer
+# Fourth - Account Intelligence for Maternal Health GTM
 
-ECHO is a GTM intelligence agent for **NurtureBridge Health**, a fictional postpartum health company selling **Postpartum Handoff Navigation** to hospitals. It finds CMS Birthing-Friendly hospitals whose HCAHPS patient experience lags behind their state's postpartum visit strength, then drafts grounded outreach for a human to review and send.
+Fourth is a GTM intelligence agent built for maternal health software companies like Babyscripts. It finds CMS Birthing-Friendly hospitals whose postpartum outcome scores lag behind their public commitments, then drafts personalized outbound for a GTM Engineer to review and send. Babyscripts' GTM Engineer is the end user. Hospitals are the sales targets.
 
-NurtureBridge's service helps maternity teams manage the discharge-to-postpartum transition with a shared follow-up work queue, patient check-ins, escalation routing, and visit-readiness tracking.
+Babyscripts' remote postpartum monitoring service includes BP monitoring kits, a mobile app, OB-specialized care managers, and RPM CPT billing support.
 
 ```text
 NY achieves 82.4% postpartum visit completion.
@@ -11,15 +11,15 @@ This Birthing-Friendly hospital scores 1 star on HCAHPS discharge information.
 
 ## What It Does
 
-ECHO gives a NurtureBridge GTM Engineer today's top 10 high-confidence accounts and three outreach variants per account.
+Fourth gives a Babyscripts GTM Engineer today's top 10 high-confidence accounts and three outreach variants per account.
 
 The human stays in control:
 
-- ECHO ranks accounts.
-- ECHO explains the mismatch.
-- ECHO drafts outreach.
+- Fourth ranks accounts.
+- Fourth explains the mismatch.
+- Fourth drafts outreach.
 - The GTM Engineer reviews, edits, copies, and sends.
-- ECHO never sends email automatically.
+- Fourth never sends email automatically.
 
 ## v1 Scope
 
@@ -82,13 +82,13 @@ Removed v0.1 fields such as `compared_to_national`, `postpartum_visit_pct`, `sev
 v1 includes a static HTML dashboard generated from hospital dicts and email objects. It is a visual review surface, not a web app:
 
 - No server, auth, CRM integration, or email sending.
-- Generated output: `dashboard/echo_dashboard.html`.
+- Generated output: `dashboard/fourth_dashboard.html`.
 - Mockup reference: `docs/mockups/echo-dashboard-mockup.html`.
 - The GTM Engineer reviews email variants, then copies/sends from their own tool.
 
 ## Standalone Ownership
 
-This is Luba's standalone continuation of ECHO. Historical docs and comments may mention the original class team, but current ownership for all files is Luba.
+This is Luba's standalone continuation of Fourth. Historical docs and comments may mention the original class team, but current ownership for all files is Luba.
 
 ## Setup
 

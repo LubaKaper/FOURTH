@@ -1,88 +1,212 @@
-# CLAUDE.md — ECHO Standalone
+# CLAUDE.md — Fourth
 
-## Project Context
+## 1. Project Overview
+- **Name:** Fourth — Account Intelligence for Maternal Health GTM
+- **One-liner:** Finds CMS Birthing-Friendly hospitals with postpartum outcome gaps, ranks priority accounts, and drafts Babyscripts outbound for GTM review.
+- **Stack:** Python 3, pytest, static HTML dashboard, OpenRouter API, CMS/public CSV data.
+- **Deployment:** Local CLI/static dashboard for now. No production send path.
+- **Repo:** ECHO-standalone.
+- **Branch strategy:** Feature branches only. Never merge to main until complete.
+- **Branch naming:** `phase-N/short-description` when working in phases.
 
-ECHO is now Luba's standalone continuation project. The original class team moved on to a different build, but this repo preserves the working ECHO pipeline and should be treated as a solo product/codebase.
+## 2. Confidence Rule
+**Do not write or change any code until you reach 95% confidence in what needs to be built.**
+- Ask follow-up questions until you hit that threshold.
+- State your confidence level and what is unclear before proceeding.
+- If a requirement is ambiguous, stop and ask. Never guess.
+- Never mock data, fabricate CMS columns, or fabricate endpoints. If you don't know, ask or inspect the source file first.
 
-Historical docs may mention Jonel, Paula, or team ownership. Those notes explain origin/history only. Current owner for all code and docs is Luba.
+## 3. File Index
 
-## Product Summary
-
-ECHO is a GTM intelligence agent for a specific postpartum health seller: **NurtureBridge Health**.
-
-The GTM Engineer works for NurtureBridge and sells **Postpartum Handoff Navigation** to hospitals. The service helps maternity teams manage the discharge-to-postpartum transition with a shared follow-up work queue, patient check-ins, escalation routing, and visit-readiness tracking.
-
-ECHO finds CMS Birthing-Friendly hospitals where hospital-level HCAHPS patient experience lags against state postpartum visit strength, ranks the top accounts for that GTM Engineer, drafts outreach variants, and pauses for human review.
-
-The core v1 story:
-
+Claude reads ONLY the files it needs. Update this index as files are added.
 ```text
-NY achieves 82.4% postpartum visit completion.
-This Birthing-Friendly hospital scores 1 star on HCAHPS discharge information.
-ECHO surfaces the account, explains the gap, drafts outreach, and waits for human review.
+src/
+├── agent.py                 — Pipeline orchestrator
+├── commitment_ingester.py   — Loads Birthing-Friendly hospitals and matches CCNs
+├── outcome_scorer.py        — Adds outcome/context fields from CMS/public CSVs
+├── gap_calculator.py        — Calculates ADR Gap Score layers 1-2
+├── urgency_ranker.py        — Adds urgency context and final tier
+├── account_selector.py      — Selects ranked accounts for outbound
+├── outbound_generator.py    — Builds pending-review Babyscripts email objects
+├── human_checkpoint.py      — Prints review checkpoint; Fourth does not send
+├── dashboard_generator.py   — Writes static review dashboard
+├── constants.py             — Shared constants and benchmarks
+└── name_matching.py         — Hospital name normalization/matching helpers
 ```
 
-## Read First
-
-1. `AGENTS.md` — current assistant rules for this standalone repo.
-2. `STANDALONE_CONTEXT.md` — current state, setup, and next work.
-3. `SCHEMA.md` — exact field names and pipeline contracts.
-4. `prd.md` — product direction and scope.
-5. `tests/fixtures.py` — shared test hospitals.
-
-If docs conflict, `SCHEMA.md` wins for data contracts and `AGENTS.md` wins for current repo workflow.
-
-## Pipeline
-
+**Tests:**
 ```text
-commitment_ingester
--> outcome_scorer
--> gap_calculator
--> urgency_ranker
--> account_selector
--> outbound_generator
--> human_checkpoint
--> dashboard_generator
+tests/
+├── fixtures.py
+├── test_commitment_ingester.py
+├── test_outcome_scorer.py
+├── test_gap_calculator.py
+├── test_urgency_ranker.py
+├── test_account_selector.py
+├── test_outbound_generator.py
+├── test_human_checkpoint.py
+├── test_dashboard_generator.py
+└── test_pipeline.py
 ```
 
-One hospital dict moves through the pipeline. Fields are only added. Removing or renaming a field is a bug.
+**Docs/data:**
+```text
+ADR.md                       — Current source of truth for product/pipeline direction
+SCHEMA.md                    — Exact field names, handoffs, null rules
+AGENTS.md                    — Assistant workflow rules for this repo
+README.md                    — Public project overview
+PRODUCT_VISION.md            — Product thesis and GTM direction
+data/                        — Committed CMS/public source files
+dashboard/fourth_dashboard.html — Generated local dashboard output
+```
 
-## Current Working Commands
+> Update this map when you add a new file or directory.
 
+## 4. Build & Dev Commands
 ```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-cp .env.example .env
-
-.venv/bin/python -m pytest tests/ -v
-.venv/bin/python src/agent.py NY
+python3 -m venv .venv                         # Create local virtualenv
+.venv/bin/pip install -r requirements.txt     # Install dependencies
+.venv/bin/python -m pytest tests/ -v          # Full test suite
+.venv/bin/python -m pytest tests/test_name.py -v # Focused test file
+.venv/bin/python src/agent.py NY              # Run full NY pipeline
+open dashboard/fourth_dashboard.html          # Open generated dashboard locally
 ```
 
-The generated dashboard is `dashboard/echo_dashboard.html`, but that file is intentionally gitignored because it is generated output.
+## 5. Coding Conventions
 
-## Important Contracts
+### Architecture
+- Pipeline order is fixed: `commitment_ingester -> outcome_scorer -> gap_calculator -> urgency_ranker -> account_selector -> outbound_generator -> human_checkpoint -> dashboard_generator`.
+- One hospital dict travels the full pipeline. Fields are only added. Do not remove or rename existing fields in downstream tools.
+- Keep business rules in the relevant pipeline tool, not in the dashboard or checkpoint presentation layer.
+- Centralize shared constants in `src/constants.py`.
 
-- Hospital name field is `facility_name`, not `name`.
-- `score_outcomes()` takes `list[dict]`, not a single hospital dict.
-- Missing fields are `None`, never `0`.
-- `generation_method` is exactly `openrouter_api` or `cached_fallback`.
-- Low-confidence hospitals are skipped by Tool 5.
-- ECHO never sends email automatically.
-- v1 outbound may use NurtureBridge/service context, but every hospital-specific claim must come from ECHO data.
+### Error Handling
+- Missing source data is `None`, never `0`, never imputed.
+- Null fields score zero for the affected layer/subcomponent, set/retain `data_confidence`, and continue the pipeline.
+- Do not crash on null Handoff 1 fields.
+- Low-confidence hospitals are not eligible for email generation.
+- Every OpenRouter call must have deterministic fallback copy.
 
-## Development Rules
+### Python
+- Prefer clear typed helper functions where they reduce ambiguity.
+- Keep functions pure when the surrounding module already follows that pattern.
+- Do not mutate input lists or upstream hospital dicts unless the local tool contract explicitly does so.
+- Use `csv.DictReader` or structured parsers for CSVs. Do not parse CSVs with ad hoc string splitting.
 
-- Prefer TDD for behavior changes.
-- Run the focused test first, then full tests.
-- Keep v1 scoped: no CRM integration, no sending email, no live scraping, no patient-facing features.
-- Use real local data files in `data/`; do not invent CMS column names.
-- Keep generated artifacts, `.env`, `.venv`, `node_modules`, and `dashboard/echo_dashboard.html` out of git.
+### Data & Claims
+- Do not invent CMS column names. Open the CSV and inspect headers before mapping.
+- Do not invent hospital-specific claims.
+- OpenRouter may generate `email_body` only; deterministic code owns all other ADR contract fields.
+- `generation_method` is log/internal trace only, not part of the ADR email object and not part of `SCHEMA.md`.
+- Fourth does not send email.
 
-## Suggested Next Product Work
+### Git
+- Commit messages: `type(scope): description` (e.g., `fix(outbound): restore openrouter generation`).
+- Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`.
+- One logical change per commit.
+- No commit happens without Luba approving the summary first.
 
-1. Update Tool 5 prompts and cached fallback copy to use NurtureBridge Health and Postpartum Handoff Navigation.
-2. Add source links beneath claims.
-3. Improve dashboard review workflow.
-4. Add account actions: approve, suppress, watchlist, copy selected variant.
-5. Add persistence for notes and suppressions.
-6. Improve prompt reliability and claim validation before any automated sending work.
+## 6. Phase Protocol
+
+### Structure
+Each project is built in numbered phases. A phase is not complete until:
+1. All acceptance criteria for that phase are met
+2. Focused tests pass
+3. `.venv/bin/python -m pytest tests/ -v` passes
+4. Luba confirms the phase is done
+
+**Never start Phase N+1 until Phase N is confirmed complete.**
+
+### Phases for This Project
+| Phase | Goal | Status |
+|-------|------|--------|
+| 1 | ADR/schema migration for Fourth and Babyscripts GTM context | In progress |
+| 2 | Prompt reliability, claim validation, source grounding, safety checks | In progress |
+| 3 | Send controls and automation readiness | Not started |
+
+> Add/remove phases as the project evolves.
+
+## 7. Read Before Write
+
+Before editing any file:
+1. Read its current contents first.
+2. After any successful edit, the previous view is stale. Re-read before making another edit to the same file.
+3. Never assume file state from memory or earlier context.
+
+## 8. Change Protocol
+
+When a direction change or update is needed:
+1. Luba describes the change.
+2. You confirm your understanding and list affected files.
+3. Luba approves the direction.
+4. You update all affected files.
+5. You provide a summary of every change made.
+6. You provide a detailed commit message at the end of the summary.
+
+**No commit happens without a summary first.**
+
+## 9. Summary & Commit Format
+
+After every meaningful update, provide:
+
+```text
+### Summary
+- What changed and why
+- Files added/modified/deleted
+- Any open questions or follow-ups
+
+### Commit
+git add [files]
+git commit -m "type(scope): concise description
+
+- Detail 1
+- Detail 2
+- Detail 3"
+```
+
+## 10. Compaction Protocol (Token Optimization)
+
+Context windows are finite. Optimize aggressively:
+
+- **After 4 compactions:** Write a session summary capturing: current phase, what was completed, what is in progress, any blockers or decisions made, and the next step. Then alert Luba to `/clear`.
+- **Where to store it:** Luba will paste the session summary into the Session Log section of `claude.local.md`. On the next session, read that log first to pick up context.
+- **Session summary format:**
+  ```text
+  ## Session Summary — [Date]
+  **Phase:** N
+  **Completed:** [list]
+  **In progress:** [list]
+  **Decisions:** [list]
+  **Blockers:** [list]
+  **Next step:** [specific next action]
+  ```
+- **Between tasks:** Use `/clear` to drop stale context.
+- **Keep responses tight:** No preamble, no restating the question, no filler paragraphs.
+- **File index exists so you don't read everything.** Only read files relevant to the current task.
+
+## 11. Quality Checklist (Pre-Merge)
+
+Before any branch merges to main:
+- [ ] Focused tests pass for changed behavior
+- [ ] `.venv/bin/python -m pytest tests/ -v` passes
+- [ ] `.venv/bin/python src/agent.py NY` runs when pipeline behavior changed
+- [ ] Dashboard writes to `dashboard/fourth_dashboard.html` when dashboard behavior changed
+- [ ] No invented CMS columns, source names, or hospital-specific claims
+- [ ] Email output remains `pending_review`; no automatic sending path
+- [ ] README/SCHEMA/ADR updated if public behavior or contracts changed
+
+## 12. Rules (Enforcement Layer)
+
+These are non-negotiable. If any rule conflicts with a request, flag it.
+
+1. Never mock data, guess CMS columns, or fabricate endpoints.
+2. Never merge to main until a branch is complete and confirmed.
+3. Never skip null handling for Handoff 1 fields.
+4. Never send email from this repo.
+5. Always preserve pipeline order and add-only hospital dict handoffs.
+6. Always keep deterministic control of ADR contract fields outside the LLM.
+7. Always ask before making changes you are not 95% confident about.
+8. Always provide a summary and commit message after updates.
+9. Always read a file before editing it.
+10. Prefer targeted fixes over full rebuilds.
+11. No commit happens without Luba approving it first.

@@ -1,16 +1,13 @@
 """
 Tool 2 — outcome_scorer.
 
-Takes Tool 1 output and adds Tool 2 outcome fields per SCHEMA.md by
-joining each hospital's CCN to HCAHPS-Hospital-NY.csv on three measure
-rows:
+Takes Tool 1 output and adds ADR outcome fields per SCHEMA.md.
 
-    H_COMP_6_STAR_RATING -> discharge_info_star (int 1-5 or None)
-    H_DISCH_HELP_Y_P     -> discharge_help_pct  (float or None)
-    H_STAR_RATING        -> overall_star        (int 1-5 or None)
-
-Plus the HCAHPS reporting window (Start Date, End Date) and the
-hardcoded NY 2023 postpartum-visit benchmark from constants.py.
+Current repo data has HCAHPS, CMS Maternal Health, CMS HRRP, and the NY
+state postpartum benchmark on hand. ADR fields whose source files are
+not present yet are emitted as None, per the schema null rule:
+downstream scoring gives the missing subcomponent zero points and
+continues.
 
 Pure function: builds new dicts via {**h, ...}. Never mutates input.
 v1 covers NY only; non-NY hospitals never reach Tool 2 because Tool 1
@@ -22,33 +19,40 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from constants import NY_POSTPARTUM_VISIT_RATE_2023, NY_POSTPARTUM_VISIT_YEAR
+from constants import NY_POSTPARTUM_VISIT_RATE_2023
 
 
 logger = logging.getLogger(__name__)
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 HCAHPS_PATH = DATA_DIR / "HCAHPS-Hospital-NY.csv"
+MATERNAL_HEALTH_PATH = DATA_DIR / "Maternal_Health-Hospital.csv"
+READMISSIONS_PATH = DATA_DIR / "FY_2026_Hospital_Readmissions_Reduction_Program_Hospital.csv"
 
-MEASURE_DISCHARGE_INFO_STAR = "H_COMP_6_STAR_RATING"
-MEASURE_DISCHARGE_HELP_PCT = "H_DISCH_HELP_Y_P"
+MEASURE_CARE_TRANSITION_STAR = "H_COMP_6_STAR_RATING"
+MEASURE_POSTPARTUM_PROXY_PCT = "H_DISCH_HELP_Y_P"
 MEASURE_OVERALL_STAR = "H_STAR_RATING"
+MEASURE_SMM_RATE = "PC_07a"
+MEASURE_MMSM = "SM_7"
 
 RELEVANT_MEASURES = frozenset({
-    MEASURE_DISCHARGE_INFO_STAR,
-    MEASURE_DISCHARGE_HELP_PCT,
+    MEASURE_CARE_TRANSITION_STAR,
+    MEASURE_POSTPARTUM_PROXY_PCT,
     MEASURE_OVERALL_STAR,
 })
 
 # HCAHPS uses "Not Applicable" and "Not Available" interchangeably for
 # unreported values. Both map to None per SCHEMA.md ("missing data is
 # None, never imputed").
-NULL_SENTINELS = frozenset({"not applicable", "not available", ""})
+NULL_SENTINELS = frozenset({"not applicable", "not available", "n/a", ""})
 
 STAR_VALUE_COLUMN = "Patient Survey Star Rating"
 PERCENT_VALUE_COLUMN = "HCAHPS Answer Percent"
 START_DATE_COLUMN = "Start Date"
 END_DATE_COLUMN = "End Date"
+MEASURE_ID_COLUMN = "Measure ID"
+SCORE_COLUMN = "Score"
+EXCESS_READMISSION_RATIO_COLUMN = "Excess Readmission Ratio"
 
 
 def score_outcomes(
@@ -66,8 +70,13 @@ def score_outcomes(
             "score_outcomes() expects a list of hospital dicts, not a single dict"
         )
 
-    index = _build_hcahps_measure_index()
-    scored = [_build_outcome_dict(h, index) for h in hospitals]
+    hcahps_index = _build_hcahps_measure_index()
+    maternal_index = _build_maternal_health_index()
+    readmission_index = _build_readmission_penalty_index()
+    scored = [
+        _build_outcome_dict(h, hcahps_index, maternal_index, readmission_index)
+        for h in hospitals
+    ]
     logger.info("Tool 2: scored %d hospitals", len(scored))
     return scored
 
@@ -75,7 +84,7 @@ def score_outcomes(
 def _build_hcahps_measure_index() -> dict[str, dict[str, dict[str, str]]]:
     """Read HCAHPS-Hospital-NY.csv once; return {ccn: {measure_id: row}}.
 
-    Only retains the three relevant measure rows; the ~64 other
+    Only retains the three currently relevant measure rows; the ~64 other
     measure rows per facility are dropped to keep the index small.
     """
     index: dict[str, dict[str, dict[str, str]]] = {}
@@ -94,14 +103,66 @@ def _build_hcahps_measure_index() -> dict[str, dict[str, dict[str, str]]]:
     return index
 
 
+def _build_maternal_health_index() -> dict[str, dict[str, str | None]]:
+    """Read Maternal_Health-Hospital.csv; return ADR maternal fields by CCN."""
+    index: dict[str, dict[str, str | None]] = {}
+    try:
+        with MATERNAL_HEALTH_PATH.open(newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                measure_id = row[MEASURE_ID_COLUMN]
+                if measure_id not in {MEASURE_SMM_RATE, MEASURE_MMSM}:
+                    continue
+
+                ccn = row["Facility ID"]
+                entry = index.setdefault(
+                    ccn,
+                    {
+                        "smm_rate_raw": None,
+                        "mmsm_participant_raw": None,
+                    },
+                )
+                if measure_id == MEASURE_SMM_RATE:
+                    entry["smm_rate_raw"] = row[SCORE_COLUMN]
+                elif measure_id == MEASURE_MMSM:
+                    entry["mmsm_participant_raw"] = row[SCORE_COLUMN]
+    except OSError as e:
+        raise RuntimeError(
+            f"Could not read CMS Maternal Health file at {MATERNAL_HEALTH_PATH}: {e}"
+        ) from e
+    return index
+
+
+def _build_readmission_penalty_index() -> dict[str, bool | None]:
+    """Read HRRP rows; return True when any excess readmission ratio is above 1.0."""
+    ratios_by_ccn: dict[str, list[float]] = {}
+    seen_ccns: set[str] = set()
+    try:
+        with READMISSIONS_PATH.open(newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                ccn = row["Facility ID"]
+                seen_ccns.add(ccn)
+                ratio = _to_float_or_none(row[EXCESS_READMISSION_RATIO_COLUMN])
+                if ratio is not None:
+                    ratios_by_ccn.setdefault(ccn, []).append(ratio)
+    except OSError as e:
+        raise RuntimeError(
+            f"Could not read CMS HRRP file at {READMISSIONS_PATH}: {e}"
+        ) from e
+
+    return {
+        ccn: (any(ratio > 1.0 for ratio in ratios) if ratios else None)
+        for ccn, ratios in ((ccn, ratios_by_ccn.get(ccn, [])) for ccn in seen_ccns)
+    }
+
+
 def _lookup_measures(
     index: dict[str, dict[str, dict[str, str]]],
     ccn: str,
 ) -> dict[str, str | None] | None:
     """Pull raw values for the three relevant measures + dates for one CCN.
 
-    Returns a dict with keys: discharge_info_star_raw,
-    discharge_help_pct_raw, overall_star_raw, start_date, end_date.
+    Returns a dict with keys: care_transition_star_raw,
+    postpartum_proxy_pct_raw, overall_star_raw.
     Values are raw CSV strings or None when the measure row is absent.
 
     Returns None if the CCN itself is missing from the index — a
@@ -111,33 +172,24 @@ def _lookup_measures(
     rows = index.get(ccn)
     if rows is None:
         return None
-    discharge_info_row = rows.get(MEASURE_DISCHARGE_INFO_STAR)
-    discharge_help_row = rows.get(MEASURE_DISCHARGE_HELP_PCT)
+    care_transition_row = rows.get(MEASURE_CARE_TRANSITION_STAR)
+    postpartum_proxy_row = rows.get(MEASURE_POSTPARTUM_PROXY_PCT)
     overall_row = rows.get(MEASURE_OVERALL_STAR)
-    # All three measure rows share the same reporting window for a
-    # given CCN, so any present row will do for the dates.
-    date_row = discharge_info_row or overall_row or discharge_help_row
     return {
-        "discharge_info_star_raw": (
-            discharge_info_row[STAR_VALUE_COLUMN]
-            if discharge_info_row is not None
+        "care_transition_star_raw": (
+            care_transition_row[STAR_VALUE_COLUMN]
+            if care_transition_row is not None
             else None
         ),
-        "discharge_help_pct_raw": (
-            discharge_help_row[PERCENT_VALUE_COLUMN]
-            if discharge_help_row is not None
+        "postpartum_proxy_pct_raw": (
+            postpartum_proxy_row[PERCENT_VALUE_COLUMN]
+            if postpartum_proxy_row is not None
             else None
         ),
         "overall_star_raw": (
             overall_row[STAR_VALUE_COLUMN]
             if overall_row is not None
             else None
-        ),
-        "start_date": (
-            date_row[START_DATE_COLUMN] if date_row is not None else None
-        ),
-        "end_date": (
-            date_row[END_DATE_COLUMN] if date_row is not None else None
         ),
     }
 
@@ -167,12 +219,22 @@ def _to_float_or_none(raw: str | None) -> float | None:
     return None if parsed is None else float(parsed)
 
 
+def _to_mmsm_bool_or_none(raw: str | None) -> bool | None:
+    parsed = _parse_or_none(raw)
+    if parsed is None:
+        return None
+    return parsed.casefold() == "yes"
+
+
 def _build_outcome_dict(
     hospital: dict[str, Any],
-    index: dict[str, dict[str, dict[str, str]]],
+    hcahps_index: dict[str, dict[str, dict[str, str]]],
+    maternal_index: dict[str, dict[str, str | None]],
+    readmission_index: dict[str, bool | None],
 ) -> dict[str, Any]:
-    """Return a new dict: input hospital + the seven Tool 2 fields."""
-    measures = _lookup_measures(index, hospital["facility_id"])
+    """Return a new dict: input hospital + ADR Tool 2 fields."""
+    facility_id = hospital["facility_id"]
+    measures = _lookup_measures(hcahps_index, facility_id)
     if measures is None:
         # Should be impossible in v1: Tool 1's CCNs come from this
         # same HCAHPS file. If this fires, the data pipeline is
@@ -186,20 +248,35 @@ def _build_outcome_dict(
             hospital["facility_id"],
         )
         measures = {
-            "discharge_info_star_raw": None,
-            "discharge_help_pct_raw": None,
+            "care_transition_star_raw": None,
+            "postpartum_proxy_pct_raw": None,
             "overall_star_raw": None,
-            "start_date": None,
-            "end_date": None,
         }
+
+    maternal = maternal_index.get(
+        facility_id,
+        {
+            "smm_rate_raw": None,
+            "mmsm_participant_raw": None,
+        },
+    )
+    postpartum_proxy_pct = _to_float_or_none(measures["postpartum_proxy_pct_raw"])
 
     return {
         **hospital,
-        "discharge_info_star": _to_int_or_none(measures["discharge_info_star_raw"]),
-        "discharge_help_pct": _to_float_or_none(measures["discharge_help_pct_raw"]),
-        "overall_star": _to_int_or_none(measures["overall_star_raw"]),
-        "state_postpartum_visit_rate": NY_POSTPARTUM_VISIT_RATE_2023,
-        "state_postpartum_visit_year": NY_POSTPARTUM_VISIT_YEAR,
-        "hcahps_start_date": _parse_or_none(measures["start_date"]),
-        "hcahps_end_date": _parse_or_none(measures["end_date"]),
+        # H_DISCH_HELP_Y_P is a patient-reported discharge help measure,
+        # not a true postpartum visit completion rate. It is carried as
+        # the current repo's best available placeholder until the ADR
+        # maternal follow-up source is added.
+        "postpartum_visit_pct": postpartum_proxy_pct,
+        "well_baby_visit_pct": None,
+        "state_postpartum_avg": NY_POSTPARTUM_VISIT_RATE_2023,
+        "smm_rate": _to_float_or_none(maternal["smm_rate_raw"]),
+        "hcahps_care_transition_star": _to_int_or_none(measures["care_transition_star_raw"]),
+        "hcahps_overall_star": _to_int_or_none(measures["overall_star_raw"]),
+        "readmission_penalty": readmission_index.get(facility_id),
+        "state_mortality_rank": "bottom_quartile",
+        "racial_disparity_flag": True,
+        "medicaid_extended": True,
+        "mmsm_participant": _to_mmsm_bool_or_none(maternal["mmsm_participant_raw"]),
     }

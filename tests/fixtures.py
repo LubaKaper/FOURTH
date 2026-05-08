@@ -1,8 +1,9 @@
 # tests/fixtures.py
 """
-Shared test fixtures for all ECHO tests.
-Import these instead of defining your own test hospitals.
-Every fixture uses SCHEMA.md v0.2 fields.
+Shared test fixtures for Fourth tests.
+
+Import these instead of defining ad hoc hospitals in test files. Fixtures
+match the ADR-backed SCHEMA.md handoff contracts.
 """
 
 BASE_IDENTITY = {
@@ -25,60 +26,68 @@ HIGH_GAP = {
     **BASE_IDENTITY,
     "facility_id": "330101",
     "facility_name": "Test High Gap Hospital",
-    "discharge_info_star": 1,
-    "discharge_help_pct": 62.0,
-    "overall_star": 1,
-    "state_postpartum_visit_rate": 82.4,
-    "state_postpartum_visit_year": 2023,
-    "hcahps_start_date": "04/01/2024",
-    "hcahps_end_date": "03/31/2025",
-    "medicaid_extended": True,
+    "postpartum_visit_pct": 61.0,
+    "well_baby_visit_pct": 94.0,
+    "state_postpartum_avg": 82.4,
+    "smm_rate": 180.0,
+    "hcahps_care_transition_star": 2,
+    "hcahps_overall_star": 2,
+    "readmission_penalty": True,
+    "state_mortality_rank": "bottom_quartile",
     "racial_disparity_flag": True,
+    "medicaid_extended": True,
+    "mmsm_participant": True,
 }
 
 MEDIUM_GAP = {
     **BASE_IDENTITY,
     "facility_id": "330102",
     "facility_name": "Test Medium Gap Hospital",
-    "discharge_info_star": 2,
-    "discharge_help_pct": 70.0,
-    "overall_star": 3,
-    "state_postpartum_visit_rate": 82.4,
-    "state_postpartum_visit_year": 2023,
-    "hcahps_start_date": "04/01/2024",
-    "hcahps_end_date": "03/31/2025",
-    "medicaid_extended": True,
+    "postpartum_visit_pct": 70.0,
+    "well_baby_visit_pct": 74.0,
+    "state_postpartum_avg": 82.4,
+    "smm_rate": None,
+    "hcahps_care_transition_star": 2,
+    "hcahps_overall_star": 3,
+    "readmission_penalty": False,
+    "state_mortality_rank": "middle",
     "racial_disparity_flag": False,
+    "medicaid_extended": True,
+    "mmsm_participant": False,
 }
 
 LOW_GAP = {
     **BASE_IDENTITY,
     "facility_id": "330103",
     "facility_name": "Test Low Gap Hospital",
-    "discharge_info_star": 5,
-    "discharge_help_pct": 91.0,
-    "overall_star": 5,
-    "state_postpartum_visit_rate": 82.4,
-    "state_postpartum_visit_year": 2023,
-    "hcahps_start_date": "04/01/2024",
-    "hcahps_end_date": "03/31/2025",
-    "medicaid_extended": True,
+    "postpartum_visit_pct": 79.0,
+    "well_baby_visit_pct": 81.0,
+    "state_postpartum_avg": 82.4,
+    "smm_rate": None,
+    "hcahps_care_transition_star": 5,
+    "hcahps_overall_star": 5,
+    "readmission_penalty": False,
+    "state_mortality_rank": "middle",
     "racial_disparity_flag": False,
+    "medicaid_extended": False,
+    "mmsm_participant": False,
 }
 
 NULL_DATA = {
     **BASE_IDENTITY,
     "facility_id": "330104",
     "facility_name": "Test Null Data Hospital",
-    "discharge_info_star": None,
-    "discharge_help_pct": None,
-    "overall_star": None,
-    "state_postpartum_visit_rate": 82.4,
-    "state_postpartum_visit_year": 2023,
-    "hcahps_start_date": None,
-    "hcahps_end_date": None,
-    "medicaid_extended": True,
-    "racial_disparity_flag": True,
+    "postpartum_visit_pct": None,
+    "well_baby_visit_pct": None,
+    "state_postpartum_avg": 82.4,
+    "smm_rate": None,
+    "hcahps_care_transition_star": None,
+    "hcahps_overall_star": None,
+    "readmission_penalty": None,
+    "state_mortality_rank": None,
+    "racial_disparity_flag": None,
+    "medicaid_extended": None,
+    "mmsm_participant": None,
 }
 
 NO_COMMITMENT = {
@@ -89,13 +98,15 @@ NO_COMMITMENT = {
     "commitment_tag": None,
     "commitment_source": None,
     "commitment_year": None,
-    "discharge_info_star": 4,
-    "discharge_help_pct": 88.0,
-    "overall_star": 4,
-    "state_postpartum_visit_rate": 82.4,
-    "state_postpartum_visit_year": 2023,
-    "hcahps_start_date": "04/01/2024",
-    "hcahps_end_date": "03/31/2025",
+    "postpartum_visit_pct": 58.0,
+    "well_baby_visit_pct": 92.0,
+    "state_postpartum_avg": 82.4,
+    "smm_rate": 175.0,
+    "hcahps_care_transition_star": 2,
+    "hcahps_overall_star": 2,
+    "readmission_penalty": True,
+    "state_mortality_rank": "bottom_quartile",
+    "racial_disparity_flag": True,
     "medicaid_extended": True,
-    "racial_disparity_flag": False,
+    "mmsm_participant": False,
 }
