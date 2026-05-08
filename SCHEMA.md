@@ -138,7 +138,8 @@ Each hospital dict is enriched with:
 {
   # Maternal / infant follow-up outcomes
   "postpartum_visit_pct":          float | None,  # 0.0-100.0
-  "well_baby_visit_pct":           float | None,  # 0.0-100.0
+  "well_baby_visit_pct":           float | None,  # 0.0-100.0; NY proxy = 91.5 when no hospital-specific source
+  "well_baby_visit_estimated":     bool,           # True when well_baby_visit_pct is a state-level proxy
   "state_postpartum_avg":          float | None,  # State benchmark, 0.0-100.0
 
   # Maternal safety / quality outcomes
@@ -428,6 +429,14 @@ ADR target files:
 | `HCAHPS-Hospital.csv` | HCAHPS care transition / patient experience signals |
 
 Current repo files may remain in use until the migration is implemented. When source files conflict with this schema, update the ADR/schema before code.
+
+### Known Data Gaps — Current CMS Release
+
+**PC_07a (SMM rate) — Not Available for all hospitals.**
+`Maternal_Health-Hospital.csv` contains 4,437 rows for Measure ID `PC_07a` across all states; every row has `Score = "Not Available"`. This is a CMS data release gap, not a mapping error. As a result, `smm_rate` is `None` for all hospitals in the live pipeline, and `smm_rate_gap` is a fixture-only lead angle until an alternate source is added. Roadmap: CDC WONDER v2 API.
+
+**well_baby_visit_pct — No hospital-level CMS source exists.**
+CMS does not publish hospital-specific well-baby visit completion rates. `outcome_scorer.py` substitutes the NY state benchmark (91.5%, 2023, NY DOH Child Core Set) for all NY hospitals. The field `well_baby_visit_estimated: True` flags this substitution. Hospital-specific data from a payer or state registry would supersede this proxy.
 
 ---
 

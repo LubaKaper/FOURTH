@@ -35,6 +35,7 @@ TOOL_1_KEYS = {
 TOOL_2_KEYS_ADDED = {
     "postpartum_visit_pct",
     "well_baby_visit_pct",
+    "well_baby_visit_estimated",
     "state_postpartum_avg",
     "smm_rate",
     "hcahps_care_transition_star",
@@ -165,9 +166,19 @@ def test_unavailable_smm_rate_remains_none(hospitals):
     assert nassau["smm_rate"] is None
 
 
-def test_well_baby_visit_pct_remains_none_without_hospital_level_source(hospitals):
+def test_well_baby_visit_pct_uses_ny_state_benchmark_proxy(hospitals):
+    """outcome_scorer sets well_baby_visit_pct = 91.5 (NY state proxy) for all NY hospitals."""
     nassau = next(h for h in hospitals if h["facility_id"] == "330027")
-    assert nassau["well_baby_visit_pct"] is None
+    assert nassau["well_baby_visit_pct"] == 91.5
+    assert isinstance(nassau["well_baby_visit_pct"], float)
+
+
+def test_well_baby_visit_estimated_is_true_for_all_ny_hospitals(hospitals):
+    """well_baby_visit_estimated must be True whenever the proxy value is used."""
+    for h in hospitals:
+        assert h["well_baby_visit_estimated"] is True, (
+            f"{h['facility_id']} well_baby_visit_estimated not True"
+        )
 
 
 def test_legacy_v02_fields_not_added_by_outcome_scorer(hospitals):

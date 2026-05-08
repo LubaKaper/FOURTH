@@ -19,7 +19,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from constants import NY_POSTPARTUM_VISIT_RATE_2023
+from constants import NY_POSTPARTUM_VISIT_RATE_2023, NY_WELL_BABY_VISIT_RATE_2023
 
 
 logger = logging.getLogger(__name__)
@@ -269,7 +269,10 @@ def _build_outcome_dict(
         # the current repo's best available placeholder until the ADR
         # maternal follow-up source is added.
         "postpartum_visit_pct": postpartum_proxy_pct,
-        "well_baby_visit_pct": None,
+        # No hospital-level well-baby visit source exists in the current CMS files.
+        # NY state benchmark used as proxy; well_baby_visit_estimated flags this.
+        "well_baby_visit_pct": NY_WELL_BABY_VISIT_RATE_2023,
+        "well_baby_visit_estimated": True,
         "state_postpartum_avg": NY_POSTPARTUM_VISIT_RATE_2023,
         "smm_rate": _to_float_or_none(maternal["smm_rate_raw"]),
         "hcahps_care_transition_star": _to_int_or_none(measures["care_transition_star_raw"]),
