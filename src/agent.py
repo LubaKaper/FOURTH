@@ -23,6 +23,7 @@ from urgency_ranker import add_urgency
 from account_selector import select_top_accounts
 from outbound_generator import generate_outbound_email
 from approvals import run_approvals
+from send_gate import filter_sendable
 from human_checkpoint import display_checkpoint
 from dashboard_generator import generate_dashboard
 
@@ -74,6 +75,9 @@ def run_pipeline(state: str) -> int:
     ready = statuses.get("ready_to_send", 0)
     if ready:
         log.info("Approvals — %d email(s) auto-approved (ready_to_send)", ready)
+
+    sendable = filter_sendable(emails)
+    log.info("Send gate — %d email(s) cleared for delivery", len(sendable))
 
     display_checkpoint(selected_hospitals, emails)
     log.info("Tool 6 — Checkpoint displayed")
