@@ -11,31 +11,33 @@ This Birthing-Friendly hospital scores 1 star on HCAHPS discharge information.
 
 ## What It Does
 
-Fourth gives a Babyscripts GTM Engineer today's top 10 high-confidence accounts and three outreach variants per account.
+Fourth gives a Babyscripts GTM Engineer today's top 10 high-confidence accounts with one grounded outreach email per account.
 
-The human stays in control:
+The pipeline:
 
-- Fourth ranks accounts.
-- Fourth explains the mismatch.
-- Fourth drafts outreach.
-- The GTM Engineer reviews, edits, copies, and sends.
-- Fourth never sends email automatically.
+- Ranks accounts by a 3-layer gap score (commitment strength, outcome gap, urgency context).
+- Selects the strongest lead angle per hospital from 5 evidence-based options.
+- Drafts a Babyscripts outbound email grounded in CMS data with validated claims.
+- Auto-approves emails meeting all safety criteria (`gap_score ≥ 70`, `data_confidence = high`, `claim_validation = passed`).
+- Delivers via SMTP when `--send` is active; otherwise holds everything at `pending_review` for human review.
 
-## v1 Scope
+## Scope
 
-v1 is intentionally narrow:
+Current build targets NY. CMS Birthing-Friendly hospitals only.
 
-- NY demo territory.
-- CMS Birthing-Friendly hospitals.
-- Hospital-level HCAHPS patient experience.
-- State-level postpartum visit benchmark.
-- OpenRouter email generation with cached fallback.
-- Terminal human checkpoint.
-- Static HTML dashboard for human review.
+**Implemented (Phases 1–3):**
+- Gap scoring across 3 layers (commitment strength, outcome gap, urgency context)
+- 5 lead angles with priority ordering and `angle_reason` explanation
+- Claim validation — LLM body checked for fabricated percentages and star ratings
+- Auto-approve gate — `gap_score ≥ 70` + `data_confidence = high` + `claim_validation = passed`
+- SMTP delivery with `--send` flag, 30-day dedup cooldown, append-only audit log
+- Terminal human checkpoint + static HTML dashboard
 
-Hospital-level severe morbidity, readmissions, maternal quality scores, Medicaid payer mix, silent-gap mode, CRM integration, per-hospital curated commitment tags, and Anthropic are v2.
-
-Automated email sending is a long-term direction, not v1. It should wait until prompt reliability, claim validation, source grounding, safety checks, approvals, suppressions, throttling, audit logs, and send controls are designed and tested.
+**Not yet implemented (v2):**
+- Hospital-level well-baby visit source (currently using NY state benchmark proxy 91.5%)
+- SMM rate data (PC_07a Not Available in current CMS release; roadmap: CDC WONDER v2)
+- Silent-gap mode (non-BF hospitals with poor outcomes)
+- CRM integration, multi-state, per-hospital curated commitment tags
 
 ## Pipeline
 
@@ -52,39 +54,24 @@ commitment_ingester
 
 One hospital dict travels through the full pipeline. Each tool only adds fields.
 
-## v0.2 Data Fields
-
-Primary v1 fields:
-
-- `discharge_info_star`
-- `discharge_help_pct`
-- `overall_star`
-- `state_postpartum_visit_rate`
-- `state_postpartum_visit_year`
-- `medicaid_extended`
-- `racial_disparity_flag`
-
-Removed v0.1 fields such as `compared_to_national`, `postpartum_visit_pct`, `severe_morbidity_rate`, `readmission_penalty`, and `medicaid_pct` are v2.
-
 ## Data Sources
 
-| Source file | v1 use |
+| Source | Provides |
 |---|---|
-| `Birthing_Friendly_Hospitals_Geocoded.csv` | Birthing-Friendly universe, address, ZIP, lat/lon |
-| `HCAHPS-Hospital-NY.csv` | CCN, county, discharge information star, discharge help percent, overall star, survey dates |
-| `core-set-data-dashboard...postpartum-care...csv` | State postpartum visit rate and reporting year |
-| `raw_data.csv` | KFF Medicaid extension context |
-| `hestat113.pdf` | Racial disparity context |
-| OpenRouter API | Three grounded outreach variants |
+| `Birthing_Friendly_Hospitals_Geocoded.csv` | Birthing-Friendly universe, address, lat/lon |
+| `HCAHPS-Hospital-NY.csv` | Care transition star, postpartum proxy pct, overall star |
+| `Maternal_Health-Hospital.csv` | SMM rate (PC_07a — Not Available in current CMS release), MMSM participation |
+| `FY_2026_Hospital_Readmissions_Reduction_Program_Hospital.csv` | Readmission penalty via Excess Readmission Ratio |
+| NY state benchmark | Postpartum visit avg 82.4% (CMS Medicaid Adult Core Set 2023); well-baby proxy 91.5% (NY DOH Child Core Set 2023) |
+| OpenRouter API | Email body generation with deterministic fallback |
 
 ## Dashboard
 
-v1 includes a static HTML dashboard generated from hospital dicts and email objects. It is a visual review surface, not a web app:
+Static HTML dashboard generated from hospital dicts and email objects — a visual review surface, not a web app.
 
-- No server, auth, CRM integration, or email sending.
 - Generated output: `dashboard/fourth_dashboard.html`.
-- Mockup reference: `docs/mockups/echo-dashboard-mockup.html`.
-- The GTM Engineer reviews email variants, then copies/sends from their own tool.
+- Shows urgency tier, gap score, lead angle, angle reason, and email body per account.
+- In review mode, all emails show `pending_review`. In `--send` mode, auto-approved emails are delivered before the dashboard is written.
 
 ## Standalone Ownership
 
@@ -122,12 +109,27 @@ Increase `OPENROUTER_CONCURRENCY` only if OpenRouter is responding reliably; `1`
 ## Run
 
 ```bash
+# Run test suite
 .venv/bin/python -m pytest tests/ -v
+
+# Review mode (default) — no email sent
 .venv/bin/python src/agent.py NY
+
+# Send mode — requires SMTP credentials in .env
+.venv/bin/python src/agent.py NY --send
+```
+
+For send mode, add SMTP credentials to `.env`:
+
+```bash
+SMTP_HOST=smtp.example.com
+SMTP_USER=you@example.com
+SMTP_PASSWORD=secret
+SMTP_FROM_EMAIL=you@example.com
+SMTP_TO_EMAIL=recipient@hospital.com
 ```
 
 ## Docs
 
-- `prd.md` - product source of truth.
-- `SCHEMA.md` - engineering contract.
-- `PLAN.md` - owner split, implementation order, and test contract.
+- `ADR.md` - architecture decisions and pipeline contracts.
+- `SCHEMA.md` - engineering contract (field names, handoffs, null rules).

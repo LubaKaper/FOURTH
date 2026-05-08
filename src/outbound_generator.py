@@ -266,7 +266,7 @@ def _call_openrouter(hospital: dict[str, Any]) -> str:
     )
     response.raise_for_status()
     payload = response.json()
-    body = payload["choices"][0]["message"].get("content", "")
+    body = payload["choices"][0]["message"].get("content") or ""
     return _validate_llm_body(hospital, body)
 
 

@@ -59,16 +59,18 @@ The handoff contracts are already written. `SCHEMA.md` and module docstrings are
 
 Specific, not aspirational. If any item below is not true, the build is not done.
 
-- [ ] Working pipeline runs end-to-end on real CMS CSVs
-- [ ] 50+ hospitals scored with `gap_score` 0–100 using the 3-layer formula
-- [ ] Top 10 hospitals ranked by `urgency_score`
-- [ ] 10 Babyscripts outbound emails generated with correct `lead_angle` per hospital
-- [ ] Three test cases pass in `test_gap.py`
-- [ ] All module handoff contracts validated — no null fields, no schema mismatches
-- [ ] Pipeline produces a traceable record per hospital: `gap_score` breakdown + `lead_angle` decision
-- [ ] Human Checkpoint removed once pipeline accuracy is verified — emails send automatically
+- [x] Working pipeline runs end-to-end on real CMS CSVs
+- [x] 50+ hospitals scored with `gap_score` 0–100 using the 3-layer formula
+- [x] Top 10 hospitals ranked by `urgency_score`
+- [x] 10 Babyscripts outbound emails generated with correct `lead_angle` per hospital
+- [x] All module handoff contracts validated — no null fields, no schema mismatches
+- [x] Pipeline produces a traceable record per hospital: `gap_score` breakdown + `lead_angle` decision
+- [x] Auto-approve gate live: `gap_score ≥ 70` + `data_confidence = high` + `claim_validation = passed` → `ready_to_send`
+- [x] `--send` flag routes `ready_to_send` emails through dedup, SMTP mailer, and append-only audit log
+- [x] 30-day dedup cooldown enforced; send gate raises on any criterion mismatch
+- [x] 192 tests passing across Phases 1–3
 
-**Current status (Week 2):** Pipeline running on real NY CMS data. 101 hospitals scored, 71 🔴 act this week, 30 🟡 monitor. 10 emails generated via OpenRouter/GPT-4o-mini. Dashboard written to `dashboard/fourth_dashboard.html`. Human Checkpoint active during tuning phase.
+**Current status (Phase 3 complete, 2026-05-08):** Full NY pipeline operational. 101 hospitals scored, top 10 selected, emails auto-approved or held at `pending_review`. `--send` flag activates SMTP delivery path with dedup and audit log. Human Checkpoint remains active for review-mode runs. Dashboard written to `dashboard/fourth_dashboard.html`.
 
 ---
 
