@@ -347,7 +347,7 @@ Function contract:
 generate_outbound_email(hospitals: list[dict]) -> list[dict]
 ```
 
-During tuning, Fourth may generate three angle variants for dashboard review. The ADR production send contract is one send-ready email object per hospital:
+One send-ready email object per hospital. `angle_reason` is a deterministic one-line explanation of why the lead angle was selected — no LLM call.
 
 ```python
 {
@@ -358,6 +358,7 @@ During tuning, Fourth may generate three angle variants for dashboard review. Th
   "email_body":       str,
   "product":          str,       # exactly "Babyscripts"
   "lead_angle":       str,
+  "angle_reason":     str,       # e.g. "Care transition 2/5 stars — below 3-star threshold"
   "gap_score":        float,
   "urgency_tier":     str,
   "sent_at":          None,      # populated on send
@@ -379,11 +380,6 @@ Allowed `status` values:
 - `"pending_review"` — tuning phase; Human Checkpoint/dashboard displays for review.
 - `"ready_to_send"` — production target; orchestrator may send automatically once safety gates are approved.
 
-Current transition note:
-
-- Existing tests/code may still use `body_moral`, `body_clinical`, `body_financial`, `to_role`, and `generation_method`.
-- Those fields are legacy tuning fields and must be migrated through tests before production send behavior is implemented.
-
 ---
 
 ## Field Rules — Non-Negotiable
@@ -402,7 +398,7 @@ Current transition note:
 
 ## Removed / Legacy v0.2 Fields
 
-These fields are from the prior ECHO/Fourth v0.2 contract and should be migrated away as tests and logic move to the ADR schema:
+These fields are from the prior ECHO/Fourth v0.2 contract. Migration is complete — do not reference or reintroduce them:
 
 - `discharge_info_star`
 - `discharge_help_pct`
@@ -417,8 +413,6 @@ These fields are from the prior ECHO/Fourth v0.2 contract and should be migrated
 - `body_financial`
 - `lead_angle_used`
 - `generation_method`
-
-Do not add new behavior against these legacy fields unless it is explicitly part of the migration bridge.
 
 ---
 

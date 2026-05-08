@@ -130,6 +130,26 @@ def test_empty_emails_still_returns_string():
     assert isinstance(result, str)
 
 
+# ── decision brief ────────────────────────────────────────────────────────────
+
+def test_checkpoint_includes_decision_brief_compact_format():
+    """Checkpoint output must include a compact one-line decision brief per hospital."""
+    hospitals, emails = _pipeline()
+    result = display_checkpoint(hospitals, emails)
+
+    # Brief format contains: · Gap {score} · {lead_angle} · ... · {recipient_role}
+    assert "· Gap " in result, "Decision brief must include '· Gap {score} ·'"
+
+
+def test_checkpoint_decision_brief_includes_recipient_role():
+    """Decision brief must include the recipient role from the email object."""
+    hospitals, emails = _pipeline()
+    result = display_checkpoint(hospitals, emails)
+    roles = {"CMO", "VP Patient Experience"}
+
+    assert any(role in result for role in roles), "Decision brief must include recipient role"
+
+
 def test_low_urgency_not_shown():
     h_low = _run(LOW_GAP)
     emails = generate_outbound_email([h_low])

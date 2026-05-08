@@ -102,9 +102,10 @@ def _email_variants(email: dict[str, Any] | None) -> str:
         </div>
         <article class="variant-content active">
           <div class="variant-label">{_safe(email.get("product"))} / {_safe(email.get("lead_angle"))}</div>
+          <div class="angle-reason">{_safe(email.get("angle_reason"))}</div>
           <p>{_safe(email.get("email_body"))}</p>
         </article>
-        <div class="copy-note">Review one variant, adapt it if needed, then copy it into your sending tool. Fourth does not send.</div>
+        <div class="copy-note">Review this variant, adapt it if needed, then copy it into your sending tool. Fourth does not send.</div>
       </section>
     """
 
@@ -423,6 +424,12 @@ def _render_html(hospitals: list[dict[str, Any]], emails: list[dict[str, Any]]) 
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 6px;
+    }}
+    .angle-reason {{
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      margin-bottom: 10px;
     }}
     .copy-note {{
       color: var(--muted);

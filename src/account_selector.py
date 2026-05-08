@@ -22,13 +22,20 @@ LEAD_ANGLE_PRIORITY = {
 def select_top_accounts(
     hospitals: list[dict[str, Any]],
     limit: int = 10,
+    require_high_confidence: bool = False,
 ) -> list[dict[str, Any]]:
-    """Return top accounts by final Gap Score after add_urgency()."""
+    """Return top accounts by final Gap Score after add_urgency().
+
+    require_high_confidence: set True for production auto-send to hard-block
+    low-confidence hospitals at selection time. Default False preserves
+    tuning-phase visibility.
+    """
     eligible = [
         hospital
         for hospital in hospitals
         if hospital.get("urgency_tier") in ("high", "medium")
         and float(hospital.get("gap_score") or 0) >= 40.0
+        and (not require_high_confidence or hospital.get("data_confidence") == "high")
     ]
     ranked = sorted(
         eligible,
