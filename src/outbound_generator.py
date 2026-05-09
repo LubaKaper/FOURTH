@@ -19,6 +19,12 @@ try:
 except ImportError:
     _REQUESTS_AVAILABLE = False
 
+try:
+    import anthropic as _anthropic_sdk
+    _ANTHROPIC_AVAILABLE = True
+except ImportError:
+    _ANTHROPIC_AVAILABLE = False
+
 
 load_dotenv()
 
@@ -28,6 +34,9 @@ _OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY", "")
 _OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini")
 _OPENROUTER_TIMEOUT_SECONDS = int(os.getenv("OPENROUTER_TIMEOUT_SECONDS", "10"))
 _OPENROUTER_MAX_TOKENS = int(os.getenv("OPENROUTER_MAX_TOKENS", "450"))
+
+_ANTHROPIC_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+_ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 
 VALID_LEAD_ANGLES = {
     "baby_vs_mother_contrast",
@@ -79,7 +88,26 @@ def _validate_hospital_state(hospital: dict[str, Any]) -> None:
 
 
 def _subject(hospital: dict[str, Any]) -> str:
-    return f"{hospital['facility_name']} postpartum follow-up gap"
+    name = hospital["facility_name"]
+    lead = hospital.get("lead_angle")
+    postpartum = hospital.get("postpartum_visit_pct")
+    well_baby = hospital.get("well_baby_visit_pct")
+    state_avg = hospital.get("state_postpartum_avg")
+    star = hospital.get("hcahps_care_transition_star")
+
+    if lead == "baby_vs_mother_contrast" and well_baby is not None and postpartum is not None:
+        gap = round(float(well_baby) - float(postpartum))
+        return f"{name} — {gap}pt gap between well-baby and postpartum follow-up"
+    if lead == "hcahps_care_transition_gap" and star is not None:
+        return f"{name} — {star}/5 care transition score"
+    if lead == "financial_unrealized":
+        return f"{name} — RPM billing opportunity in your Medicaid mix"
+    if lead == "smm_rate_gap":
+        return f"{name} — maternal morbidity signal worth addressing"
+    if lead == "state_strength_vs_hospital_lag" and postpartum is not None and state_avg is not None:
+        lag = round(float(state_avg) - float(postpartum))
+        return f"{name} — postpartum follow-up {lag}pt below NY average"
+    return f"{name} — postpartum follow-up gap"
 
 
 def _format_pct(value: Any) -> str | None:
@@ -99,36 +127,75 @@ def _email_body(hospital: dict[str, Any]) -> str:
     well_baby = _format_pct(hospital.get("well_baby_visit_pct"))
     state_avg = _format_pct(hospital.get("state_postpartum_avg"))
 
+    proof = (
+        "Hospitals using Babyscripts saw patients become 2x more likely to complete "
+        "their 30-day postpartum visit."
+    )
+    sign_off = "Worth a 15-minute conversation?\n\nBest,\n[YOUR NAME]"
+
     if lead == "baby_vs_mother_contrast" and postpartum and well_baby:
-        hook = (
-            f"Your well-baby visit completion rate is {well_baby}. "
-            f"Your postpartum maternal visit completion rate is {postpartum}. "
-            "The system you built works — for babies."
+        gap = round(float(hospital["well_baby_visit_pct"]) - float(hospital["postpartum_visit_pct"]))
+        return (
+            "Hi,\n\n"
+            f"Across NY, well-baby visit completion averages {well_baby} — but postpartum "
+            f"maternal completion at {name} sits at {postpartum}. That {gap}-point gap is "
+            "where mothers fall through.\n\n"
+            f"Babyscripts is built for exactly this: remote postpartum monitoring with BP kits, "
+            f"a mobile app, OB-specialized care managers, and RPM CPT billing support. {proof}\n\n"
+            f"{sign_off}"
         )
-    elif lead == "hcahps_care_transition_gap":
+
+    if lead == "hcahps_care_transition_gap":
         star = hospital.get("hcahps_care_transition_star")
-        hook = f"{name}'s care transition signal is {star}/5 stars, creating a postpartum handoff risk."
-    elif lead == "smm_rate_gap":
-        hook = f"{name}'s maternal morbidity signal gives your team a reason to inspect postpartum follow-up."
-    elif lead == "financial_unrealized":
-        state = hospital.get("state", "Your state")
-        hook = f"{state}'s postpartum Medicaid coverage creates a longer RPM follow-up window."
-    elif state_avg and postpartum:
-        hook = f"{name}'s postpartum visit rate is {postpartum} against a state benchmark of {state_avg}."
-    else:
-        hook = f"{name} has a reviewable postpartum follow-up gap."
+        return (
+            "Hi,\n\n"
+            f"{name}'s HCAHPS care transition score is {star}/5 stars. That's the discharge "
+            "moment — the handoff where postpartum patients either stay connected to care or "
+            "fall through.\n\n"
+            f"Babyscripts closes that gap with remote postpartum monitoring: BP kits, mobile app, "
+            f"OB-specialized care managers, and RPM CPT billing support. {proof}\n\n"
+            f"{sign_off}"
+        )
+
+    if lead == "smm_rate_gap":
+        return (
+            "Hi,\n\n"
+            f"{name}'s severe maternal morbidity signal is elevated. That's a clinical flag "
+            "that often tracks with gaps in postpartum follow-up — the window where remote "
+            "monitoring has the clearest impact.\n\n"
+            f"Babyscripts provides that infrastructure: BP kits, mobile app, OB-specialized "
+            f"care managers, and RPM CPT billing support. {proof}\n\n"
+            f"{sign_off}"
+        )
+
+    if lead == "financial_unrealized":
+        state = hospital.get("state", "NY")
+        return (
+            "Hi,\n\n"
+            f"{state}'s 12-month postpartum Medicaid coverage creates a billing window most "
+            "hospitals aren't fully capturing. Remote postpartum monitoring with RPM CPT codes "
+            f"fits directly into that window — and {name} already has the patient population.\n\n"
+            f"Babyscripts provides the infrastructure: BP kits, mobile app, OB-specialized "
+            f"care managers, and billing support. {proof}\n\n"
+            f"{sign_off}"
+        )
+
+    if state_avg and postpartum:
+        return (
+            "Hi,\n\n"
+            f"{name}'s postpartum visit completion is at {postpartum} against a NY benchmark "
+            f"of {state_avg}. Closing that gap is exactly what Babyscripts is built for — "
+            "remote postpartum monitoring with BP kits, a mobile app, OB-specialized care "
+            f"managers, and RPM CPT billing support. {proof}\n\n"
+            f"{sign_off}"
+        )
 
     return (
         "Hi,\n\n"
         f"{name} made a public commitment: \"{commitment}.\"\n\n"
-        f"{hook}\n\n"
-        "Babyscripts supports remote postpartum monitoring with BP kits, a mobile app, "
-        "OB-specialized care managers, and RPM CPT billing support. Hospitals using "
-        "Babyscripts saw patients become 2x more likely to complete their 30-day "
-        "postpartum visit.\n\n"
-        "Worth a 15-minute look?\n\n"
-        "Best,\n"
-        "[YOUR NAME]"
+        f"Babyscripts supports remote postpartum monitoring with BP kits, a mobile app, "
+        f"OB-specialized care managers, and RPM CPT billing support. {proof}\n\n"
+        f"{sign_off}"
     )
 
 
@@ -152,17 +219,25 @@ def _openrouter_prompt(hospital: dict[str, Any]) -> str:
     return (
         "Write one concise cold outbound email body for a Babyscripts GTM Engineer to send to a hospital buyer.\n"
         "Audience: CMO or VP Patient Experience at the hospital.\n"
+        "\n"
+        "Tone and framing:\n"
+        "- Write as a peer reaching out to a healthcare professional, not as a vendor pitching a product.\n"
+        "- Lead with the insight or implication first — not the raw numbers. Make the reader feel the gap before they see the data.\n"
+        "- Do not open with the hospital name as the first word. Vary your opening.\n"
+        "- Avoid buzzwords: 'opportunity', 'solutions', 'leverage', 'synergy', 'innovative'.\n"
+        "- Be specific and concrete. One clear idea per paragraph.\n"
+        "\n"
         "Rules:\n"
         "- Return only the email body, no JSON, markdown, subject line, or explanation.\n"
         "- Start with 'Hi,'.\n"
-        "- Use the hospital name exactly.\n"
+        f"- Use the hospital name exactly as provided: \"{hospital['facility_name']}\". Do not shorten, abbreviate, or paraphrase it.\n"
         "- Use only the provided facts; do not invent outcomes, customers, reimbursement amounts, or clinical claims.\n"
-        "- The gap_score is Fourth's internal account score, not an HCAHPS score or HCAHPS rating.\n"
-        "- Do not mention the gap_score or any internal Fourth score in the email body.\n"
-        "- If mentioning HCAHPS, use only the HCAHPS care transition star rating as a 1-to-5 star value.\n"
+        "- The gap_score is Fourth's internal account score — do not mention it in the email.\n"
+        "- If mentioning HCAHPS, use only the care transition star rating as a 1-to-5 star value.\n"
         '- You MUST include this exact sentence: "Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit."\n'
         "- Keep it under 140 words.\n"
-        "- End with a short CTA question.\n"
+        "- End with a specific, low-friction CTA question (not 'Worth a chat?').\n"
+        "\n"
         f"Facts: {facts}"
     )
 
@@ -170,15 +245,15 @@ def _openrouter_prompt(hospital: dict[str, Any]) -> str:
 def _validate_llm_body(hospital: dict[str, Any], body: str) -> str:
     cleaned = body.strip()
     if not cleaned:
-        raise ValueError("OpenRouter returned empty email body")
+        raise ValueError("LLM returned empty email body")
     if hospital["facility_name"] not in cleaned:
-        raise ValueError("OpenRouter body did not include facility_name")
+        raise ValueError("LLM body did not include facility_name")
     if "Babyscripts" not in cleaned:
-        raise ValueError("OpenRouter body did not include Babyscripts")
+        raise ValueError("LLM body did not include Babyscripts")
     if "2x" not in cleaned and "two times" not in cleaned.lower():
-        raise ValueError("OpenRouter body did not include Babyscripts proof point")
+        raise ValueError("LLM body did not include Babyscripts proof point")
     if len(cleaned.split()) > 170:
-        raise ValueError("OpenRouter body exceeded length limit")
+        raise ValueError("LLM body exceeded length limit")
     unsupported = (
         "guarantee",
         "guaranteed",
@@ -191,7 +266,7 @@ def _validate_llm_body(hospital: dict[str, Any], body: str) -> str:
     lower = cleaned.lower()
     for phrase in unsupported:
         if phrase in lower:
-            raise ValueError(f"OpenRouter body used unsupported claim: {phrase}")
+            raise ValueError(f"LLM body used unsupported claim: {phrase}")
     gap_score = hospital.get("gap_score")
     if gap_score is not None:
         gap_text = rf"{float(gap_score):g}(?:\.0)?"
@@ -202,7 +277,7 @@ def _validate_llm_body(hospital: dict[str, Any], body: str) -> str:
         )
         for pattern in bad_gap_labels:
             if re.search(pattern, lower):
-                raise ValueError("OpenRouter body mislabeled gap_score as an HCAHPS score")
+                raise ValueError("LLM body mislabeled gap_score as an HCAHPS score")
 
     # Percentage grounding — every XX% in the body must match a hospital outcome field within 1 point
     pct_fields = [
@@ -270,17 +345,39 @@ def _call_openrouter(hospital: dict[str, Any]) -> str:
     return _validate_llm_body(hospital, body)
 
 
+def _call_anthropic(hospital: dict[str, Any]) -> str:
+    if not _ANTHROPIC_KEY:
+        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+    if not _ANTHROPIC_AVAILABLE:
+        raise RuntimeError("anthropic package is not installed")
+
+    client = _anthropic_sdk.Anthropic(api_key=_ANTHROPIC_KEY)
+    message = client.messages.create(
+        model=_ANTHROPIC_MODEL,
+        max_tokens=_OPENROUTER_MAX_TOKENS,
+        system="You write accurate, source-grounded B2B healthcare GTM email copy.",
+        messages=[{"role": "user", "content": _openrouter_prompt(hospital)}],
+    )
+    body = (message.content[0].text if message.content else "") or ""
+    return _validate_llm_body(hospital, body)
+
+
 def _generate_email_body(hospital: dict[str, Any]) -> tuple[str, str, str]:
+    name = hospital.get("facility_name", "unknown hospital")
+
     try:
         return _call_openrouter(hospital), "openrouter_api", ""
     except Exception as exc:
-        reason = str(exc)
-        log.warning(
-            "Tool 5 — OpenRouter failed for %s; using template fallback: %s",
-            hospital.get("facility_name", "unknown hospital"),
-            reason,
-        )
-        return _email_body(hospital), "cached_fallback", reason
+        openrouter_reason = str(exc)
+        log.warning("Tool 5 — OpenRouter failed for %s; trying Anthropic: %s", name, openrouter_reason)
+
+    try:
+        return _call_anthropic(hospital), "anthropic_api", ""
+    except Exception as exc:
+        anthropic_reason = str(exc)
+        log.warning("Tool 5 — Anthropic failed for %s; using template fallback: %s", name, anthropic_reason)
+        combined_reason = f"OpenRouter: {openrouter_reason}; Anthropic: {anthropic_reason}"
+        return _email_body(hospital), "cached_fallback", combined_reason
 
 
 def _angle_reason(hospital: dict[str, Any]) -> str:
@@ -338,7 +435,7 @@ def generate_outbound_email(hospitals: list[dict[str, Any]]) -> list[dict[str, A
         and float(hospital.get("gap_score") or 0) >= 40.0
     ]
 
-    method_counts = {"openrouter_api": 0, "cached_fallback": 0}
+    method_counts = {"openrouter_api": 0, "anthropic_api": 0, "cached_fallback": 0}
     fallback_details: list[tuple[str, str]] = []
     emails = []
     for hospital in eligible:
@@ -350,8 +447,9 @@ def generate_outbound_email(hospitals: list[dict[str, Any]]) -> list[dict[str, A
 
     log.info("Tool 5 — Generated %d Babyscripts emails", len(emails))
     log.info(
-        "Tool 5 — generation_method openrouter_api=%d cached_fallback=%d",
+        "Tool 5 — generation_method openrouter_api=%d anthropic_api=%d cached_fallback=%d",
         method_counts["openrouter_api"],
+        method_counts["anthropic_api"],
         method_counts["cached_fallback"],
     )
     if fallback_details:

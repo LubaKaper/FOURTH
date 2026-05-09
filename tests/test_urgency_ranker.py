@@ -89,3 +89,65 @@ def test_missing_gap_score_raises_key_error():
 def test_missing_gap_breakdown_raises_key_error():
     with pytest.raises(KeyError):
         add_urgency({"facility_id": "330000", "gap_score": 10.0})
+
+
+# ── urgency_breakdown ─────────────────────────────────────────────────────────
+
+def _urgency_hospital(
+    state_mortality_rank=None,
+    racial_disparity_flag=False,
+    medicaid_extended=False,
+) -> dict:
+    """Minimal hospital dict ready for add_urgency() with explicit signal control.
+    Uses state='XX' to avoid STATE_URGENCY_CONTEXT defaults overriding test values.
+    """
+    return {
+        "facility_id": "TEST001",
+        "facility_name": "Test Hospital",
+        "state": "XX",
+        "gap_score": 50.0,
+        "gap_breakdown": {"commitment_strength": 25, "outcome_gap": 25, "urgency_context": 0},
+        "data_confidence": "high",
+        "state_mortality_rank": state_mortality_rank,
+        "racial_disparity_flag": racial_disparity_flag,
+        "medicaid_extended": medicaid_extended,
+    }
+
+
+def test_urgency_breakdown_all_signals_present():
+    hospital = _urgency_hospital(
+        state_mortality_rank="bottom_quartile",
+        racial_disparity_flag=True,
+        medicaid_extended=True,
+    )
+    result = add_urgency(hospital)
+    assert result["urgency_breakdown"] == {
+        "state_mortality_rank": 10,
+        "racial_disparity": 8,
+        "medicaid_extended": 7,
+    }
+
+
+def test_urgency_breakdown_no_signals_all_zeros():
+    result = add_urgency(_urgency_hospital())
+    assert result["urgency_breakdown"] == {
+        "state_mortality_rank": 0,
+        "racial_disparity": 0,
+        "medicaid_extended": 0,
+    }
+
+
+def test_urgency_breakdown_partial_signals():
+    hospital = _urgency_hospital(racial_disparity_flag=True)
+    result = add_urgency(hospital)
+    assert result["urgency_breakdown"] == {
+        "state_mortality_rank": 0,
+        "racial_disparity": 8,
+        "medicaid_extended": 0,
+    }
+
+
+def test_urgency_breakdown_key_always_present():
+    for fixture in (HIGH_GAP, MEDIUM_GAP, LOW_GAP, NULL_DATA):
+        hospital = _final(fixture)
+        assert "urgency_breakdown" in hospital

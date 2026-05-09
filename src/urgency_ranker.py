@@ -40,6 +40,14 @@ def _urgency_context_points(hospital: dict[str, Any]) -> int:
     return min(points, 25)
 
 
+def _urgency_breakdown(hospital: dict[str, Any]) -> dict[str, int]:
+    return {
+        "state_mortality_rank": 10 if hospital.get("state_mortality_rank") == "bottom_quartile" else 0,
+        "racial_disparity": 8 if hospital.get("racial_disparity_flag") else 0,
+        "medicaid_extended": 7 if hospital.get("medicaid_extended") else 0,
+    }
+
+
 def _tier_and_flag(score: float) -> tuple[str, str]:
     if score >= 70:
         return "high", "🔴 Act this week"
@@ -63,6 +71,7 @@ def add_urgency(hospital: dict[str, Any]) -> dict[str, Any]:
     hospital["gap_breakdown"]["urgency_context"] = urgency_points
     hospital["urgency_tier"] = tier
     hospital["urgency_flag"] = flag
+    hospital["urgency_breakdown"] = _urgency_breakdown(hospital)
 
     if tier not in VALID_TIERS:
         raise ValueError(f"Invalid urgency_tier: {tier}")

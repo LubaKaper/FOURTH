@@ -225,6 +225,11 @@ Updates `gap_score` to final 0-100 value and adds:
   "urgency_flag":           str,     # exact values below
   "medicaid_extended":      bool | None,
   "racial_disparity_flag":  bool | None,
+  "urgency_breakdown": {
+      "state_mortality_rank": int,   # 10 if bottom_quartile, else 0
+      "racial_disparity":     int,   # 8 if racial_disparity_flag, else 0
+      "medicaid_extended":    int,   # 7 if medicaid_extended, else 0
+  },
 }
 ```
 

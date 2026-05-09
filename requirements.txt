@@ -1,5 +1,6 @@
 strands-agents
 openai
+anthropic
 pandas
 requests
 python-dotenv

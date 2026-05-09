@@ -302,9 +302,11 @@ def test_openrouter_prompt_includes_smm_rate_for_smm_rate_gap_lead_angle():
 def test_generate_outbound_email_logs_fallback_summary_by_hospital_name(caplog):
     """After batch generation, a dedicated summary log names each hospital that fell back and why."""
     hospital = _ready(HIGH_GAP)
-    failure_reason = "OpenRouter body did not include Babyscripts proof point"
+    openrouter_reason = "LLM body did not include Babyscripts proof point"
+    anthropic_reason = "LLM body did not include Babyscripts proof point"
 
-    with patch("src.outbound_generator._call_openrouter", side_effect=ValueError(failure_reason)):
+    with patch("src.outbound_generator._call_openrouter", side_effect=ValueError(openrouter_reason)), \
+         patch("src.outbound_generator._call_anthropic", side_effect=ValueError(anthropic_reason)):
         with caplog.at_level(logging.WARNING, logger="fourth.outbound_generator"):
             generate_outbound_email([hospital])
 
@@ -313,4 +315,4 @@ def test_generate_outbound_email_logs_fallback_summary_by_hospital_name(caplog):
     assert summary_records, "No batch fallback summary log entry found after generation"
     combined = " ".join(r.message for r in summary_records)
     assert hospital["facility_name"] in combined, "Fallback summary must name the specific hospital"
-    assert failure_reason in combined, "Fallback summary must include the failure reason"
+    assert openrouter_reason in combined, "Fallback summary must include the failure reason"
