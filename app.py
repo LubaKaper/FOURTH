@@ -12,23 +12,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-import pandas as pd
-import pyarrow as pa
 import streamlit as st
-
-# In this environment (pandas 3.0.2 + pyarrow 25.0.0), st.dataframe() calls
-# segfault the interpreter when invoked from a freshly spawned OS thread —
-# and every Streamlit script rerun (every widget interaction, including
-# switching sidebar views) runs in a new thread. Verified locally with two
-# independent repros: (1) pandas' default PyArrow-backed "str" dtype
-# crashes inside ArrowStringArray._from_sequence during DataFrame
-# construction, and (2) PyArrow's multi-threaded DataFrame->Arrow
-# conversion crashes separately during the wire-serialization step. Both
-# mitigations are required together — either alone still crashed in
-# testing. Must run before any st.dataframe/st.json call.
-pd.set_option("future.infer_string", False)
-pa.set_cpu_count(1)
-pa.set_io_thread_count(1)
 
 RESULTS_PATH = Path(__file__).parent / "data" / "demo_results.json"
 
@@ -79,6 +63,31 @@ def _fmt(value: Any, suffix: str = "") -> str:
     return "—" if value is None else f"{value}{suffix}"
 
 
+def _markdown_table(rows: list[dict[str, Any]]) -> str:
+    """Render a GitHub-style markdown table from a list of dicts.
+
+    Column order follows the first row's key order; pipe characters in
+    values are escaped. Used instead of st.dataframe(): the small tables
+    here don't need interactivity, and st.dataframe()'s DataFrame/Arrow
+    native conversion segfaulted the interpreter in this environment on
+    any script-rerun thread after the first (see commit message).
+    """
+    if not rows:
+        return ""
+    headers = list(rows[0].keys())
+
+    def esc(value: Any) -> str:
+        return str(value).replace("|", "\\|")
+
+    lines = [
+        "| " + " | ".join(esc(h) for h in headers) + " |",
+        "| " + " | ".join("---" for _ in headers) + " |",
+    ]
+    for row in rows:
+        lines.append("| " + " | ".join(esc(row.get(h, "")) for h in headers) + " |")
+    return "\n".join(lines)
+
+
 def render_accounts(data: dict[str, Any]) -> None:
     st.subheader(f"Top accounts — {data['state']}")
     st.caption(f"Generated {data['generated_at']} from CMS public data.")
@@ -93,7 +102,7 @@ def render_accounts(data: dict[str, Any]) -> None:
         }
         for a in data["accounts"]
     ]
-    st.dataframe(rows, width="stretch", hide_index=True)
+    st.markdown(_markdown_table(rows))
 
 
 def render_account_detail(data: dict[str, Any]) -> None:
@@ -116,7 +125,7 @@ def render_account_detail(data: dict[str, Any]) -> None:
 
     st.divider()
     st.write("**Signals** (provenance in Methodology)")
-    st.dataframe(
+    st.markdown(_markdown_table(
         [
             {"Signal": "Discharge info received (hospital)", "Value": _fmt(account.get("discharge_info_pct"), "%")},
             {"Signal": "Care transition star (hospital)", "Value": _fmt(account.get("hcahps_care_transition_star"), "/5")},
@@ -124,10 +133,8 @@ def render_account_detail(data: dict[str, Any]) -> None:
             {"Signal": "State postpartum visit avg", "Value": _fmt(account.get("state_postpartum_avg"), "%")},
             {"Signal": "SMM rate", "Value": _fmt(account.get("smm_rate"))},
             {"Signal": "Readmission penalty", "Value": _fmt(account.get("readmission_penalty"))},
-        ],
-        width="stretch",
-        hide_index=True,
-    )
+        ]
+    ))
 
     st.divider()
     email = account.get("email")
@@ -167,11 +174,9 @@ path (not exposed here) enforces an approval gate, a final send gate, a
         """
     )
     st.subheader("Signal provenance — what's real, what's proxy")
-    st.dataframe(
-        [{"Signal": s, "Provenance": p, "Meaning": m} for s, p, m in SIGNAL_PROVENANCE],
-        width="stretch",
-        hide_index=True,
-    )
+    st.markdown(_markdown_table(
+        [{"Signal": s, "Provenance": p, "Meaning": m} for s, p, m in SIGNAL_PROVENANCE]
+    ))
 
 
 def main() -> None:
