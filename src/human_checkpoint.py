@@ -11,7 +11,7 @@ DIVIDER = "─" * 72
 
 def _key_metric(hospital: dict[str, Any]) -> str:
     lead = hospital.get("lead_angle", "")
-    postpartum = hospital.get("postpartum_visit_pct")
+    postpartum = hospital.get("discharge_info_pct")
     well_baby = hospital.get("well_baby_visit_pct")
     state_avg = hospital.get("state_postpartum_avg")
     star = hospital.get("hcahps_care_transition_star")

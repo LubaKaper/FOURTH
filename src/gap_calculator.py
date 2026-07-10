@@ -43,8 +43,11 @@ def _commitment_strength(hospital: dict[str, Any]) -> int:
     return min(points, 25)
 
 
-def _postpartum_lag_points(hospital: dict[str, Any]) -> int:
-    postpartum = _number(hospital.get("postpartum_visit_pct"))
+# Internal ranking proxy: compares the hospital's discharge-info measure
+# against the state postpartum visit benchmark. Fine for relative scoring;
+# outbound copy must present the two numbers as different measures.
+def _discharge_info_lag_points(hospital: dict[str, Any]) -> int:
+    postpartum = _number(hospital.get("discharge_info_pct"))
     state_avg = _number(hospital.get("state_postpartum_avg"))
     if postpartum is None or state_avg is None:
         return 0
@@ -84,7 +87,7 @@ def _hcahps_points(hospital: dict[str, Any]) -> int:
 def _outcome_gap(hospital: dict[str, Any]) -> int:
     points = (
         _smm_points(hospital)
-        + _postpartum_lag_points(hospital)
+        + _discharge_info_lag_points(hospital)
         + _hcahps_points(hospital)
         + _bool_points(hospital.get("readmission_penalty"), 5)
     )
@@ -93,7 +96,7 @@ def _outcome_gap(hospital: dict[str, Any]) -> int:
 
 def _has_baby_vs_mother_contrast(hospital: dict[str, Any]) -> bool:
     baby = _number(hospital.get("well_baby_visit_pct"))
-    mother = _number(hospital.get("postpartum_visit_pct"))
+    mother = _number(hospital.get("discharge_info_pct"))
     return baby is not None and mother is not None and baby - mother >= BABY_MOTHER_GAP_THRESHOLD
 
 
@@ -108,7 +111,7 @@ def _has_hcahps_gap(hospital: dict[str, Any]) -> bool:
 
 
 def _has_state_lag(hospital: dict[str, Any]) -> bool:
-    postpartum = _number(hospital.get("postpartum_visit_pct"))
+    postpartum = _number(hospital.get("discharge_info_pct"))
     state_avg = _number(hospital.get("state_postpartum_avg"))
     return postpartum is not None and state_avg is not None and state_avg - postpartum >= STATE_LAG_THRESHOLD
 
@@ -129,11 +132,11 @@ def _lead_angle(hospital: dict[str, Any]) -> str:
 
 def _data_confidence(hospital: dict[str, Any]) -> str:
     has_baby_mother = (
-        hospital.get("postpartum_visit_pct") is not None
+        hospital.get("discharge_info_pct") is not None
         and hospital.get("well_baby_visit_pct") is not None
     )
     has_state_lag = (
-        hospital.get("postpartum_visit_pct") is not None
+        hospital.get("discharge_info_pct") is not None
         and hospital.get("state_postpartum_avg") is not None
     )
     has_hcahps = hospital.get("hcahps_care_transition_star") is not None

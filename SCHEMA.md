@@ -137,7 +137,7 @@ Each hospital dict is enriched with:
 ```python
 {
   # Maternal / infant follow-up outcomes
-  "postpartum_visit_pct":          float | None,  # 0.0-100.0
+  "discharge_info_pct":          float | None,  # 0.0-100.0 — HCAHPS H_DISCH_HELP_Y_P, % reporting recovery info received at discharge (proxy; not a visit completion rate)
   "well_baby_visit_pct":           float | None,  # 0.0-100.0; NY proxy = 91.5 when no hospital-specific source
   "well_baby_visit_estimated":     bool,           # True when well_baby_visit_pct is a state-level proxy
   "state_postpartum_avg":          float | None,  # State benchmark, 0.0-100.0
@@ -167,7 +167,7 @@ Null scoring rules:
 
 | Field | If `None` |
 |---|---|
-| `postpartum_visit_pct` | Scores `0` for postpartum-vs-state outcome subcomponent; cannot drive `baby_vs_mother_contrast` without `well_baby_visit_pct`. |
+| `discharge_info_pct` | Scores 0 for the discharge-lag subcomponent; cannot drive `baby_vs_mother_contrast` without `well_baby_visit_pct`. |
 | `well_baby_visit_pct` | Scores `0` for baby-vs-mother contrast; cannot drive `baby_vs_mother_contrast`. |
 | `state_postpartum_avg` | Scores `0` for state-strength comparison; cannot drive `state_strength_vs_hospital_lag`. |
 | `smm_rate` | Scores `0` for SMM subcomponent; cannot drive `smm_rate_gap`. |
@@ -274,11 +274,13 @@ Missing/null commitment inputs score `0` for their subcomponent.
 | Signal | Points |
 |---|---:|
 | `smm_rate` above accepted benchmark | up to 20 |
-| `postpartum_visit_pct` below `state_postpartum_avg` | up to 15 |
+| `discharge_info_pct` below `state_postpartum_avg` | up to 15* |
 | `hcahps_care_transition_star < 3` | up to 10 |
 | `readmission_penalty is True` | 5 |
 
 Missing/null outcome inputs score `0` for their subcomponent.
+
+\* cross-measure proxy comparison, used for ranking only — never quoted as a like-for-like gap in outbound copy.
 
 ### Layer 3 — Urgency Context, 0-25
 
@@ -296,7 +298,7 @@ Missing/null urgency inputs score `0` for their subcomponent.
 
 Exact valid `lead_angle` values:
 
-- `"baby_vs_mother_contrast"` — well-baby visit completion materially outperforms postpartum maternal visit completion.
+- `"baby_vs_mother_contrast"` — state well-baby completion (state-level proxy) materially outperforms the hospital's discharge-information measure.
 - `"hcahps_care_transition_gap"` — patient experience / care transition signal is weak.
 - `"state_strength_vs_hospital_lag"` — hospital postpartum performance lags the state benchmark.
 - `"financial_unrealized"` — Medicaid coverage/RPM billing context supports financial framing.
@@ -305,7 +307,7 @@ Exact valid `lead_angle` values:
 Priority order:
 
 1. `baby_vs_mother_contrast`
-   - Use when both `well_baby_visit_pct` and `postpartum_visit_pct` are present and the baby-vs-mother gap is large enough to support the hook.
+   - Use when both `well_baby_visit_pct` and `discharge_info_pct` are present and the baby-vs-mother gap is large enough to support the hook.
 2. `smm_rate_gap`
    - Use when `smm_rate` is present and elevated against the accepted benchmark.
 3. `hcahps_care_transition_gap`
@@ -313,7 +315,7 @@ Priority order:
 4. `financial_unrealized`
    - Use when Medicaid/RPM context is present and the financial angle can be grounded without inventing payer mix or revenue.
 5. `state_strength_vs_hospital_lag`
-   - Use when `postpartum_visit_pct` and `state_postpartum_avg` are present and hospital performance lags the benchmark.
+   - Use when `discharge_info_pct` and `state_postpartum_avg` are present and hospital performance lags the benchmark.
 
 If no specific lead angle can be grounded because required fields are `None`, default to `state_strength_vs_hospital_lag` only if its required fields are present. Otherwise set the best available review-safe angle and mark `data_confidence = "low"`.
 

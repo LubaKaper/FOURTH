@@ -90,7 +90,7 @@ def _validate_hospital_state(hospital: dict[str, Any]) -> None:
 def _subject(hospital: dict[str, Any]) -> str:
     name = hospital["facility_name"]
     lead = hospital.get("lead_angle")
-    postpartum = hospital.get("postpartum_visit_pct")
+    postpartum = hospital.get("discharge_info_pct")
     well_baby = hospital.get("well_baby_visit_pct")
     state_avg = hospital.get("state_postpartum_avg")
     star = hospital.get("hcahps_care_transition_star")
@@ -123,7 +123,7 @@ def _email_body(hospital: dict[str, Any]) -> str:
     name = hospital["facility_name"]
     lead = hospital["lead_angle"]
     commitment = hospital.get("commitment_tag") or "a CMS Birthing-Friendly commitment"
-    postpartum = _format_pct(hospital.get("postpartum_visit_pct"))
+    postpartum = _format_pct(hospital.get("discharge_info_pct"))
     well_baby = _format_pct(hospital.get("well_baby_visit_pct"))
     state_avg = _format_pct(hospital.get("state_postpartum_avg"))
 
@@ -134,7 +134,7 @@ def _email_body(hospital: dict[str, Any]) -> str:
     sign_off = "Worth a 15-minute conversation?\n\nBest,\n[YOUR NAME]"
 
     if lead == "baby_vs_mother_contrast" and postpartum and well_baby:
-        gap = round(float(hospital["well_baby_visit_pct"]) - float(hospital["postpartum_visit_pct"]))
+        gap = round(float(hospital["well_baby_visit_pct"]) - float(hospital["discharge_info_pct"]))
         return (
             "Hi,\n\n"
             f"Across NY, well-baby visit completion averages {well_baby} — but postpartum "
@@ -207,7 +207,7 @@ def _openrouter_prompt(hospital: dict[str, Any]) -> str:
         "lead_angle": lead,
         "fourth_internal_gap_score_context_only_do_not_quote": hospital.get("gap_score"),
         "hcahps_care_transition_star": hospital.get("hcahps_care_transition_star"),
-        "postpartum_visit_pct": hospital.get("postpartum_visit_pct"),
+        "discharge_info_pct": hospital.get("discharge_info_pct"),
         "state_postpartum_avg": hospital.get("state_postpartum_avg"),
         "babyscripts_service": "remote postpartum monitoring: BP monitoring kit, mobile app, OB-specialized care managers, RPM CPT billing support",
         "babyscripts_proof": "Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.",
@@ -282,7 +282,7 @@ def _validate_llm_body(hospital: dict[str, Any], body: str) -> str:
     # Percentage grounding — every XX% in the body must match a hospital outcome field within 1 point
     pct_fields = [
         v for v in (
-            hospital.get("postpartum_visit_pct"),
+            hospital.get("discharge_info_pct"),
             hospital.get("well_baby_visit_pct"),
             hospital.get("state_postpartum_avg"),
         )
@@ -382,7 +382,7 @@ def _generate_email_body(hospital: dict[str, Any]) -> tuple[str, str, str]:
 
 def _angle_reason(hospital: dict[str, Any]) -> str:
     lead = hospital.get("lead_angle", "")
-    postpartum = hospital.get("postpartum_visit_pct")
+    postpartum = hospital.get("discharge_info_pct")
     well_baby = hospital.get("well_baby_visit_pct")
     state_avg = hospital.get("state_postpartum_avg")
     star = hospital.get("hcahps_care_transition_star")

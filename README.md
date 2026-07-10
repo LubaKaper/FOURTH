@@ -59,7 +59,7 @@ One hospital dict travels through the full pipeline. Each tool only adds fields.
 | Source | Provides |
 |---|---|
 | `Birthing_Friendly_Hospitals_Geocoded.csv` | Birthing-Friendly universe, address, lat/lon |
-| `HCAHPS-Hospital-NY.csv` | Care transition star, postpartum proxy pct, overall star |
+| `HCAHPS-Hospital-NY.csv` | Care transition star, discharge info pct (H_DISCH_HELP_Y_P), overall star |
 | `Maternal_Health-Hospital.csv` | SMM rate (PC_07a — Not Available in current CMS release), MMSM participation |
 | `FY_2026_Hospital_Readmissions_Reduction_Program_Hospital.csv` | Readmission penalty via Excess Readmission Ratio |
 | NY state benchmark | Postpartum visit avg 82.4% (CMS Medicaid Adult Core Set 2023); well-baby proxy 91.5% (NY DOH Child Core Set 2023) |

@@ -34,7 +34,7 @@ TOOL_1_KEYS = {
 }
 
 OUTCOME_FIELDS_NOT_IN_TOOL_1 = {
-    "postpartum_visit_pct",
+    "discharge_info_pct",
     "well_baby_visit_pct",
     "state_postpartum_avg",
     "smm_rate",

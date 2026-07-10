@@ -30,14 +30,14 @@ MATERNAL_HEALTH_PATH = DATA_DIR / "Maternal_Health-Hospital.csv"
 READMISSIONS_PATH = DATA_DIR / "FY_2026_Hospital_Readmissions_Reduction_Program_Hospital.csv"
 
 MEASURE_CARE_TRANSITION_STAR = "H_COMP_6_STAR_RATING"
-MEASURE_POSTPARTUM_PROXY_PCT = "H_DISCH_HELP_Y_P"
+MEASURE_DISCHARGE_INFO_PCT = "H_DISCH_HELP_Y_P"
 MEASURE_OVERALL_STAR = "H_STAR_RATING"
 MEASURE_SMM_RATE = "PC_07a"
 MEASURE_MMSM = "SM_7"
 
 RELEVANT_MEASURES = frozenset({
     MEASURE_CARE_TRANSITION_STAR,
-    MEASURE_POSTPARTUM_PROXY_PCT,
+    MEASURE_DISCHARGE_INFO_PCT,
     MEASURE_OVERALL_STAR,
 })
 
@@ -162,7 +162,7 @@ def _lookup_measures(
     """Pull raw values for the three relevant measures + dates for one CCN.
 
     Returns a dict with keys: care_transition_star_raw,
-    postpartum_proxy_pct_raw, overall_star_raw.
+    discharge_info_pct_raw, overall_star_raw.
     Values are raw CSV strings or None when the measure row is absent.
 
     Returns None if the CCN itself is missing from the index — a
@@ -173,7 +173,7 @@ def _lookup_measures(
     if rows is None:
         return None
     care_transition_row = rows.get(MEASURE_CARE_TRANSITION_STAR)
-    postpartum_proxy_row = rows.get(MEASURE_POSTPARTUM_PROXY_PCT)
+    discharge_info_row = rows.get(MEASURE_DISCHARGE_INFO_PCT)
     overall_row = rows.get(MEASURE_OVERALL_STAR)
     return {
         "care_transition_star_raw": (
@@ -181,9 +181,9 @@ def _lookup_measures(
             if care_transition_row is not None
             else None
         ),
-        "postpartum_proxy_pct_raw": (
-            postpartum_proxy_row[PERCENT_VALUE_COLUMN]
-            if postpartum_proxy_row is not None
+        "discharge_info_pct_raw": (
+            discharge_info_row[PERCENT_VALUE_COLUMN]
+            if discharge_info_row is not None
             else None
         ),
         "overall_star_raw": (
@@ -249,7 +249,7 @@ def _build_outcome_dict(
         )
         measures = {
             "care_transition_star_raw": None,
-            "postpartum_proxy_pct_raw": None,
+            "discharge_info_pct_raw": None,
             "overall_star_raw": None,
         }
 
@@ -260,15 +260,16 @@ def _build_outcome_dict(
             "mmsm_participant_raw": None,
         },
     )
-    postpartum_proxy_pct = _to_float_or_none(measures["postpartum_proxy_pct_raw"])
+    discharge_info_pct = _to_float_or_none(measures["discharge_info_pct_raw"])
 
     return {
         **hospital,
-        # H_DISCH_HELP_Y_P is a patient-reported discharge help measure,
-        # not a true postpartum visit completion rate. It is carried as
-        # the current repo's best available placeholder until the ADR
-        # maternal follow-up source is added.
-        "postpartum_visit_pct": postpartum_proxy_pct,
+        # H_DISCH_HELP_Y_P — % of patients who reported receiving the
+        # information they needed for recovery at discharge. Fourth uses it
+        # as its hospital-level discharge-readiness signal. It is NOT a
+        # postpartum visit completion rate; outbound copy must never
+        # present it as one (enforced by tests/test_copy_honesty.py).
+        "discharge_info_pct": discharge_info_pct,
         # No hospital-level well-baby visit source exists in the current CMS files.
         # NY state benchmark used as proxy; well_baby_visit_estimated flags this.
         "well_baby_visit_pct": NY_WELL_BABY_VISIT_RATE_2023,

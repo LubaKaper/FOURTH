@@ -20,7 +20,7 @@ def _hospital(
         "lead_angle": lead_angle,
         "urgency_tier": urgency_tier,
         "data_confidence": data_confidence,
-        "postpartum_visit_pct": 61.0,
+        "discharge_info_pct": 61.0,
         "well_baby_visit_pct": 94.0,
     }
 

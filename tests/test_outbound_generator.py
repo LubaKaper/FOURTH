@@ -173,7 +173,7 @@ def test_percentage_off_by_more_than_one_point_fails_validation():
 def test_percentage_within_one_point_of_hospital_field_passes_validation():
     """A percentage within 1 point of a hospital outcome field passes validation."""
     hospital = _ready(HIGH_GAP)
-    # 61% matches postpartum_visit_pct=61.0 exactly; 82% matches state_postpartum_avg=82.4 within 1 point
+    # 61% matches discharge_info_pct=61.0 exactly; 82% matches state_postpartum_avg=82.4 within 1 point
     body = _valid_body(
         hospital,
         "Your postpartum visit completion rate is 61%, below the state average of 82%.",
@@ -256,7 +256,7 @@ def test_angle_reason_for_baby_vs_mother_includes_both_visit_pcts():
     email = generate_outbound_email([hospital])[0]
 
     assert str(int(HIGH_GAP["well_baby_visit_pct"])) in email["angle_reason"]
-    assert str(int(HIGH_GAP["postpartum_visit_pct"])) in email["angle_reason"]
+    assert str(int(HIGH_GAP["discharge_info_pct"])) in email["angle_reason"]
 
 
 # ── Task 4: Source grounding audit ───────────────────────────────────────────

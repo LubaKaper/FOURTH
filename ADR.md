@@ -136,7 +136,7 @@ After `score_outcomes(list[dict])` runs, each hospital dict is enriched with:
 
 ```python
 {
-  "postpartum_visit_pct":     float,     # 0.0–100.0
+  "discharge_info_pct":     float,     # 0.0–100.0
   "well_baby_visit_pct":      float,     # 0.0–100.0
   "smm_rate":                 float,     # per 10,000 deliveries
   "hcahps_care_transition_star": int,    # 1–5
@@ -182,7 +182,7 @@ After `score_outcomes(list[dict])` runs, each hospital dict is enriched with:
 ```
 
 **Valid `lead_angle` values:**
-- `"baby_vs_mother_contrast"` — well-baby vs postpartum visit disparity
+- `"baby_vs_mother_contrast"` — well-baby visit (state proxy) vs hospital discharge-information disparity
 - `"hcahps_care_transition_gap"` — discharge information star rating gap
 - `"state_strength_vs_hospital_lag"` — hospital lags state postpartum average
 - `"financial_unrealized"` — Medicaid payer mix + RPM CPT codes = uncaptured revenue
@@ -225,7 +225,7 @@ Three layers, 0–100 total:
 | Layer | Max Points | Signals |
 |---|---|---|
 | Layer 1 — Commitment Strength | 25 | Birthing-Friendly flag (15), MMSM participation (10), manual tag (5 bonus) |
-| Layer 2 — Outcome Gap | 50 | SMM rate vs national (20), postpartum visit % vs state avg (15), HCAHPS care transition below 3 (10), readmission penalty (5) |
+| Layer 2 — Outcome Gap | 50 | SMM rate vs national (20), discharge-info % vs state postpartum avg (15, cross-measure proxy), HCAHPS care transition below 3 (10), readmission penalty (5) |
 | Layer 3 — Urgency Context | 25 | State mortality rank bottom quartile (10), racial disparity flag (8), Medicaid extended (7) |
 
 **Urgency tiers:**

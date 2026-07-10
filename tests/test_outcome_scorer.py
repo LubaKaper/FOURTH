@@ -33,7 +33,7 @@ TOOL_1_KEYS = {
 }
 
 TOOL_2_KEYS_ADDED = {
-    "postpartum_visit_pct",
+    "discharge_info_pct",
     "well_baby_visit_pct",
     "well_baby_visit_estimated",
     "state_postpartum_avg",
@@ -108,7 +108,7 @@ def test_score_outcomes_requires_list_input(tool_1_hospitals):
 
 def test_percentage_fields_are_float_0_to_100_or_none(hospitals):
     for h in hospitals:
-        for key in ("postpartum_visit_pct", "well_baby_visit_pct", "state_postpartum_avg"):
+        for key in ("discharge_info_pct", "well_baby_visit_pct", "state_postpartum_avg"):
             value = h[key]
             if value is None:
                 continue

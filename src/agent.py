@@ -101,7 +101,7 @@ def run_pipeline(
         log.debug(
             "Tool 2 — First hospital outcome fields: postpartum=%s well_baby=%s "
             "smm=%s hcahps_star=%s readmission_penalty=%s",
-            h0.get("postpartum_visit_pct"),
+            h0.get("discharge_info_pct"),
             h0.get("well_baby_visit_pct"),
             h0.get("smm_rate"),
             h0.get("hcahps_care_transition_star"),
