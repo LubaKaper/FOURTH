@@ -152,7 +152,7 @@ def _valid_body(hospital: dict, data_line: str) -> str:
 def test_fabricated_percentage_not_in_hospital_dict_fails_validation():
     """A percentage with no match within 1 point of any hospital outcome field is rejected."""
     hospital = _ready(HIGH_GAP)
-    # HIGH_GAP: postpartum=61.0, well_baby=94.0, state_avg=82.4
+    # HIGH_GAP: discharge_info_pct=61.0, well_baby=94.0, state_avg=82.4
     # 55% is > 1 point from all three
     body = _valid_body(hospital, "Your postpartum visit completion rate is 55%.")
 
@@ -163,7 +163,7 @@ def test_fabricated_percentage_not_in_hospital_dict_fails_validation():
 def test_percentage_off_by_more_than_one_point_fails_validation():
     """A percentage more than 1 point from the nearest hospital outcome field is rejected."""
     hospital = _ready(HIGH_GAP)
-    # postpartum=61.0 — 65% is 4 points off; not within 1 of any field
+    # discharge_info_pct=61.0 — 65% is 4 points off; not within 1 of any field
     body = _valid_body(hospital, "Your postpartum visit completion rate is 65%.")
 
     with pytest.raises(ValueError, match="ungrounded percentage"):

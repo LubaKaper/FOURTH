@@ -137,7 +137,7 @@ Each hospital dict is enriched with:
 ```python
 {
   # Maternal / infant follow-up outcomes
-  "discharge_info_pct":          float | None,  # 0.0-100.0 — HCAHPS H_DISCH_HELP_Y_P, % reporting recovery info received at discharge (proxy; not a visit completion rate)
+  "discharge_info_pct":            float | None,  # 0.0-100.0 — HCAHPS H_DISCH_HELP_Y_P, % reporting recovery info received at discharge (proxy; not a visit completion rate)
   "well_baby_visit_pct":           float | None,  # 0.0-100.0; NY proxy = 91.5 when no hospital-specific source
   "well_baby_visit_estimated":     bool,           # True when well_baby_visit_pct is a state-level proxy
   "state_postpartum_avg":          float | None,  # State benchmark, 0.0-100.0

@@ -136,7 +136,7 @@ After `score_outcomes(list[dict])` runs, each hospital dict is enriched with:
 
 ```python
 {
-  "discharge_info_pct":     float,     # 0.0–100.0
+  "discharge_info_pct":       float,     # 0.0–100.0
   "well_baby_visit_pct":      float,     # 0.0–100.0
   "smm_rate":                 float,     # per 10,000 deliveries
   "hcahps_care_transition_star": int,    # 1–5

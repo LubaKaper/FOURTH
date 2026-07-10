@@ -268,7 +268,7 @@ def _build_outcome_dict(
         # information they needed for recovery at discharge. Fourth uses it
         # as its hospital-level discharge-readiness signal. It is NOT a
         # postpartum visit completion rate; outbound copy must never
-        # present it as one (enforced by tests/test_copy_honesty.py).
+        # present it as one.
         "discharge_info_pct": discharge_info_pct,
         # No hospital-level well-baby visit source exists in the current CMS files.
         # NY state benchmark used as proxy; well_baby_visit_estimated flags this.

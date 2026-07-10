@@ -47,12 +47,12 @@ def _commitment_strength(hospital: dict[str, Any]) -> int:
 # against the state postpartum visit benchmark. Fine for relative scoring;
 # outbound copy must present the two numbers as different measures.
 def _discharge_info_lag_points(hospital: dict[str, Any]) -> int:
-    postpartum = _number(hospital.get("discharge_info_pct"))
+    discharge_info = _number(hospital.get("discharge_info_pct"))
     state_avg = _number(hospital.get("state_postpartum_avg"))
-    if postpartum is None or state_avg is None:
+    if discharge_info is None or state_avg is None:
         return 0
 
-    lag = max(state_avg - postpartum, 0.0)
+    lag = max(state_avg - discharge_info, 0.0)
     if lag >= 20:
         return 15
     if lag >= 10:
@@ -96,8 +96,8 @@ def _outcome_gap(hospital: dict[str, Any]) -> int:
 
 def _has_baby_vs_mother_contrast(hospital: dict[str, Any]) -> bool:
     baby = _number(hospital.get("well_baby_visit_pct"))
-    mother = _number(hospital.get("discharge_info_pct"))
-    return baby is not None and mother is not None and baby - mother >= BABY_MOTHER_GAP_THRESHOLD
+    discharge_info = _number(hospital.get("discharge_info_pct"))
+    return baby is not None and discharge_info is not None and baby - discharge_info >= BABY_MOTHER_GAP_THRESHOLD
 
 
 def _has_smm_gap(hospital: dict[str, Any]) -> bool:
@@ -111,9 +111,9 @@ def _has_hcahps_gap(hospital: dict[str, Any]) -> bool:
 
 
 def _has_state_lag(hospital: dict[str, Any]) -> bool:
-    postpartum = _number(hospital.get("discharge_info_pct"))
+    discharge_info = _number(hospital.get("discharge_info_pct"))
     state_avg = _number(hospital.get("state_postpartum_avg"))
-    return postpartum is not None and state_avg is not None and state_avg - postpartum >= STATE_LAG_THRESHOLD
+    return discharge_info is not None and state_avg is not None and state_avg - discharge_info >= STATE_LAG_THRESHOLD
 
 
 def _lead_angle(hospital: dict[str, Any]) -> str:
