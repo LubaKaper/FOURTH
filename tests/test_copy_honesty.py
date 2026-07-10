@@ -56,3 +56,11 @@ def test_prompt_defines_discharge_measure_and_forbids_mislabeling():
     assert "discharge_info_pct" in prompt
     assert "postpartum_visit_pct" not in prompt
     assert "not a postpartum visit completion rate" in prompt.lower()
+
+
+def test_prompt_labels_well_baby_as_statewide_proxy():
+    h = _ready(HIGH_GAP)  # baby_vs_mother_contrast — well_baby facts included
+    assert h["lead_angle"] == "baby_vs_mother_contrast"
+    prompt = _openrouter_prompt(h)
+    assert "well_baby_visit_definition" in prompt
+    assert "statewide" in prompt.lower()

@@ -220,6 +220,10 @@ def _openrouter_prompt(hospital: dict[str, Any]) -> str:
     }
     if lead == "baby_vs_mother_contrast":
         facts["well_baby_visit_pct"] = hospital.get("well_baby_visit_pct")
+        facts["well_baby_visit_definition"] = (
+            "NY statewide well-baby visit average (state-level proxy applied to all "
+            "NY hospitals; no hospital-level source exists). Not this hospital's own rate."
+        )
     if lead == "smm_rate_gap":
         facts["smm_rate"] = hospital.get("smm_rate")
     return (
@@ -241,6 +245,7 @@ def _openrouter_prompt(hospital: dict[str, Any]) -> str:
         "- The gap_score is Fourth's internal account score — do not mention it in the email.\n"
         "- If mentioning HCAHPS, use only the care transition star rating as a 1-to-5 star value.\n"
         "- discharge_info_pct measures discharge information received; never describe it as a visit completion, follow-up, or postpartum visit rate.\n"
+        "- well_baby_visit_pct is a NY statewide average, not this hospital's own rate; attribute it to NY/statewide and never as 'your' rate.\n"
         '- You MUST include this exact sentence: "Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit."\n'
         "- Keep it under 140 words.\n"
         "- End with a specific, low-friction CTA question (not 'Worth a chat?').\n"
