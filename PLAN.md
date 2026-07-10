@@ -108,7 +108,6 @@ Acceptance criteria:
 
 ### Task 1 - Commitment Ingester Tests
 
-Owner: Jonel
 
 Create `tests/test_commitment_ingester.py`.
 
@@ -132,7 +131,6 @@ Expected before implementation: import failure or failing tests.
 
 ### Task 2 - Commitment Ingester Implementation
 
-Owner: Jonel
 
 Create `src/commitment_ingester.py`.
 
@@ -158,7 +156,6 @@ Run:
 
 ### Task 3 - Outcome Scorer Tests
 
-Owner: Jonel
 
 Create `tests/test_outcome_scorer.py`.
 
@@ -183,7 +180,6 @@ Expected before implementation: import failure or failing tests.
 
 ### Task 4 - Outcome Scorer Implementation
 
-Owner: Jonel
 
 Create `src/outcome_scorer.py`.
 
@@ -308,11 +304,9 @@ Run:
 .venv/bin/python -m pytest tests/test_urgency_ranker.py -v
 ```
 
-Signal Paula when Tasks 5-8 pass.
 
 ### Task 9 - Outbound Generator Tests
 
-Owner: Paula
 
 Create `tests/test_outbound_generator.py`.
 
@@ -344,7 +338,6 @@ Expected before implementation: import failure or failing tests.
 
 ### Task 10 - Outbound Generator Implementation
 
-Owner: Paula
 
 Create:
 
@@ -369,7 +362,6 @@ Run:
 
 ### Task 11 - Human Checkpoint Tests
 
-Owner: Paula
 
 Create `tests/test_human_checkpoint.py`.
 
@@ -391,7 +383,6 @@ Expected before implementation: import failure or failing tests.
 
 ### Task 12 - Human Checkpoint Implementation
 
-Owner: Paula
 
 Create `src/human_checkpoint.py`.
 

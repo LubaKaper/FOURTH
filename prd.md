@@ -81,7 +81,7 @@ The state aggregate becomes the *expectation* hospitals should be meeting. Hospi
 - [P1] User can add an account to a watchlist for tomorrow
 - [P2] User can hand off to an external CRM via "Open in [CRM]" button
 
-> **Briefing card field list:** specified by the existing mockup HTML. Mockup needs an update pass to match v1 scope (NY-only, Birthing-Friendly only, within-state mismatch framing using HCAHPS star ratings, three angles preserved). Paula owns the update.
+> **Briefing card field list:** specified by the existing mockup HTML. Mockup needs an update pass to match v1 scope (NY-only, Birthing-Friendly only, within-state mismatch framing using HCAHPS star ratings, three angles preserved).
 
 ### Out of Scope (for v1)
 - **Sending email.** ECHO never sends email. The GTM Engineer copies a draft and sends from their own tool.
@@ -96,7 +96,7 @@ The state aggregate becomes the *expectation* hospitals should be meeting. Hospi
 - **Leapfrog Hospital Survey data.** Licensed data not included in v1.
 - **Real-time alerts or sub-daily cadence.** v1 refreshes daily.
 - **Customer discovery validation.** No external user interviews in v1 scope. Acknowledged as next-phase work.
-- **Visual design mockup as separate deliverable.** Existing mockup HTML serves as spec, pending Paula's v1-scope update.
+- **Visual design mockup as separate deliverable.** Existing mockup HTML serves as spec, pending a v1-scope update.
 
 ## Data Sources
 
@@ -191,6 +191,6 @@ The state aggregate becomes the *expectation* hospitals should be meeting. Hospi
 
 - [ ] **Honesty stance for v1 limitations.** Do we lean fully into honest framing in the dashboard copy and demo script, or smooth over what's curated vs. automated? Suggestion: lean honest. (Question 9 in team_questions.md)
 - [ ] **One-page v2 roadmap doc.** Multiple PRD sections reference v2 (commitment scope expansion, additional hospital-level metrics, additional outreach angles, customizable cadence, AIM Data Center integration). A short v2 roadmap as a v1 deliverable would make the demo more defensible.
-- [ ] **Mockup update.** Paula updates the existing mockup HTML to match v1 scope. Team reviews together so Jonel can confirm the data layer schema matches what the briefing card expects.
-- [ ] **Model choice.** v1 uses OpenRouter free tier (current model: `tencent/hy3-preview:free`, configurable via `OPENROUTER_MODEL` env var). Model selection lives in Paula's code, not the schema.
-- [ ] **Email generation cache strategy.** Generate live during dashboard open, or pre-generate nightly and serve from cache? Cache is safer for demo reliability; live is more impressive. Paula and Luba decide together.
+- [ ] **Mockup update.** Update the existing mockup HTML to match v1 scope and confirm the data layer schema matches what the briefing card expects.
+- [ ] **Model choice.** v1 uses OpenRouter free tier (current model: `tencent/hy3-preview:free`, configurable via `OPENROUTER_MODEL` env var). Model selection lives in the outbound generator, not the schema.
+- [ ] **Email generation cache strategy.** Generate live during dashboard open, or pre-generate nightly and serve from cache? Cache is safer for demo reliability; live is more impressive.

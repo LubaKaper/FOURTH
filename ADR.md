@@ -214,7 +214,7 @@ After `score_outcomes(list[dict])` runs, each hospital dict is enriched with:
 ```
 
 **Tuning phase:** status = `"pending_review"` — Human Checkpoint displays for review.
-**Production (end goal):** status = `"ready_to_send"` — Orchestrator sends automatically. No review step. Paula's input validation and Luba's threshold enforcement are the only safety gates.
+**Production (end goal):** status = `"ready_to_send"` — Orchestrator sends automatically. No review step. Input validation and threshold enforcement are the only safety gates.
 
 ---
 

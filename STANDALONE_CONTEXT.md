@@ -2,7 +2,7 @@
 
 ## Current Direction
 
-ECHO is Luba's standalone continuation of the original class project. Historical docs may mention Jonel, Paula, or team ownership, but current ownership for all files is Luba.
+Fourth (formerly ECHO) is Luba's standalone continuation of the original class project. Current ownership for all files is Luba.
 
 The product now has a concrete seller context:
 

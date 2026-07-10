@@ -1,5 +1,5 @@
 """
-human_checkpoint.py — Tool 6 | Owner: Paula
+human_checkpoint.py — Tool 6
 
 Presents a readable terminal review surface for the GTM engineer.
 Shows all high/medium email drafts. Fourth drafts only — the human sends.
