@@ -151,7 +151,11 @@ git commit -m "test(conftest): block all LLM network paths in tests
 
 ---
 
-### Task 3: Cache CSV index builders (test speed)
+### Task 3: Cache CSV index builders (test speed) — SKIPPED 2026-07-09
+
+**Skipped (YAGNI).** After Task 2 landed, the measured full-suite runtime is **1.35s** — the old ~2:19 baseline was entirely LLM network waiting, not CSV parsing (root-cause guess in this plan was wrong). The <30s acceptance target is exceeded 20x without caching, and `lru_cache` on loaders returning shared mutable dicts adds risk for no measurable benefit. Revisit only if the suite slows down for data-loading reasons.
+
+Original task text kept below for the record.
 
 `score_outcomes` re-parses three multi-MB CSVs on every call; `get_hospital_commitments` re-parses two. Dozens of pipeline-building tests multiply that. Wrap the pure loader functions in `functools.lru_cache`. No test currently patches the `*_PATH` globals to simulate missing files (verified 2026-07-09), so caching by no-arg identity is safe; exceptions are not cached by `lru_cache`, so the OSError paths still work.
 
