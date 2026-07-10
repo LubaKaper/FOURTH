@@ -1,7 +1,11 @@
-strands-agents
-openai
-anthropic
-pandas
-requests
-python-dotenv
-pytest
+# Pipeline
+pandas==3.0.2          # scripts/filter_hcahps_to_ny.py only
+requests==2.33.1
+python-dotenv==1.2.2
+anthropic==0.100.0     # LLM fallback for outbound generation
+
+# Demo app
+streamlit==1.59.1
+
+# Dev
+pytest==9.0.3
