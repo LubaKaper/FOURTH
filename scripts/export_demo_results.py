@@ -3,8 +3,9 @@
 export_demo_results.py — run the full Fourth pipeline (review mode) and
 write data/demo_results.json for the Streamlit demo app (app.py).
 
-Run locally with live LLM keys in .env to get real generated emails:
-    OPENROUTER_MAX_LIVE_EMAILS=10 .venv/bin/python scripts/export_demo_results.py
+Run locally with live LLM keys in .env to get real generated emails
+(one LLM call per selected account):
+    .venv/bin/python scripts/export_demo_results.py
 
 Real CMS data, real pipeline output. No mock data. Fails loudly (exit 1)
 if the pipeline yields zero accounts or zero emails.
