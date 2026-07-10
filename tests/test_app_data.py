@@ -33,3 +33,22 @@ def test_load_results_accepts_valid_payload(tmp_path):
     data = load_results(good)
     assert data["state"] == "NY"
     assert len(data["accounts"]) == 1
+
+
+def test_markdown_table_escapes_structure_breaking_characters():
+    from app import _markdown_table
+
+    rows = [{"Name": "St. Mary's | Unit\nAnnex", "Score": None}]
+    table = _markdown_table(rows)
+    lines = table.splitlines()
+
+    assert len(lines) == 3  # header, separator, one data row
+    assert lines[0] == "| Name | Score |"
+    assert "St. Mary's \\| Unit Annex" in lines[2]
+    assert "None" in lines[2]
+
+
+def test_markdown_table_empty_rows_returns_empty_string():
+    from app import _markdown_table
+
+    assert _markdown_table([]) == ""

@@ -66,18 +66,19 @@ def _fmt(value: Any, suffix: str = "") -> str:
 def _markdown_table(rows: list[dict[str, Any]]) -> str:
     """Render a GitHub-style markdown table from a list of dicts.
 
-    Column order follows the first row's key order; pipe characters in
-    values are escaped. Used instead of st.dataframe(): the small tables
-    here don't need interactivity, and st.dataframe()'s DataFrame/Arrow
-    native conversion segfaulted the interpreter in this environment on
-    any script-rerun thread after the first (see commit message).
+    Column order follows the first row's key order; pipes are escaped and
+    newlines collapsed so a value cannot break the table structure. Used
+    instead of st.dataframe(): the small tables here don't need
+    interactivity, and st.dataframe()'s DataFrame/Arrow native conversion
+    segfaulted the interpreter in this environment on any script-rerun
+    thread after the first (see commit message).
     """
     if not rows:
         return ""
     headers = list(rows[0].keys())
 
     def esc(value: Any) -> str:
-        return str(value).replace("|", "\\|")
+        return " ".join(str(value).replace("|", "\\|").split())
 
     lines = [
         "| " + " | ".join(esc(h) for h in headers) + " |",
