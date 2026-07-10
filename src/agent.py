@@ -99,7 +99,7 @@ def run_pipeline(
     if debug and hospitals:
         h0 = hospitals[0]
         log.debug(
-            "Tool 2 — First hospital outcome fields: postpartum=%s well_baby=%s "
+            "Tool 2 — First hospital outcome fields: discharge_info=%s well_baby=%s "
             "smm=%s hcahps_star=%s readmission_penalty=%s",
             h0.get("discharge_info_pct"),
             h0.get("well_baby_visit_pct"),

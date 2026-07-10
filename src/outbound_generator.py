@@ -90,24 +90,22 @@ def _validate_hospital_state(hospital: dict[str, Any]) -> None:
 def _subject(hospital: dict[str, Any]) -> str:
     name = hospital["facility_name"]
     lead = hospital.get("lead_angle")
-    postpartum = hospital.get("discharge_info_pct")
+    discharge_info = hospital.get("discharge_info_pct")
     well_baby = hospital.get("well_baby_visit_pct")
     state_avg = hospital.get("state_postpartum_avg")
     star = hospital.get("hcahps_care_transition_star")
 
-    if lead == "baby_vs_mother_contrast" and well_baby is not None and postpartum is not None:
-        gap = round(float(well_baby) - float(postpartum))
-        return f"{name} — {gap}pt gap between well-baby and postpartum follow-up"
+    if lead == "baby_vs_mother_contrast" and well_baby is not None and discharge_info is not None:
+        return f"{name} — infant follow-up is working; maternal discharge prep lags"
     if lead == "hcahps_care_transition_gap" and star is not None:
         return f"{name} — {star}/5 care transition score"
     if lead == "financial_unrealized":
         return f"{name} — RPM billing opportunity in your Medicaid mix"
     if lead == "smm_rate_gap":
         return f"{name} — maternal morbidity signal worth addressing"
-    if lead == "state_strength_vs_hospital_lag" and postpartum is not None and state_avg is not None:
-        lag = round(float(state_avg) - float(postpartum))
-        return f"{name} — postpartum follow-up {lag}pt below NY average"
-    return f"{name} — postpartum follow-up gap"
+    if lead == "state_strength_vs_hospital_lag" and discharge_info is not None and state_avg is not None:
+        return f"{name} — discharge readiness vs NY's postpartum strength"
+    return f"{name} — postpartum care continuity"
 
 
 def _format_pct(value: Any) -> str | None:
@@ -123,7 +121,7 @@ def _email_body(hospital: dict[str, Any]) -> str:
     name = hospital["facility_name"]
     lead = hospital["lead_angle"]
     commitment = hospital.get("commitment_tag") or "a CMS Birthing-Friendly commitment"
-    postpartum = _format_pct(hospital.get("discharge_info_pct"))
+    discharge_info = _format_pct(hospital.get("discharge_info_pct"))
     well_baby = _format_pct(hospital.get("well_baby_visit_pct"))
     state_avg = _format_pct(hospital.get("state_postpartum_avg"))
 
@@ -133,13 +131,13 @@ def _email_body(hospital: dict[str, Any]) -> str:
     )
     sign_off = "Worth a 15-minute conversation?\n\nBest,\n[YOUR NAME]"
 
-    if lead == "baby_vs_mother_contrast" and postpartum and well_baby:
-        gap = round(float(hospital["well_baby_visit_pct"]) - float(hospital["discharge_info_pct"]))
+    if lead == "baby_vs_mother_contrast" and discharge_info and well_baby:
         return (
             "Hi,\n\n"
-            f"Across NY, well-baby visit completion averages {well_baby} — but postpartum "
-            f"maternal completion at {name} sits at {postpartum}. That {gap}-point gap is "
-            "where mothers fall through.\n\n"
+            f"Across NY, well-baby visit completion averages {well_baby} — infant "
+            f"follow-up systems work. Yet only {discharge_info} of patients at {name} "
+            "reported getting the information they needed for their own recovery at "
+            "discharge. The baby gets a system; the mother gets a pamphlet.\n\n"
             f"Babyscripts is built for exactly this: remote postpartum monitoring with BP kits, "
             f"a mobile app, OB-specialized care managers, and RPM CPT billing support. {proof}\n\n"
             f"{sign_off}"
@@ -180,13 +178,16 @@ def _email_body(hospital: dict[str, Any]) -> str:
             f"{sign_off}"
         )
 
-    if state_avg and postpartum:
+    if state_avg and discharge_info:
         return (
             "Hi,\n\n"
-            f"{name}'s postpartum visit completion is at {postpartum} against a NY benchmark "
-            f"of {state_avg}. Closing that gap is exactly what Babyscripts is built for — "
-            "remote postpartum monitoring with BP kits, a mobile app, OB-specialized care "
-            f"managers, and RPM CPT billing support. {proof}\n\n"
+            f"NY is one of the stronger postpartum states — {state_avg} of Medicaid "
+            f"postpartum visits are completed statewide. But at {name}, only "
+            f"{discharge_info} of patients reported getting the information they needed "
+            "for their recovery at discharge — and that handoff is where follow-through "
+            "starts.\n\n"
+            f"Babyscripts closes that gap with remote postpartum monitoring: BP kits, mobile app, "
+            f"OB-specialized care managers, and RPM CPT billing support. {proof}\n\n"
             f"{sign_off}"
         )
 
@@ -208,6 +209,11 @@ def _openrouter_prompt(hospital: dict[str, Any]) -> str:
         "fourth_internal_gap_score_context_only_do_not_quote": hospital.get("gap_score"),
         "hcahps_care_transition_star": hospital.get("hcahps_care_transition_star"),
         "discharge_info_pct": hospital.get("discharge_info_pct"),
+        "discharge_info_definition": (
+            "percent of patients who reported receiving the information they "
+            "needed for their recovery at discharge (HCAHPS H_DISCH_HELP_Y_P). "
+            "This is not a postpartum visit completion rate."
+        ),
         "state_postpartum_avg": hospital.get("state_postpartum_avg"),
         "babyscripts_service": "remote postpartum monitoring: BP monitoring kit, mobile app, OB-specialized care managers, RPM CPT billing support",
         "babyscripts_proof": "Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.",
@@ -234,6 +240,7 @@ def _openrouter_prompt(hospital: dict[str, Any]) -> str:
         "- Use only the provided facts; do not invent outcomes, customers, reimbursement amounts, or clinical claims.\n"
         "- The gap_score is Fourth's internal account score — do not mention it in the email.\n"
         "- If mentioning HCAHPS, use only the care transition star rating as a 1-to-5 star value.\n"
+        "- discharge_info_pct measures discharge information received; never describe it as a visit completion, follow-up, or postpartum visit rate.\n"
         '- You MUST include this exact sentence: "Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit."\n'
         "- Keep it under 140 words.\n"
         "- End with a specific, low-friction CTA question (not 'Worth a chat?').\n"
@@ -382,24 +389,28 @@ def _generate_email_body(hospital: dict[str, Any]) -> tuple[str, str, str]:
 
 def _angle_reason(hospital: dict[str, Any]) -> str:
     lead = hospital.get("lead_angle", "")
-    postpartum = hospital.get("discharge_info_pct")
+    discharge_info = hospital.get("discharge_info_pct")
     well_baby = hospital.get("well_baby_visit_pct")
     state_avg = hospital.get("state_postpartum_avg")
     star = hospital.get("hcahps_care_transition_star")
     smm = hospital.get("smm_rate")
 
-    if lead == "baby_vs_mother_contrast" and well_baby is not None and postpartum is not None:
-        gap = float(well_baby) - float(postpartum)
-        return f"Well-baby {float(well_baby):g}% vs postpartum {float(postpartum):g}% — {gap:.0f}pt gap"
+    if lead == "baby_vs_mother_contrast" and well_baby is not None and discharge_info is not None:
+        return (
+            f"NY well-baby {float(well_baby):g}% (state proxy) vs "
+            f"{float(discharge_info):g}% discharge-info at hospital"
+        )
     if lead == "hcahps_care_transition_gap" and star is not None:
         return f"Care transition {star}/5 stars — below 3-star threshold"
     if lead == "smm_rate_gap" and smm is not None:
         return f"SMM rate {float(smm):.0f}/10K deliveries — above 150 benchmark"
     if lead == "financial_unrealized":
         return "Medicaid extended — RPM coverage window available"
-    if lead == "state_strength_vs_hospital_lag" and postpartum is not None and state_avg is not None:
-        lag = float(state_avg) - float(postpartum)
-        return f"Postpartum {float(postpartum):g}% vs state avg {float(state_avg):g}% — {lag:.0f}pt lag"
+    if lead == "state_strength_vs_hospital_lag" and discharge_info is not None and state_avg is not None:
+        return (
+            f"NY postpartum visits {float(state_avg):g}% (state benchmark) vs "
+            f"{float(discharge_info):g}% discharge-info at hospital"
+        )
     return f"Lead angle: {lead}"
 
 

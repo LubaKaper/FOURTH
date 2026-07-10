@@ -11,22 +11,22 @@ DIVIDER = "─" * 72
 
 def _key_metric(hospital: dict[str, Any]) -> str:
     lead = hospital.get("lead_angle", "")
-    postpartum = hospital.get("discharge_info_pct")
+    discharge_info = hospital.get("discharge_info_pct")
     well_baby = hospital.get("well_baby_visit_pct")
     state_avg = hospital.get("state_postpartum_avg")
     star = hospital.get("hcahps_care_transition_star")
     smm = hospital.get("smm_rate")
 
-    if lead == "baby_vs_mother_contrast" and well_baby is not None and postpartum is not None:
-        return f"Well-baby {float(well_baby):g}% vs postpartum {float(postpartum):g}%"
+    if lead == "baby_vs_mother_contrast" and well_baby is not None and discharge_info is not None:
+        return f"Well-baby {float(well_baby):g}% (state) vs discharge-info {float(discharge_info):g}%"
     if lead == "hcahps_care_transition_gap" and star is not None:
         return f"Care transition {star}/5 stars"
     if lead == "smm_rate_gap" and smm is not None:
         return f"SMM {float(smm):.0f}/10K"
     if lead == "financial_unrealized":
         return "Medicaid extended"
-    if lead == "state_strength_vs_hospital_lag" and postpartum is not None and state_avg is not None:
-        return f"Postpartum {float(postpartum):g}% vs state avg {float(state_avg):g}%"
+    if lead == "state_strength_vs_hospital_lag" and discharge_info is not None and state_avg is not None:
+        return f"Discharge-info {float(discharge_info):g}% vs state postpartum {float(state_avg):g}%"
     return "—"
 
 

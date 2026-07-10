@@ -160,7 +160,7 @@ def _hospital_card(hospital: dict[str, Any], email: dict[str, Any] | None, is_ac
       <div class="metrics">
         {_metric("Lead angle", _lead_angle_label(hospital.get("lead_angle")))}
         {_metric("Commitment", hospital.get("commitment_tag"))}
-        {_metric("Postpartum visit", hospital.get("discharge_info_pct"))}
+        {_metric("Discharge info received", hospital.get("discharge_info_pct"))}
         {_metric("Well-baby visit", hospital.get("well_baby_visit_pct"))}
       </div>
 
