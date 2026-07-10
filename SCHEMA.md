@@ -156,6 +156,8 @@ Each hospital dict is enriched with:
 }
 ```
 
+`state_mortality_rank`, `racial_disparity_flag`, and `medicaid_extended` are **state-level context** — identical for every hospital in a state (same pattern as `well_baby_visit_estimated`). They add flat urgency-context points and cannot differentiate hospitals within a state. Sources are cited in `src/constants.py`.
+
 Allowed `state_mortality_rank` values:
 
 - `"top_quartile"`

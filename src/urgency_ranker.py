@@ -6,15 +6,16 @@ Adds ADR urgency context and finalizes gap_score to 0-100.
 
 from typing import Any
 
+from constants import NY_STATE_URGENCY_CONTEXT
+
 
 VALID_TIERS = {"high", "medium", "low"}
 VALID_FLAGS = {"🔴 Act this week", "🟡 Monitor", "🟢 Not ready"}
 STATE_URGENCY_CONTEXT = {
-    # Sources documented in SCHEMA.md: KFF postpartum Medicaid tracker and
-    # NCHS Health E-Stat 113. v1 is NY-only after Tool 1.
+    # State facts, not per-hospital signals — sources cited in constants.py.
     "NY": {
-        "medicaid_extended": True,
-        "racial_disparity_flag": True,
+        "medicaid_extended": NY_STATE_URGENCY_CONTEXT["medicaid_extended"],
+        "racial_disparity_flag": NY_STATE_URGENCY_CONTEXT["racial_disparity_flag"],
     }
 }
 

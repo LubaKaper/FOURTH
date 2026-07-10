@@ -19,7 +19,11 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from constants import NY_POSTPARTUM_VISIT_RATE_2023, NY_WELL_BABY_VISIT_RATE_2023
+from constants import (
+    NY_POSTPARTUM_VISIT_RATE_2023,
+    NY_STATE_URGENCY_CONTEXT,
+    NY_WELL_BABY_VISIT_RATE_2023,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -279,8 +283,7 @@ def _build_outcome_dict(
         "hcahps_care_transition_star": _to_int_or_none(measures["care_transition_star_raw"]),
         "hcahps_overall_star": _to_int_or_none(measures["overall_star_raw"]),
         "readmission_penalty": readmission_index.get(facility_id),
-        "state_mortality_rank": "bottom_quartile",
-        "racial_disparity_flag": True,
-        "medicaid_extended": True,
+        # State-level context, identical for all NY hospitals (see constants.py)
+        **NY_STATE_URGENCY_CONTEXT,
         "mmsm_participant": _to_mmsm_bool_or_none(maternal["mmsm_participant_raw"]),
     }
