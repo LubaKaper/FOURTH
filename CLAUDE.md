@@ -5,7 +5,7 @@
 - **One-liner:** Finds CMS Birthing-Friendly hospitals with postpartum outcome gaps, ranks priority accounts, and drafts Babyscripts outbound for GTM review.
 - **Stack:** Python 3, pytest, static HTML dashboard, OpenRouter API, CMS/public CSV data.
 - **Deployment:** Local CLI/static dashboard. Production send path built — requires SMTP env vars. Use `--send` flag to activate.
-- **Repo:** ECHO-standalone.
+- **Repo:** FOURTH (GitHub); local dir ECHO-standalone.
 - **Branch strategy:** Feature branches only. Never merge to main until complete.
 - **Branch naming:** `phase-N/short-description` when working in phases.
 
@@ -39,6 +39,12 @@ src/
 └── name_matching.py         — Hospital name normalization/matching helpers
 ```
 
+**App/scripts:**
+```text
+app.py                          — Streamlit demo app, read-only over data/demo_results.json
+scripts/export_demo_results.py  — Runs the real pipeline and writes data/demo_results.json
+```
+
 **Tests:**
 ```text
 tests/
@@ -57,7 +63,12 @@ tests/
 ├── test_send_mode.py
 ├── test_human_checkpoint.py
 ├── test_dashboard_generator.py
-└── test_pipeline.py         — Handoff contracts + Phase 3 integration tests
+├── test_pipeline.py         — Handoff contracts + Phase 3 integration tests
+├── test_copy_honesty.py     — Blocks conflated/unsupported claim language in copy
+├── test_network_block.py    — Guards that the offline suite never hits the network
+├── test_app_data.py         — Validates data/demo_results.json shape for app.py
+├── test_export_demo_results.py — Validates the demo results exporter script
+└── test_smm_data_availability.py — Fails loudly once CMS ships PC_07a (SMM)
 ```
 
 **Docs/data:**
@@ -68,7 +79,10 @@ AGENTS.md                    — Assistant workflow rules for this repo
 README.md                    — Public project overview
 PRODUCT_VISION.md            — Product thesis and GTM direction
 data/                        — Committed CMS/public source files
+data/demo_results.json       — Precomputed real pipeline output for app.py
+docs/images/                 — Screenshots used in README.md
 dashboard/fourth_dashboard.html — Generated local dashboard output
+.github/workflows/ci.yml     — CI: installs deps, runs offline test suite on push/PR
 ```
 
 > Update this map when you add a new file or directory.
