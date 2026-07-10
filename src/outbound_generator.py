@@ -137,7 +137,7 @@ def _email_body(hospital: dict[str, Any]) -> str:
             f"Across NY, well-baby visit completion averages {well_baby} — infant "
             f"follow-up systems work. Yet only {discharge_info} of patients at {name} "
             "reported getting the information they needed for their own recovery at "
-            "discharge. The baby gets a system; the mother gets a pamphlet.\n\n"
+            "discharge. The system you built works — for babies.\n\n"
             f"Babyscripts is built for exactly this: remote postpartum monitoring with BP kits, "
             f"a mobile app, OB-specialized care managers, and RPM CPT billing support. {proof}\n\n"
             f"{sign_off}"
@@ -181,10 +181,10 @@ def _email_body(hospital: dict[str, Any]) -> str:
     if state_avg and discharge_info:
         return (
             "Hi,\n\n"
-            f"NY is one of the stronger postpartum states — {state_avg} of Medicaid "
-            f"postpartum visits are completed statewide. But at {name}, only "
+            f"Statewide, NY completes {state_avg} of its Medicaid postpartum visits. "
+            f"But at {name}, only "
             f"{discharge_info} of patients reported getting the information they needed "
-            "for their recovery at discharge — and that handoff is where follow-through "
+            "for their own recovery at discharge — and that handoff is where follow-through "
             "starts.\n\n"
             f"Babyscripts closes that gap with remote postpartum monitoring: BP kits, mobile app, "
             f"OB-specialized care managers, and RPM CPT billing support. {proof}\n\n"
@@ -211,7 +211,8 @@ def _openrouter_prompt(hospital: dict[str, Any]) -> str:
         "discharge_info_pct": hospital.get("discharge_info_pct"),
         "discharge_info_definition": (
             "percent of patients who reported receiving the information they "
-            "needed for their recovery at discharge (HCAHPS H_DISCH_HELP_Y_P). "
+            "needed for their recovery at discharge (CMS patient-experience "
+            "survey measure H_DISCH_HELP_Y_P). "
             "This is not a postpartum visit completion rate."
         ),
         "state_postpartum_avg": hospital.get("state_postpartum_avg"),

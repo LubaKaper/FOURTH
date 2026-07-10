@@ -18,7 +18,7 @@ def _key_metric(hospital: dict[str, Any]) -> str:
     smm = hospital.get("smm_rate")
 
     if lead == "baby_vs_mother_contrast" and well_baby is not None and discharge_info is not None:
-        return f"Well-baby {float(well_baby):g}% (state) vs discharge-info {float(discharge_info):g}%"
+        return f"Well-baby {float(well_baby):g}% (state proxy) vs discharge-info {float(discharge_info):g}%"
     if lead == "hcahps_care_transition_gap" and star is not None:
         return f"Care transition {star}/5 stars"
     if lead == "smm_rate_gap" and smm is not None:

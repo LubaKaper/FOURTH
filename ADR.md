@@ -247,7 +247,7 @@ Three layers, 0–100 total:
 
 **Social proof:** "Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit." (LCMC Health case study)
 
-**Core outbound hook:** Baby vs mother contrast — "Across NY, well-baby visit completion averages 94%. Only 61% of patients at this hospital reported getting the information they needed for their own recovery at discharge. The baby gets a system; the mother gets a pamphlet."
+**Core outbound hook:** Baby vs mother contrast — "Across NY, well-baby visit completion averages 94% — infant follow-up systems work. Yet only 61% of patients at this hospital reported getting the information they needed for their own recovery at discharge. The system you built works — for babies."
 
 **Three email angles per hospital:**
 1. **Moral** — "You made a commitment. The data shows a gap."

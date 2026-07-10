@@ -13,7 +13,7 @@ from src.gap_calculator import calculate_gap_score
 from src.human_checkpoint import _key_metric
 from src.outbound_generator import _angle_reason, _email_body, _openrouter_prompt, _subject
 from src.urgency_ranker import add_urgency
-from tests.fixtures import FINANCIAL_ONLY, HIGH_GAP, MEDIUM_GAP
+from tests.fixtures import FINANCIAL_ONLY, HIGH_GAP, LOW_GAP, MEDIUM_GAP, SMM_ONLY
 
 FORBIDDEN_PHRASES = [
     "postpartum maternal completion",
@@ -32,7 +32,10 @@ def _ready(fixture: dict) -> dict:
 
 
 def test_no_surface_claims_visit_completion_from_discharge_measure():
-    for fixture in (HIGH_GAP, MEDIUM_GAP, FINANCIAL_ONLY):
+    # Covers all five lead angles: HIGH_GAP -> baby_vs_mother_contrast,
+    # MEDIUM_GAP -> hcahps_care_transition_gap, FINANCIAL_ONLY -> financial_unrealized,
+    # LOW_GAP -> state_strength_vs_hospital_lag, SMM_ONLY -> smm_rate_gap.
+    for fixture in (HIGH_GAP, MEDIUM_GAP, FINANCIAL_ONLY, LOW_GAP, SMM_ONLY):
         h = _ready(fixture)
         text = " ".join(
             [_subject(h), _email_body(h), _angle_reason(h), _key_metric(h)]
