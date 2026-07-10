@@ -7,8 +7,9 @@ exercise LLM-path logic override by patching the same names inside the
 test (an inner unittest.mock.patch wins over this fixture).
 
 The pipeline modules are importable under two names — "src.X" (tests)
-and bare "X" (agent.py's sys.path hack). Both module objects are patched
-when present so no path is left live.
+and bare "X" (agent.py's sys.path hack). Both module objects are
+imported and patched so neither path is left live. If a third import
+identity is ever introduced, it must be added here.
 """
 
 import os
