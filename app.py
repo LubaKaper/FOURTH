@@ -311,8 +311,16 @@ button[title="Open sidebar"] svg {{
   border: 1px solid var(--fourth-border);
   border-radius: 999px;
   color: var(--fourth-text);
-  font-weight: 700;
   box-shadow: none;
+}}
+
+[data-testid="stPopover"] button p {{
+  font-family: var(--fourth-body-font);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fourth-text);
 }}
 
 [data-testid="stPopover"] button:hover {{
@@ -1136,7 +1144,7 @@ def main() -> None:
 
     _, palette_col = st.columns([0.82, 0.18])
     with palette_col:
-        with st.popover("🎨 Palette"):
+        with st.popover("Palette"):
             st.radio(
                 "Palette",
                 options=list(THEMES),
