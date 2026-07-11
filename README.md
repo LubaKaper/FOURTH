@@ -6,7 +6,7 @@ ranks them with a 3-layer gap score, and drafts claim-validated outbound
 email for a GTM engineer to review. Built for maternal health companies
 like Babyscripts; hospitals are the sales targets.
 
-**Live demo:** _coming soon_ · ![CI](https://github.com/LubaKaper/FOURTH/actions/workflows/ci.yml/badge.svg)
+**Live demo:** https://fourth.streamlit.app · ![CI](https://github.com/LubaKaper/FOURTH/actions/workflows/ci.yml/badge.svg)
 
 ![Ranked accounts view](docs/images/app-accounts.png)
 

@@ -224,13 +224,34 @@ button[title="Open sidebar"] svg {{
   color: var(--fourth-text) !important;
 }}
 
+/* Sidebar nav: hide native radio circles, render options as theme pills. */
+[data-testid="stSidebar"] [role="radiogroup"] label > div:first-child {{
+  display: none;
+}}
+
 [data-testid="stSidebar"] [role="radiogroup"] label {{
-  border-radius: 8px;
-  padding: 0.18rem 0.2rem;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.15rem;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
 }}
 
 [data-testid="stSidebar"] [role="radiogroup"] label:hover {{
-  background: rgba(255, 248, 244, 0.42);
+  background: rgba(255, 248, 244, 0.5);
+}}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {{
+  background: var(--fourth-surface);
+  border-color: var(--fourth-border);
+  box-shadow: 0 8px 18px rgba(17, 17, 17, 0.08);
+}}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) p {{
+  font-weight: 700;
 }}
 
 [data-testid="stSidebar"] [role="radiogroup"] p {{
@@ -238,8 +259,52 @@ button[title="Open sidebar"] svg {{
   -webkit-text-fill-color: var(--fourth-text) !important;
 }}
 
+/* Sidebar section label ("View") */
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {{
+  font-size: 0.74rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fourth-muted) !important;
+  -webkit-text-fill-color: var(--fourth-muted) !important;
+}}
+
+/* Palette popover: trigger reads as a header chip; options match sidebar pills. */
+[data-testid="stPopover"] button {{
+  background: var(--fourth-surface);
+  border: 1px solid var(--fourth-border);
+  border-radius: 999px;
+  color: var(--fourth-text);
+  font-weight: 650;
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.1);
+}}
+
+[data-testid="stPopover"] button:hover {{
+  border-color: var(--fourth-primary);
+  color: var(--fourth-text);
+}}
+
+[data-testid="stPopoverBody"] [role="radiogroup"] label > div:first-child {{
+  display: none;
+}}
+
+[data-testid="stPopoverBody"] [role="radiogroup"] label {{
+  display: flex;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+}}
+
+[data-testid="stPopoverBody"] [role="radiogroup"] label:has(input:checked) {{
+  background: var(--fourth-primary-soft);
+  border-color: var(--fourth-border);
+}}
+
 .block-container {{
-  padding-top: 1.25rem;
+  /* Clear Streamlit's fixed header (2.6rem) so the top row — the palette
+     popover — is never under its click-intercepting toolbar. */
+  padding-top: 3.4rem;
   padding-bottom: 3rem;
   max-width: 1280px;
 }}
@@ -333,7 +398,9 @@ hr {{
   margin: 0;
   max-width: 760px;
   font-family: var(--fourth-display-font);
-  font-size: clamp(2.55rem, 4.6vw, 5.25rem);
+  /* Max sized so "INTELLIGENCE." fits the text column without clipping
+     behind the device visual at any width. */
+  font-size: clamp(2.3rem, 3.5vw, 4rem);
   font-weight: 900;
   line-height: 1;
   text-transform: uppercase;
@@ -667,6 +734,19 @@ hr {{
   font-weight: 650;
 }}
 
+/* Between phone and full desktop the device visual crowds the headline —
+   drop it earlier than the full mobile breakpoint. */
+@media (max-width: 1150px) {{
+  .fourth-hero {{
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }}
+
+  .fourth-visual {{
+    display: none;
+  }}
+}}
+
 @media (max-width: 760px) {{
   .block-container {{
     padding-left: 1rem;
@@ -959,13 +1039,9 @@ path (not exposed here) enforces an approval gate, a final send gate, a
 
 def main() -> None:
     st.set_page_config(page_title="Fourth — Account Intelligence", page_icon="🏥", layout="wide")
-    theme_key = st.sidebar.radio(
-        "Palette",
-        options=list(THEMES),
-        format_func=lambda key: THEMES[key]["label"],
-        index=0,
-    )
-    apply_theme(theme_key)
+    if "palette" not in st.session_state:
+        st.session_state.palette = next(iter(THEMES))
+    apply_theme(st.session_state.palette)
 
     if not RESULTS_PATH.exists():
         st.warning("Demo data not generated yet. Run:")
@@ -976,6 +1052,17 @@ def main() -> None:
     except (ValueError, json.JSONDecodeError) as exc:
         st.error(f"demo_results.json is invalid: {exc}")
         st.stop()
+
+    _, palette_col = st.columns([0.82, 0.18])
+    with palette_col:
+        with st.popover("🎨 Palette"):
+            st.radio(
+                "Palette",
+                options=list(THEMES),
+                format_func=lambda key: THEMES[key]["label"],
+                key="palette",
+                label_visibility="collapsed",
+            )
 
     render_header(data)
     view = st.sidebar.radio("View", ["Ranked accounts", "Account detail", "Methodology"])

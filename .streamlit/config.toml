@@ -1,0 +1,5 @@
+# Streamlit base theme — kills the default red accent on radios, focus
+# rings, and buttons. Per-palette colors are layered on top via CSS
+# variables in app.py (_theme_css).
+[theme]
+primaryColor = "#7C4C55"
