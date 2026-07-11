@@ -835,9 +835,13 @@ def _html_table(headers: list[str], rows: list[list[str]]) -> str:
 
 
 def render_header(data: dict[str, Any]) -> None:
-    account_count = len(data.get("accounts", []))
-    email_count = sum(1 for account in data.get("accounts", []) if account.get("email"))
+    accounts = data.get("accounts", [])
+    account_count = len(accounts)
+    email_count = sum(1 for account in accounts if account.get("email"))
     state = escape(str(data.get("state", "NY")))
+    top = max(accounts, key=lambda a: a.get("gap_score") or 0, default={})
+    top_name = escape(str(top.get("facility_name", "—")))
+    top_score = int(top.get("gap_score") or 0)
     st.markdown(
         f"""
 <section class="fourth-hero">
@@ -874,14 +878,14 @@ def render_header(data: dict[str, Any]) -> None:
     </div>
     <div class="fourth-device fourth-device-main">
       <div class="fourth-device-tag">Priority</div>
-      <div class="fourth-device-title">Nassau University Medical Center</div>
+      <div class="fourth-device-title">{top_name}</div>
       <div class="fourth-device-line"></div>
       <div class="fourth-device-line"></div>
       <div class="fourth-device-line short"></div>
       <div class="fourth-device-line"></div>
     </div>
     <div class="fourth-mini-controls">
-      <div class="fourth-mini-control"><span class="fourth-mini-value">77</span><span class="fourth-mini-label">gap score</span></div>
+      <div class="fourth-mini-control"><span class="fourth-mini-value">{top_score}</span><span class="fourth-mini-label">gap score</span></div>
       <div class="fourth-mini-control"><span class="fourth-mini-value">BF</span><span class="fourth-mini-label">CMS flag</span></div>
       <div class="fourth-mini-control"><span class="fourth-mini-value">NY</span><span class="fourth-mini-label">market</span></div>
     </div>

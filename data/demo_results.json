@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-10T21:19:34+00:00",
+  "generated_at": "2026-07-11T03:55:56+00:00",
   "state": "NY",
   "accounts": [
     {
@@ -18,16 +18,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 1,
       "readmission_penalty": true,
-      "gap_score": 77.0,
+      "gap_score": 67.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 27,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -38,14 +38,14 @@
         "facility_name": "Nassau University Medical Center",
         "recipient_role": "VP Patient Experience",
         "subject": "Nassau University Medical Center \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nNewborns in New York show up for their well-baby visits at rates above 91%, yet new mothers often don't make it back for their own postpartum checkups. At Nassau University Medical Center, 69% of patients report receiving the discharge information they needed\u2014and your care transition rating sits at 1 star. That gap between infant and maternal follow-up is real.\n\nRemote postpartum monitoring closes it. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. The model is straightforward: a BP kit, mobile app, and OB-specialized care managers handle the logistics. You bill for RPM using standard CPT codes.\n\nGiven your Birthing-Friendly designation, this aligns directly with your commitment to maternal outcomes.\n\nAre you seeing similar discharge information gaps in your postpartum population, or is follow-up completion already a strength?",
+        "email_body": "Hi,\n\nWhile 91.5% of newborns in NY make it to their well-baby visits, many mothers fall through the cracks after discharge. At Nassau University Medical Center, only 69% of patients report receiving the information they need for recovery, and your care transition rating sits at just 1 star.\n\nThis gap matters because maternal outcomes directly impact your Birthing-Friendly designation and patient experience scores. Remote postpartum monitoring can help bridge this divide\u2014BP monitoring kits, a mobile app, and OB-specialized care managers working together to keep moms engaged after they leave.\n\nHospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit.\n\nWould you be open to a 15-minute call to explore how this might fit into your current maternal care workflow?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 69% discharge-info at hospital",
-        "gap_score": 77.0,
-        "urgency_tier": "high",
+        "gap_score": 67.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -66,16 +66,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 1,
       "readmission_penalty": true,
-      "gap_score": 71.0,
+      "gap_score": 61.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 21,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -86,14 +86,14 @@
         "facility_name": "Brookdale Hospital Medical Center",
         "recipient_role": "VP Patient Experience",
         "subject": "Brookdale Hospital Medical Center \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nBrookdale Hospital Medical Center earned the CMS Birthing-Friendly designation\u2014a real commitment to maternal care. Yet postpartum monitoring is where the gap often appears. While 91.5% of infants in NY complete their well-baby visits, mothers are completing discharge recovery instructions at 74%, well below the state benchmark of 82.4%. That disconnect matters: patients without clear guidance on their own recovery are less likely to catch warning signs early.\n\nRemote postpartum monitoring closes this gap directly. Babyscripts provides BP monitoring, mobile app check-ins, and OB-specialized care managers\u2014all built for the 30 days when maternal complications are highest. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit.\n\nDoes remote postpartum monitoring fit into your current patient experience roadmap?",
+        "email_body": "Hi,\n\nI noticed Brookdale Hospital Medical Center earned the CMS Birthing-Friendly designation, yet your HCAHPS care transition star rating is 1 out of 5. With 74% of patients reporting they received needed discharge information, there\u2019s a clear disconnect between what\u2019s provided and how smoothly patients transition home.\n\nBabyscripts\u2019 remote postpartum monitoring\u2014BP kits, app, OB-specialized care managers, and RPM billing support\u2014helps hospitals close this gap. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.\n\nGiven your focus on maternal care quality, how are you currently supporting postpartum follow-up for patients after discharge?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 74% discharge-info at hospital",
-        "gap_score": 71.0,
-        "urgency_tier": "high",
+        "gap_score": 61.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -114,16 +114,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 1,
       "readmission_penalty": true,
-      "gap_score": 71.0,
+      "gap_score": 61.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 21,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -134,14 +134,14 @@
         "facility_name": "Harlem Hospital Center",
         "recipient_role": "VP Patient Experience",
         "subject": "Harlem Hospital Center \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nYou've earned Harlem Hospital Center the CMS Birthing-Friendly designation\u2014which says something real about your commitment to maternal care. Yet here's what we're seeing: while well-baby visits in NY average 91.5%, the gap often isn't clinical. It's friction. Mothers miss their 30-day postpartum check-ins not because they don't want to go\u2014they're navigating discharge instructions, monitoring their own recovery, and coordinating childcare all at once.\n\nThat friction shows up in your data: 76% of patients report receiving discharge information they need. When mothers feel unclear about their recovery path, follow-through drops.\n\nHospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. We do this through remote monitoring (BP kit, mobile app) paired with OB-specialized care managers who reach out proactively\u2014removing the appointment-scheduling burden during those critical first weeks.\n\nWhat's your current workflow for ensuring mothers actually show up to that 30-day visit?",
+        "email_body": "Hi,\n\nWhile Harlem Hospital Center earned the CMS Birthing-Friendly designation, I noticed a gap between your strong infant care metrics and postpartum support. Your 1-star HCAHPS care transition rating and 76% discharge info rate suggest patients may struggle with the transition home. \n\nBabyscripts offers remote postpartum monitoring\u2014BP kits, a mobile app, and OB-specialized care managers\u2014to help close this gap. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.\n\nHow are you currently supporting postpartum follow-up for high-risk patients?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 76% discharge-info at hospital",
-        "gap_score": 71.0,
-        "urgency_tier": "high",
+        "gap_score": 61.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -162,16 +162,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 1,
       "readmission_penalty": true,
-      "gap_score": 71.0,
+      "gap_score": 61.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 21,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -182,14 +182,14 @@
         "facility_name": "Healthalliance Hospital Marys Avenue Campus",
         "recipient_role": "VP Patient Experience",
         "subject": "Healthalliance Hospital Marys Avenue Campus \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nMost hospitals focus heavily on the newborn\u2014well-baby visits in NY average 91.5%\u2014yet struggle to keep mothers engaged in their own recovery. At Healthalliance Hospital Marys Avenue Campus, 73% of postpartum patients report receiving the discharge information they need, and your care transition rating sits at 1 star. That gap matters: mothers who disappear post-discharge become high-risk cases.\n\nRemote postpartum monitoring closes this gap. It pairs BP kits and a mobile app with OB-specialized care managers who keep mothers accountable to their 30-day visit. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. You already earned the CMS Birthing-Friendly designation\u2014this extends that commitment beyond the hospital door.\n\nDoes your team track postpartum visit completion rates, or is that data fragmented across departments right now?",
+        "email_body": "Hi,\n\nYou've earned the CMS Birthing-Friendly designation\u2014that's meaningful work. Yet after delivery, the picture shifts. While well-baby visits track at 91.5% statewide in NY, postpartum care completion tells a different story.\n\nRight now, 73% of patients at Healthalliance Hospital Marys Avenue Campus report receiving the discharge information they need for recovery. That gap compounds: mothers who don't get clear recovery guidance are less likely to show up for their own 30-day postpartum visit, even as their newborns stay on track.\n\nHospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. The service wraps remote monitoring\u2014BP kit, mobile app, OB-specialized care managers\u2014around discharge planning so mothers stay connected during those critical first weeks.\n\nDoes bridging that mother-to-baby care gap align with where you're focused right now?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 73% discharge-info at hospital",
-        "gap_score": 71.0,
-        "urgency_tier": "high",
+        "gap_score": 61.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -210,16 +210,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 2,
       "readmission_penalty": true,
-      "gap_score": 71.0,
+      "gap_score": 61.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 21,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -230,14 +230,14 @@
         "facility_name": "Jacobi Medical Center",
         "recipient_role": "VP Patient Experience",
         "subject": "Jacobi Medical Center \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nJacobi Medical Center earned CMS's Birthing-Friendly designation\u2014a real commitment to mothers. Yet postpartum follow-up tells a different story: only 73% of patients report receiving the information they need at discharge to manage their recovery. That gap matters because mothers miss warning signs when they're unclear on next steps.\n\nWell-baby visits in New York average 91.5%, but maternal 30-day postpartum attendance lags significantly behind. The asymmetry is stark\u2014we monitor infants closely while mothers fall through the cracks.\n\nRemote postpartum monitoring closes this gap. Babyscripts provides BP monitoring, a mobile app, and OB-specialized care managers who reach patients directly in those critical first weeks. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit.\n\nDoes bridging that maternal follow-up gap align with your patient experience priorities right now?",
+        "email_body": "Hi,\n\nNew York hospitals average 91.5% well-baby visit completion, yet maternal postpartum care lags significantly behind. Jacobi Medical Center earned the CMS Birthing-Friendly designation, but your care transition star rating of 1 suggests there's room to strengthen support during this critical period.\n\nWith 73% of patients receiving needed discharge information, there's an opportunity to extend that support into the 30-day postpartum window. Remote postpartum monitoring\u2014BP kits, mobile apps, and OB-specialized care managers\u2014can bridge this gap.\n\nHospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.\n\nWould you be open to a 15-minute call next week to discuss how this could work at Jacobi Medical Center?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 73% discharge-info at hospital",
-        "gap_score": 71.0,
-        "urgency_tier": "high",
+        "gap_score": 61.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -258,16 +258,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 2,
       "readmission_penalty": true,
-      "gap_score": 71.0,
+      "gap_score": 61.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 21,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -278,14 +278,14 @@
         "facility_name": "St Barnabas Hospital",
         "recipient_role": "VP Patient Experience",
         "subject": "St Barnabas Hospital \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nMost hospitals focus heavily on the baby's first visit\u2014and for good reason. But we rarely see the same attention paid to the mother's recovery in those critical 30 days postpartum.\n\nAt St Barnabas Hospital, 74% of patients report receiving the discharge information they need for recovery. That gap matters: postpartum complications are silent, and many mothers don't reach their follow-up visit until problems escalate.\n\nHospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. The service combines remote BP monitoring, a mobile app, and OB-specialized care managers\u2014with built-in RPM billing support.\n\nGiven your Birthing-Friendly designation, there's a natural fit to extend that commitment from delivery into recovery.\n\nWould a brief call make sense to see how this maps to your current gaps?",
+        "email_body": "Hi,\n\nSt Barnabas Hospital\u2019s 1-star HCAHPS care transition rating suggests patients may struggle with post-discharge support, even though 74% report receiving needed recovery info at discharge. Yet NY\u2019s statewide postpartum visit average sits at 82.4%, and your well-baby visit rate is 91.5%. That gap between maternal and infant care completion could impact both outcomes and CMS recognition\u2014especially after earning the Birthing-Friendly designation.\n\nBabyscripts\u2019 remote postpartum monitoring (BP kits, app, OB-specialized care managers) helped LCMC Health double postpartum visit completion. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.\n\nHow are you currently addressing postpartum care follow-through?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 74% discharge-info at hospital",
-        "gap_score": 71.0,
-        "urgency_tier": "high",
+        "gap_score": 61.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -306,16 +306,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 1,
       "readmission_penalty": true,
-      "gap_score": 71.0,
+      "gap_score": 61.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 21,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -326,14 +326,14 @@
         "facility_name": "St John's Episcopal Hospital at South Shore",
         "recipient_role": "VP Patient Experience",
         "subject": "St John's Episcopal Hospital at South Shore \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nSt John's Episcopal Hospital at South Shore has earned the CMS Birthing-Friendly designation\u2014a real commitment to maternal care. Yet here's what often gets missed: while 91.5% of babies in NY complete their well-baby visits, mothers fall behind. Only 75% of your patients report receiving the discharge information they need for recovery.\n\nThat gap matters because mothers who lack clarity about what to watch for or when to reach out simply don't follow through on postpartum care. The data shows up in care transitions\u2014and in readmissions that were preventable.\n\nHospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. The service pairs remote monitoring (BP kit + app) with OB-specialized care managers, so mothers have both the tools and the support to stay on track.\n\nDoes it make sense to explore whether this could move your discharge clarity and follow-up rates?",
+        "email_body": "Hi,\n\nWhile 91.5% of newborns in NY get timely well-baby visits, postpartum care often lags\u2014especially when discharge information is only reaching 75% of patients. St John's Episcopal Hospital at South Shore earned the CMS Birthing-Friendly designation, yet there's room to strengthen the maternal care journey.\n\nBabyscripts supports remote postpartum monitoring with BP kits, a mobile app, and OB-specialized care managers. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.\n\nHow are you currently supporting postpartum care transitions beyond discharge?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 75% discharge-info at hospital",
-        "gap_score": 71.0,
-        "urgency_tier": "high",
+        "gap_score": 61.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -354,16 +354,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 2,
       "readmission_penalty": true,
-      "gap_score": 71.0,
+      "gap_score": 61.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 21,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -374,14 +374,14 @@
         "facility_name": "Wyckoff Heights Medical Center",
         "recipient_role": "VP Patient Experience",
         "subject": "Wyckoff Heights Medical Center \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nWyckoff Heights Medical Center earned CMS Birthing-Friendly status\u2014a meaningful commitment to maternal care. Yet here's what often gets overlooked: while well-baby visits in NY average 91.5%, postpartum maternal follow-up lags behind. Only 74% of your patients report receiving the information they need at discharge for their own recovery.\n\nThat gap matters. Mothers who lack clear discharge guidance miss early warning signs for conditions like preeclampsia and postpartum depression\u2014issues that show up between days 5 and 30.\n\nRemote postpartum monitoring closes this. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Our care managers stay connected via mobile app and BP monitoring\u2014no extra clinic visits required\u2014with built-in RPM billing support.\n\nDoes expanding postpartum follow-up completion align with your patient experience priorities?",
+        "email_body": "Hi [First Name],\n\nYour team's commitment to earning the CMS Birthing-Friendly designation shows a strong focus on maternal care. However, with a 1-star HCAHPS care transition rating and 74% of patients reporting they received needed discharge information, there's a clear gap between current support and the 82.4% state average for postpartum visit completion.\n\nBabyscripts' remote postpartum monitoring\u2014BP kits, app, OB-specialized care managers, and RPM billing support\u2014has helped hospitals bridge this gap. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.\n\nGiven Wyckoff Heights Medical Center\u2019s high well-baby visit rate (91.5% statewide average), addressing maternal care continuity could further strengthen your outcomes.\n\nAre you exploring ways to improve postpartum visit completion rates?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 74% discharge-info at hospital",
-        "gap_score": 71.0,
-        "urgency_tier": "high",
+        "gap_score": 61.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -402,16 +402,16 @@
       "hcahps_care_transition_star": 1,
       "hcahps_overall_star": 2,
       "readmission_penalty": true,
-      "gap_score": 71.0,
+      "gap_score": 61.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 21,
-        "urgency_context": 25
+        "urgency_context": 15
       },
-      "urgency_tier": "high",
-      "urgency_flag": "\ud83d\udd34 Act this week",
+      "urgency_tier": "medium",
+      "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -422,14 +422,14 @@
         "facility_name": "Nyack Hospital",
         "recipient_role": "VP Patient Experience",
         "subject": "Nyack Hospital \u2014 1/5 care transition score",
-        "email_body": "Hi,\n\nNyack Hospital's HCAHPS care transition score is 1/5 stars. That's the discharge moment \u2014 the handoff where postpartum patients either stay connected to care or fall through.\n\nBabyscripts closes that gap with remote postpartum monitoring: BP kits, mobile app, OB-specialized care managers, and RPM CPT billing support. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit.\n\nWorth a 15-minute conversation?\n\nBest,\n[YOUR NAME]",
+        "email_body": "Hi,\n\nNyack Hospital\u2019s 1-star care transition rating suggests patients may be leaving without the support they need for a safe recovery. With 77% of patients reporting adequate discharge information\u2014below the state average of 82.4%\u2014there\u2019s room to strengthen postpartum engagement. \n\nHospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study. Remote monitoring, OB-specialized care managers, and RPM billing support could help close this gap. \n\nAre you seeing similar challenges with postpartum care transitions?",
         "product": "Babyscripts",
         "lead_angle": "hcahps_care_transition_gap",
         "angle_reason": "Care transition 1/5 stars \u2014 below 3-star threshold",
-        "gap_score": 71.0,
-        "urgency_tier": "high",
+        "gap_score": 61.0,
+        "urgency_tier": "medium",
         "sent_at": null,
-        "status": "ready_to_send",
+        "status": "pending_review",
         "claim_validation": "passed",
         "data_confidence": "high"
       }
@@ -450,16 +450,16 @@
       "hcahps_care_transition_star": 2,
       "hcahps_overall_star": 2,
       "readmission_penalty": true,
-      "gap_score": 69.0,
+      "gap_score": 59.0,
       "gap_breakdown": {
         "commitment_strength": 25,
         "outcome_gap": 19,
-        "urgency_context": 25
+        "urgency_context": 15
       },
       "urgency_tier": "medium",
       "urgency_flag": "\ud83d\udfe1 Monitor",
       "urgency_breakdown": {
-        "state_mortality_rank": 10,
+        "state_mortality_rank": 0,
         "racial_disparity": 8,
         "medicaid_extended": 7
       },
@@ -470,11 +470,11 @@
         "facility_name": "Ellis Hospital",
         "recipient_role": "VP Patient Experience",
         "subject": "Ellis Hospital \u2014 infant follow-up is working; maternal discharge prep lags",
-        "email_body": "Hi,\n\nEllis Hospital earned CMS Birthing-Friendly status\u2014a meaningful commitment to maternal care. Yet postpartum follow-up tells a different story. While 91.5% of newborns in NY complete their well-baby visits, far fewer mothers finish their own 30-day postpartum check. This gap matters: mothers who miss that visit face higher readmission and complication rates, and it shows up in your discharge experience scores.\n\nOnly 76% of your patients reported receiving the information they needed for recovery at discharge. That disconnect often leads to missed appointments down the line.\n\nRemote postpartum monitoring closes this gap. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. The service includes BP monitoring, mobile app engagement, and OB-specialized care managers\u2014with RPM billing support built in.\n\nWould it make sense to explore how this works at Ellis Hospital specifically?",
+        "email_body": "Hi,\n\nEllis Hospital's 2-star care transition rating suggests new moms may be missing critical postpartum support. With 76% of patients receiving needed discharge info\u2014below the 82.4% state average for postpartum visits\u2014there's a clear gap in ongoing maternal care.\n\nBabyscripts provides remote postpartum monitoring (BP kits, app, OB-specialized care managers) to bridge that gap. Hospitals using Babyscripts saw patients become 2x more likely to complete their 30-day postpartum visit. Source: LCMC Health case study.\n\nGiven your CMS Birthing-Friendly designation, I'm curious: what's your current approach to postpartum care continuity beyond discharge?",
         "product": "Babyscripts",
         "lead_angle": "baby_vs_mother_contrast",
         "angle_reason": "NY well-baby 91.5% (state proxy) vs 76% discharge-info at hospital",
-        "gap_score": 69.0,
+        "gap_score": 59.0,
         "urgency_tier": "medium",
         "sent_at": null,
         "status": "pending_review",
