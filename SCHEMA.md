@@ -158,6 +158,13 @@ Each hospital dict is enriched with:
 
 `state_mortality_rank`, `racial_disparity_flag`, and `medicaid_extended` are **state-level context** — identical for every hospital in a state (same pattern as `well_baby_visit_estimated`). They add flat urgency-context points and cannot differentiate hospitals within a state. Sources are cited in `src/constants.py`.
 
+`state_mortality_rank` is **computed, not hardcoded**: Tool 2 derives it from
+`data/state_maternal_mortality.csv` (CDC NCHS/NVSS, "Maternal Deaths and
+Mortality Rates by State, 2018–2022"). Quartile cutoffs are computed over
+states with reliable (non-suppressed) rates; best quartile → `"top_quartile"`,
+worst → `"bottom_quartile"`, middle two → `"middle"`. States whose rate CDC
+suppressed (<20 deaths) get `None`. NY (22.4/100k) computes to `"middle"`.
+
 Allowed `state_mortality_rank` values:
 
 - `"top_quartile"`

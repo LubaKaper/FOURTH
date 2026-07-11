@@ -21,6 +21,29 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from agent import run_pipeline
 
+# Synthetic gate-cleared email for send-mode plumbing tests. These tests
+# verify dedup/mailer/audit wiring, not whether live NY data crosses the
+# auto-approve threshold — with the data-driven state_mortality_rank, real
+# NY accounts legitimately score below the >=70 gate, so plumbing tests
+# inject their own sendable email at the send-gate boundary. The gate's
+# own behavior is covered by tests/test_send_gate.py.
+READY_EMAIL = {
+    "facility_id": "330199",
+    "facility_name": "Synthetic Ready Hospital",
+    "recipient_role": "CMO",
+    "subject": "subject",
+    "email_body": "body",
+    "product": "Babyscripts",
+    "lead_angle": "hcahps_care_transition_gap",
+    "angle_reason": "reason",
+    "gap_score": 75.0,
+    "urgency_tier": "high",
+    "sent_at": None,
+    "status": "ready_to_send",
+    "claim_validation": "passed",
+    "data_confidence": "high",
+}
+
 
 # ── review-only mode (default) ────────────────────────────────────────────────
 
@@ -51,7 +74,8 @@ def test_send_mode_calls_mailer_for_cleared_emails(tmp_path):
     """With --send, mailer.send_batch is called with the dedup-cleared emails."""
     log_path = tmp_path / "send_log.csv"
 
-    with patch("dedup.filter_duplicates", return_value=[]) as mock_dedup, \
+    with patch("agent.filter_sendable", return_value=[dict(READY_EMAIL)]), \
+         patch("dedup.filter_duplicates", return_value=[]) as mock_dedup, \
          patch("mailer.send_batch", return_value=[]) as mock_send, \
          patch("audit_logger.log_send") as mock_log:
         run_pipeline("NY", send_mode=True, log_path=log_path)
@@ -72,7 +96,8 @@ def test_send_mode_runs_dedup_before_mailer(tmp_path):
         call_order.append("mailer")
         return emails
 
-    with patch("dedup.filter_duplicates", side_effect=fake_dedup), \
+    with patch("agent.filter_sendable", return_value=[dict(READY_EMAIL)]), \
+         patch("dedup.filter_duplicates", side_effect=fake_dedup), \
          patch("mailer.send_batch", side_effect=fake_send), \
          patch("audit_logger.log_send"):
         run_pipeline("NY", send_mode=True, log_path=log_path)
@@ -90,7 +115,8 @@ def test_send_mode_logs_each_sent_email_to_audit(tmp_path):
         {"facility_id": "B", "sent_at": "2026-05-08T14:00:01Z"},
     ]
 
-    with patch("dedup.filter_duplicates", side_effect=lambda emails, p: emails), \
+    with patch("agent.filter_sendable", return_value=[dict(READY_EMAIL)]), \
+         patch("dedup.filter_duplicates", side_effect=lambda emails, p: emails), \
          patch("mailer.send_batch", return_value=sent_emails) as mock_send, \
          patch("audit_logger.log_send") as mock_log:
         run_pipeline("NY", send_mode=True, log_path=log_path)
@@ -103,7 +129,8 @@ def test_send_mode_passes_dry_run_false_to_mailer(tmp_path):
     """In send mode, mailer must be called with dry_run=False."""
     log_path = tmp_path / "send_log.csv"
 
-    with patch("dedup.filter_duplicates", side_effect=lambda emails, p: emails), \
+    with patch("agent.filter_sendable", return_value=[dict(READY_EMAIL)]), \
+         patch("dedup.filter_duplicates", side_effect=lambda emails, p: emails), \
          patch("mailer.send_batch", return_value=[]) as mock_send, \
          patch("audit_logger.log_send"):
         run_pipeline("NY", send_mode=True, log_path=log_path)

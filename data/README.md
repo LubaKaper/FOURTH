@@ -46,7 +46,27 @@ For refreshing files when they get out of date.
 
 ### NCHS
 
-- **Health E-Stat 113 / maternal mortality source:** needs re-verification before citation. The previously listed `https://www.cdc.gov/nchs/products/databriefs/db113.htm` URL resolves to an unrelated data brief and should not be used as the maternal mortality source.
+- **Health E-Stat 113 (national maternal mortality by race):**
+  https://www.cdc.gov/nchs/data/hestat/hestat113.pdf — "Maternal Mortality
+  Rates in the United States, 2024" (Hoyert DL, NCHS Health E-Stats, March
+  2026). Verified by direct read of `data/hestat113.pdf`: **national data
+  only**, broken out by race/Hispanic origin and age group; contains no
+  state-level breakdown. Supports the national racial-disparity finding
+  (Black non-Hispanic 44.8/100k vs White non-Hispanic 14.2, 2024). Must NOT
+  be cited for any state-level ranking claim. (The old
+  `products/databriefs/db113.htm` URL was wrong — unrelated data brief.)
+- **State maternal mortality rates (`state_maternal_mortality.csv`):**
+  CDC NCHS/NVSS, "Maternal Deaths and Mortality Rates by State, 2018–2022" —
+  https://www.cdc.gov/nchs/maternal-mortality/mmr-2018-2022-state-data.pdf
+  (hub: https://www.cdc.gov/nchs/maternal-mortality/data.htm). Values
+  cross-verified against KFF's republication of the same NVSS table. Rates
+  for states with <20 deaths are suppressed by CDC (empty rate +
+  `reliability_flag=suppressed`). National rate for the period: 23.2/100k.
+  Tool 2 computes `state_mortality_rank` quartiles from this file.
+- **NY-specific racial disparity:** NY State Comptroller audit, July 2024 —
+  https://www.osc.ny.gov/state-agencies/audits/2024/07/30/maternal-health —
+  Black women in NY died at over 4x the rate of White women (2018–2020),
+  with the disparity widening even as NY's overall rate improved.
 
 ### Cureus
 

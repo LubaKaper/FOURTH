@@ -16,6 +16,7 @@ returns [] for them.
 
 import csv
 import logging
+import statistics
 from pathlib import Path
 from typing import Any
 
@@ -32,6 +33,9 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 HCAHPS_PATH = DATA_DIR / "HCAHPS-Hospital-NY.csv"
 MATERNAL_HEALTH_PATH = DATA_DIR / "Maternal_Health-Hospital.csv"
 READMISSIONS_PATH = DATA_DIR / "FY_2026_Hospital_Readmissions_Reduction_Program_Hospital.csv"
+# CDC NCHS/NVSS, "Maternal Deaths and Mortality Rates by State, 2018-2022".
+# Rates for states with <20 deaths are suppressed by CDC (reliability_flag).
+STATE_MORTALITY_PATH = DATA_DIR / "state_maternal_mortality.csv"
 
 MEASURE_CARE_TRANSITION_STAR = "H_COMP_6_STAR_RATING"
 MEASURE_DISCHARGE_INFO_PCT = "H_DISCH_HELP_Y_P"
@@ -77,8 +81,11 @@ def score_outcomes(
     hcahps_index = _build_hcahps_measure_index()
     maternal_index = _build_maternal_health_index()
     readmission_index = _build_readmission_penalty_index()
+    mortality_rank_index = _build_state_mortality_rank_index()
     scored = [
-        _build_outcome_dict(h, hcahps_index, maternal_index, readmission_index)
+        _build_outcome_dict(
+            h, hcahps_index, maternal_index, readmission_index, mortality_rank_index
+        )
         for h in hospitals
     ]
     logger.info("Tool 2: scored %d hospitals", len(scored))
@@ -159,6 +166,47 @@ def _build_readmission_penalty_index() -> dict[str, bool | None]:
     }
 
 
+def _build_state_mortality_rank_index() -> dict[str, str | None]:
+    """Read state_maternal_mortality.csv; return {state: quartile rank}.
+
+    Quartile cutoffs are computed over states with reliable (non-suppressed)
+    CDC rates only. Mapping per SCHEMA.md's allowed values:
+    best quartile -> "top_quartile", worst quartile -> "bottom_quartile",
+    middle two -> "middle". Suppressed states map to None — missing data is
+    None, never imputed.
+    """
+    rates: dict[str, float | None] = {}
+    try:
+        with STATE_MORTALITY_PATH.open(newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                rates[row["state"]] = _to_float_or_none(
+                    row["maternal_mortality_rate_per_100k"]
+                )
+    except OSError as e:
+        raise RuntimeError(
+            f"Could not read state maternal mortality file at {STATE_MORTALITY_PATH}: {e}"
+        ) from e
+
+    reliable = sorted(rate for rate in rates.values() if rate is not None)
+    if len(reliable) < 4:
+        raise RuntimeError(
+            f"State maternal mortality file at {STATE_MORTALITY_PATH} has too few "
+            f"reliable rates ({len(reliable)}) to compute quartiles"
+        )
+    q1, _, q3 = statistics.quantiles(reliable, n=4)
+
+    def rank(rate: float | None) -> str | None:
+        if rate is None:
+            return None
+        if rate <= q1:
+            return "top_quartile"
+        if rate > q3:
+            return "bottom_quartile"
+        return "middle"
+
+    return {state: rank(rate) for state, rate in rates.items()}
+
+
 def _lookup_measures(
     index: dict[str, dict[str, dict[str, str]]],
     ccn: str,
@@ -235,6 +283,7 @@ def _build_outcome_dict(
     hcahps_index: dict[str, dict[str, dict[str, str]]],
     maternal_index: dict[str, dict[str, str | None]],
     readmission_index: dict[str, bool | None],
+    mortality_rank_index: dict[str, str | None],
 ) -> dict[str, Any]:
     """Return a new dict: input hospital + ADR Tool 2 fields."""
     facility_id = hospital["facility_id"]
@@ -285,5 +334,10 @@ def _build_outcome_dict(
         "readmission_penalty": readmission_index.get(facility_id),
         # State-level context, identical for all NY hospitals (see constants.py)
         **NY_STATE_URGENCY_CONTEXT,
+        # Computed from CDC NCHS state data (data/state_maternal_mortality.csv);
+        # None when CDC suppressed the state's rate (<20 deaths).
+        "state_mortality_rank": mortality_rank_index.get(
+            str(hospital.get("state") or "").upper()
+        ),
         "mmsm_participant": _to_mmsm_bool_or_none(maternal["mmsm_participant_raw"]),
     }

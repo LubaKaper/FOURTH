@@ -22,11 +22,23 @@ NY_WELL_BABY_VISIT_RATE_2023: float = 91.5
 # Sources:
 # - medicaid_extended: KFF postpartum Medicaid coverage tracker
 #   (data/kff_postpartum_coverage.csv) — NY adopted the 12-month extension.
-# - racial_disparity_flag: NCHS Health E-Stat 113 (data/hestat113.pdf) and
-#   Cureus racial disparity study (data/cureus-racial-disparity.pdf).
-# - state_mortality_rank: NCHS Health E-Stat 113 state maternal mortality tables.
+# - racial_disparity_flag: documented racial disparity in maternal mortality,
+#   national and NY-specific.
+#   National: NCHS Health E-Stat 113, "Maternal Mortality Rates in the United
+#   States, 2024" (data/hestat113.pdf) — Black non-Hispanic maternal mortality
+#   44.8/100k live births vs 14.2 White non-Hispanic (2024, statistically
+#   significant). National-only document; it has no state breakdown.
+#   NY-specific: NY State Comptroller audit, July 2024
+#   (https://www.osc.ny.gov/state-agencies/audits/2024/07/30/maternal-health)
+#   — Black women in NY died at over 4x the rate of White women (2018-2020).
+#   See also data/cureus-racial-disparity.pdf for peer-reviewed context.
+#
+# state_mortality_rank is NOT hardcoded here: it is computed per state by
+# outcome_scorer from data/state_maternal_mortality.csv (CDC NCHS/NVSS,
+# "Maternal Deaths and Mortality Rates by State, 2018-2022"). An earlier
+# version hardcoded "bottom_quartile" for NY, which the data contradicts —
+# NY (22.4/100k) sits in the second-best quartile of reportable states.
 NY_STATE_URGENCY_CONTEXT: dict[str, bool | str] = {
     "medicaid_extended": True,
     "racial_disparity_flag": True,
-    "state_mortality_rank": "bottom_quartile",
 }

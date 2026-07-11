@@ -195,3 +195,30 @@ def test_score_outcomes_does_not_mutate_input():
         assert original == current, (
             f"{original['facility_id']} mutated by score_outcomes"
         )
+
+
+def test_state_mortality_rank_computed_from_cdc_data():
+    from src.outcome_scorer import _build_state_mortality_rank_index
+
+    index = _build_state_mortality_rank_index()
+
+    # NY: 22.4/100k (2018-2022) sits between the reliable-state quartile
+    # cutoffs — second-best quartile, i.e. "middle", NOT "bottom_quartile".
+    assert index["NY"] == "middle"
+    # Worst quartile examples per CDC data
+    assert index["TN"] == "bottom_quartile"
+    assert index["MS"] == "bottom_quartile"
+    # Best quartile example
+    assert index["CA"] == "top_quartile"
+    # CDC-suppressed states (<20 deaths) are None, never imputed
+    assert index["AK"] is None
+    assert index["VT"] is None
+
+
+def test_ny_hospitals_get_data_driven_mortality_rank():
+    from src.commitment_ingester import get_hospital_commitments
+    from src.outcome_scorer import score_outcomes
+
+    hospitals = score_outcomes(get_hospital_commitments("NY"))
+    assert hospitals
+    assert all(h["state_mortality_rank"] == "middle" for h in hospitals)
