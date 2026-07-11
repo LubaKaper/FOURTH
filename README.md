@@ -48,6 +48,7 @@ commitment_ingester
   -> urgency_ranker
   -> account_selector
   -> outbound_generator
+  -> approvals -> send gate -> dedup -> mailer   (send mode only)
   -> human_checkpoint
   -> dashboard_generator
 ```
@@ -63,6 +64,12 @@ output from a real run of the pipeline against real CMS data. No API keys
 or pipeline imports required to view it.
 
 ![Account detail view](docs/images/app-detail.png)
+
+Each account shows its gap and urgency breakdowns, signal values with
+provenance labels, and the drafted email with its claim-validation status.
+The methodology view lays out how the score is built — and which signals
+are hospital-level versus state-level proxies:
+
 ![Methodology / data honesty view](docs/images/app-methodology.png)
 
 ## Data sources
