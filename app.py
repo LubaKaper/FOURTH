@@ -22,6 +22,28 @@ REQUIRED_TOP_KEYS = {"generated_at", "state", "accounts"}
 TIER_LABELS = {"high": "High", "medium": "Medium", "low": "Low"}
 
 THEMES = {
+    "maternal_intelligence": {
+        "label": "Maternal intelligence",
+        "background": "#f7ebe9",
+        "surface": "#ffffff",
+        "surface_alt": "#f3ecec",
+        "sidebar": "#f9f2f1",
+        "hero": "#6d4b53",
+        "hero_ink": "#f3c7cf",
+        "hero_body": "rgba(255, 248, 247, 0.82)",
+        "table_header": "#f0e4e2",
+        "text": "#1e1b1b",
+        "muted": "#6e6162",
+        "border": "#e7dad8",
+        "primary": "#593a41",
+        "primary_soft": "#f0dede",
+        "secondary": "#c48f99",
+        "secondary_soft": "#f6e3e6",
+        "sage": "#8aa382",
+        "clay": "#b3705f",
+        "display_font": "'Plus Jakarta Sans', 'Avenir Next', -apple-system, sans-serif",
+        "body_font": "'Plus Jakarta Sans', 'Avenir Next', -apple-system, sans-serif",
+    },
     "mauve_editorial": {
         "label": "Mauve editorial",
         "background": "#C7A2A6",
@@ -152,14 +174,21 @@ def _badge(label: str, kind: str = "neutral") -> str:
 
 
 def _theme_css(theme: dict[str, str]) -> str:
+    hero_ink = theme.get("hero_ink", theme["text"])
+    hero_body = theme.get("hero_body", theme["muted"])
     return f"""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
+
 :root {{
   --fourth-bg: {theme["background"]};
   --fourth-surface: {theme["surface"]};
   --fourth-surface-alt: {theme["surface_alt"]};
   --fourth-sidebar: {theme["sidebar"]};
   --fourth-hero: {theme["hero"]};
+  --fourth-hero-ink: {hero_ink};
+  --fourth-hero-body: {hero_body};
   --fourth-table-header: {theme["table_header"]};
   --fourth-text: {theme["text"]};
   --fourth-muted: {theme["muted"]};
@@ -174,10 +203,15 @@ def _theme_css(theme: dict[str, str]) -> str:
   --fourth-body-font: {theme["body_font"]};
 }}
 
+.material-symbols-outlined {{
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+}}
+
 .stApp {{
-  background:
-    radial-gradient(circle at 82% 10%, rgba(255, 248, 244, 0.35), transparent 26rem),
-    var(--fourth-bg);
+  background: var(--fourth-bg);
   color: var(--fourth-text);
   font-family: var(--fourth-body-font);
 }}
@@ -193,10 +227,10 @@ footer {{
   height: 0;
 }}
 
+/* ── Sidebar: tonal panel, pill nav, no shadows ─────────────────────── */
 [data-testid="stSidebar"] {{
   background: var(--fourth-sidebar);
   border-right: 1px solid var(--fourth-border);
-  box-shadow: 16px 0 50px rgba(17, 17, 17, 0.05);
 }}
 
 [data-testid="stSidebar"] * {{
@@ -209,11 +243,11 @@ button[title="Close sidebar"],
 button[title="Open sidebar"] {{
   visibility: visible !important;
   opacity: 1 !important;
-  background: rgba(255, 248, 244, 0.82) !important;
+  background: var(--fourth-surface) !important;
   border: 1px solid var(--fourth-border) !important;
   border-radius: 999px !important;
   color: var(--fourth-text) !important;
-  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.12) !important;
+  box-shadow: none !important;
 }}
 
 [data-testid="stSidebarCollapseButton"] svg,
@@ -234,49 +268,51 @@ button[title="Open sidebar"] svg {{
   align-items: center;
   border-radius: 12px;
   border: 1px solid transparent;
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.8rem;
   margin-bottom: 0.15rem;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease;
 }}
 
 [data-testid="stSidebar"] [role="radiogroup"] label:hover {{
-  background: rgba(255, 248, 244, 0.5);
+  background: var(--fourth-surface-alt);
 }}
 
 [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {{
-  background: var(--fourth-surface);
-  border-color: var(--fourth-border);
-  box-shadow: 0 8px 18px rgba(17, 17, 17, 0.08);
+  background: var(--fourth-primary);
+  border-color: var(--fourth-primary);
 }}
 
 [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) p {{
+  color: var(--fourth-surface) !important;
+  -webkit-text-fill-color: var(--fourth-surface) !important;
   font-weight: 700;
 }}
 
 [data-testid="stSidebar"] [role="radiogroup"] p {{
   color: var(--fourth-text) !important;
   -webkit-text-fill-color: var(--fourth-text) !important;
+  font-family: var(--fourth-body-font);
 }}
 
 /* Sidebar section label ("View") */
 [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {{
-  font-size: 0.74rem;
-  font-weight: 750;
-  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--fourth-muted) !important;
   -webkit-text-fill-color: var(--fourth-muted) !important;
 }}
 
-/* Palette popover: trigger reads as a header chip; options match sidebar pills. */
+/* ── Palette popover ────────────────────────────────────────────────── */
 [data-testid="stPopover"] button {{
   background: var(--fourth-surface);
   border: 1px solid var(--fourth-border);
   border-radius: 999px;
   color: var(--fourth-text);
-  font-weight: 650;
-  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.1);
+  font-weight: 700;
+  box-shadow: none;
 }}
 
 [data-testid="stPopover"] button:hover {{
@@ -301,32 +337,19 @@ button[title="Open sidebar"] svg {{
   border-color: var(--fourth-border);
 }}
 
+/* ── Layout & type ──────────────────────────────────────────────────── */
 .block-container {{
   /* Clear Streamlit's fixed header (2.6rem) so the top row — the palette
      popover — is never under its click-intercepting toolbar. */
   padding-top: 3.4rem;
   padding-bottom: 3rem;
-  max-width: 1280px;
+  max-width: 1240px;
 }}
 
 h1, h2, h3 {{
   color: var(--fourth-text);
-  letter-spacing: 0;
   font-family: var(--fourth-display-font);
-}}
-
-h1 {{
-  font-size: 2.4rem;
-  font-weight: 720;
-  margin-bottom: 0.1rem;
-}}
-
-h2, h3 {{
-  font-weight: 680;
-}}
-
-p, li, caption, div {{
-  letter-spacing: 0;
+  letter-spacing: -0.02em;
 }}
 
 [data-testid="stMarkdownContainer"] {{
@@ -340,18 +363,22 @@ p, li, caption, div {{
 [data-testid="stMetric"] {{
   background: var(--fourth-surface);
   border: 1px solid var(--fourth-border);
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 1rem 1.1rem;
-  box-shadow: 0 10px 26px rgba(47, 52, 55, 0.06);
+  box-shadow: none;
 }}
 
 [data-testid="stMetricLabel"] p {{
   color: var(--fourth-muted);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }}
 
 [data-testid="stMetricValue"] {{
   color: var(--fourth-text);
+  font-family: var(--fourth-display-font);
 }}
 
 div[data-testid="stSelectbox"] > div,
@@ -361,269 +388,289 @@ div[data-testid="stRadio"] > div {{
 
 .stCodeBlock, pre {{
   border: 1px solid var(--fourth-border);
-  border-radius: 8px;
+  border-radius: 12px;
 }}
 
 hr {{
   border-color: var(--fourth-border);
 }}
 
+/* ── Hero: deep plum block, tonal, no device mockups ────────────────── */
 .fourth-hero {{
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(350px, 0.8fr);
-  min-height: 420px;
-  gap: 2rem;
-  align-items: center;
   background: var(--fourth-hero);
-  border: 1px solid rgba(17, 17, 17, 0.08);
-  border-radius: 8px;
-  padding: 2.1rem 2.2rem;
-  margin: 0.1rem 0 2rem;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(17, 17, 17, 0.12);
-}}
-
-.fourth-hero::before {{
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 38%;
-  background: linear-gradient(180deg, transparent, rgba(255, 248, 244, 0.22));
-  pointer-events: none;
-}}
-
-.fourth-hero h1 {{
-  position: relative;
-  margin: 0;
-  max-width: 760px;
-  font-family: var(--fourth-display-font);
-  /* Max sized so "INTELLIGENCE." fits the text column without clipping
-     behind the device visual at any width. */
-  font-size: clamp(2.3rem, 3.5vw, 4rem);
-  font-weight: 900;
-  line-height: 1;
-  text-transform: uppercase;
-  color: var(--fourth-text);
-  word-break: keep-all;
-  overflow-wrap: normal;
-  hyphens: none;
-  z-index: 1;
+  border-radius: 24px;
+  padding: 3rem 3.2rem 2.8rem;
+  margin: 0.1rem 0 1rem;
 }}
 
 .fourth-eyebrow {{
-  position: relative;
-  color: var(--fourth-text);
-  font-size: 0.78rem;
-  font-weight: 750;
+  display: inline-flex;
+  background: rgba(255, 248, 247, 0.14);
+  color: var(--fourth-hero-ink);
+  font-size: 0.7rem;
+  font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 1.15rem;
-  z-index: 1;
-}}
-
-.fourth-hero-copy {{
-  position: relative;
-  color: rgba(17, 17, 17, 0.7);
-  max-width: 620px;
-  margin: 1.2rem 0 0;
-  font-size: 1.06rem;
-  line-height: 1.55;
-  z-index: 1;
-}}
-
-.fourth-visual {{
-  position: relative;
-  min-height: 330px;
-  z-index: 1;
-}}
-
-.fourth-device {{
-  position: absolute;
-  width: 190px;
-  min-height: 270px;
-  border-radius: 28px;
-  background: var(--fourth-surface);
-  border: 8px solid #111111;
-  box-shadow: 0 20px 44px rgba(17, 17, 17, 0.24);
-  padding: 1.1rem 0.9rem;
-}}
-
-.fourth-device-main {{
-  right: 118px;
-  top: 20px;
-}}
-
-.fourth-device-side {{
-  right: 6px;
-  top: 64px;
-  transform: rotate(13deg);
-  opacity: 0.95;
-}}
-
-.fourth-device-tag {{
-  display: inline-flex;
   border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  margin-bottom: 1.3rem;
+}}
+
+.fourth-hero h1 {{
+  margin: 0;
+  max-width: 640px;
+  font-family: var(--fourth-display-font);
+  font-size: clamp(2.1rem, 3.4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--fourth-hero-ink);
+}}
+
+/* Beat the global ".stMarkdown p" muted-color rule on hero copy. */
+.fourth-hero p.fourth-hero-copy {{
+  color: var(--fourth-hero-body);
+  max-width: 560px;
+  margin: 1.1rem 0 1.6rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}}
+
+.fourth-btn {{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  padding: 0.7rem 1.4rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  margin-right: 0.7rem;
+  transition: transform 120ms ease;
+}}
+
+.fourth-btn:hover {{
+  transform: translateY(-2px);
+}}
+
+.fourth-btn-filled {{
+  background: var(--fourth-primary-soft);
+  color: var(--fourth-primary) !important;
+}}
+
+.fourth-btn-ghost {{
+  border: 2px solid rgba(255, 248, 247, 0.4);
+  color: var(--fourth-hero-ink) !important;
+}}
+
+/* ── Stat cards: flat, icon chip, tonal ─────────────────────────────── */
+.fourth-stat-row {{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 1.6rem;
+}}
+
+.fourth-stat-card {{
+  background: var(--fourth-surface);
+  border-radius: 24px;
+  padding: 24px;
+  transition: transform 200ms ease;
+}}
+
+.fourth-stat-card:hover {{
+  transform: translateY(-2px);
+}}
+
+.fourth-icon-chip {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
   background: var(--fourth-primary-soft);
   color: var(--fourth-primary);
-  font-size: 0.68rem;
-  padding: 0.18rem 0.5rem;
-  margin-bottom: 0.8rem;
-  font-weight: 760;
-}}
-
-.fourth-device-title {{
-  font-weight: 850;
-  color: var(--fourth-text);
-  font-size: 1.1rem;
-  line-height: 1.1;
   margin-bottom: 0.9rem;
-}}
-
-.fourth-device-line {{
-  height: 0.5rem;
-  border-radius: 999px;
-  background: var(--fourth-surface-alt);
-  margin: 0.44rem 0;
-}}
-
-.fourth-device-line.short {{
-  width: 58%;
-}}
-
-.fourth-mini-controls {{
-  position: absolute;
-  right: 108px;
-  bottom: 6px;
-  display: flex;
-  gap: 0.62rem;
-}}
-
-.fourth-mini-control {{
-  min-width: 76px;
-  height: 58px;
-  border-radius: 16px;
-  background: var(--fourth-primary);
-  color: var(--fourth-surface);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 0.74rem;
-  box-shadow: 0 12px 24px rgba(17, 17, 17, 0.18);
-}}
-
-.fourth-mini-value {{
-  font-size: 1rem;
-  line-height: 1;
-  font-weight: 900;
-}}
-
-.fourth-mini-label {{
-  color: rgba(255, 248, 244, 0.72);
-  font-size: 0.58rem;
-  line-height: 1;
-  margin-top: 0.26rem;
-  text-transform: uppercase;
-}}
-
-.fourth-stat-strip {{
-  display: flex;
-  gap: 0.7rem;
-  margin-top: 1.35rem;
-  flex-wrap: wrap;
-}}
-
-.fourth-stat {{
-  min-width: 106px;
-  background: rgba(255, 248, 244, 0.66);
-  border: 1px solid rgba(17, 17, 17, 0.12);
-  border-radius: 18px;
-  padding: 0.82rem 0.9rem;
-}}
-
-.fourth-stat-value {{
-  color: var(--fourth-text);
-  font-size: 1.25rem;
-  font-weight: 780;
-  line-height: 1.1;
 }}
 
 .fourth-stat-label {{
   color: var(--fourth-muted);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  margin-top: 0.2rem;
 }}
 
-.fourth-kicker {{
-  color: rgba(17, 17, 17, 0.62);
-  font-size: 0.9rem;
-  margin: 0 0 1.2rem 0;
+.fourth-stat-value {{
+  color: var(--fourth-text);
+  font-family: var(--fourth-display-font);
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1.15;
 }}
 
+.fourth-stat-note {{
+  color: var(--fourth-muted);
+  font-size: 0.84rem;
+  margin-top: 0.25rem;
+}}
+
+/* ── Section headings ───────────────────────────────────────────────── */
 .fourth-section-title {{
   color: var(--fourth-text);
   font-family: var(--fourth-display-font);
-  font-size: clamp(2rem, 3vw, 3.3rem);
-  line-height: 0.98;
-  text-transform: uppercase;
-  margin: 0 0 0.65rem;
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  line-height: 1.2;
+  margin: 0 0 0.35rem;
+}}
+
+.fourth-kicker {{
+  color: var(--fourth-muted);
+  font-size: 0.88rem;
+  margin: 0 0 1.1rem 0;
+}}
+
+/* ── Cards & account board ──────────────────────────────────────────── */
+.fourth-card {{
+  background: var(--fourth-surface);
+  border-radius: 24px;
+  padding: 24px;
 }}
 
 .fourth-board {{
   display: grid;
-  gap: 0.82rem;
+  gap: 4px;
 }}
 
 .fourth-account-row {{
   display: grid;
-  grid-template-columns: 54px minmax(220px, 1.2fr) 98px 110px minmax(180px, 0.9fr) 118px 104px;
-  gap: 1rem;
+  grid-template-columns: 52px minmax(200px, 1.25fr) 76px 104px minmax(160px, 0.9fr) 104px 100px;
+  gap: 0.9rem;
   align-items: center;
   background: var(--fourth-surface);
-  border: 1px solid rgba(17, 17, 17, 0.1);
-  border-radius: 22px;
-  padding: 1rem 1.1rem;
-  box-shadow: 0 14px 34px rgba(17, 17, 17, 0.08);
+  border-radius: 16px;
+  padding: 0.85rem 1rem;
+  transition: background 120ms ease;
+}}
+
+.fourth-account-row:hover {{
+  background: var(--fourth-surface-alt);
 }}
 
 .fourth-board-head {{
-  background: rgba(255, 248, 244, 0.42);
-  box-shadow: none;
-  border-color: transparent;
-  padding-top: 0.45rem;
-  padding-bottom: 0.45rem;
-  color: rgba(17, 17, 17, 0.58);
-  font-size: 0.72rem;
-  font-weight: 850;
+  background: transparent;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  color: var(--fourth-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }}
 
+.fourth-rank {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  background: var(--fourth-primary);
+  color: var(--fourth-surface);
+  font-size: 0.95rem;
+  font-weight: 800;
+}}
+
+.fourth-hospital-name {{
+  font-weight: 700;
+  color: var(--fourth-text);
+}}
+
+.fourth-score {{
+  color: var(--fourth-text);
+  font-family: var(--fourth-display-font);
+  font-size: 1.2rem;
+  font-weight: 800;
+}}
+
+.fourth-muted {{
+  color: var(--fourth-muted);
+}}
+
+/* ── Badges: pill, low-vibrancy ─────────────────────────────────────── */
+.fourth-badge {{
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}}
+
+.fourth-badge-high {{
+  background: #f6ddd6;
+  color: #8f4436;
+}}
+
+.fourth-badge-medium {{
+  background: var(--fourth-primary-soft);
+  color: var(--fourth-primary);
+}}
+
+.fourth-badge-low {{
+  background: #e4eadf;
+  color: #5f7f5b;
+}}
+
+.fourth-badge-blue, .fourth-badge-state {{
+  background: var(--fourth-secondary-soft);
+  color: #6b5257;
+}}
+
+.fourth-badge-sage, .fourth-badge-hospital {{
+  background: #e3e9de;
+  color: #5c7857;
+}}
+
+.fourth-badge-neutral, .fourth-badge-missing {{
+  background: var(--fourth-surface-alt);
+  color: var(--fourth-muted);
+}}
+
+/* ── Tables (signals, provenance) ───────────────────────────────────── */
 .fourth-table {{
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
-  border: 1px solid var(--fourth-border);
-  border-radius: 8px;
+  border-radius: 16px;
   background: var(--fourth-surface);
-  box-shadow: 0 12px 30px rgba(47, 52, 55, 0.06);
 }}
 
 .fourth-table th {{
   text-align: left;
-  font-size: 0.76rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--fourth-muted);
   background: var(--fourth-table-header);
-  padding: 0.76rem 0.9rem;
-  border-bottom: 1px solid var(--fourth-border);
+  padding: 0.76rem 0.95rem;
 }}
 
 .fourth-table td {{
   color: var(--fourth-text);
-  padding: 0.86rem 0.9rem;
-  border-bottom: 1px solid var(--fourth-border);
+  padding: 0.86rem 0.95rem;
+  border-bottom: 1px solid var(--fourth-surface-alt);
   vertical-align: top;
 }}
 
@@ -631,82 +678,7 @@ hr {{
   border-bottom: none;
 }}
 
-.fourth-rank {{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 16px;
-  background: var(--fourth-primary);
-  border: 1px solid rgba(17, 17, 17, 0.12);
-  color: var(--fourth-surface);
-  font-size: 1rem;
-  font-weight: 900;
-}}
-
-.fourth-hospital-name {{
-  font-weight: 650;
-  color: var(--fourth-text);
-}}
-
-.fourth-score {{
-  color: var(--fourth-text);
-  font-size: 1.28rem;
-  font-weight: 900;
-}}
-
-.fourth-muted {{
-  color: var(--fourth-muted);
-}}
-
-.fourth-badge {{
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.55rem;
-  padding: 0.18rem 0.56rem;
-  border-radius: 18px;
-  border: 1px solid var(--fourth-border);
-  font-size: 0.78rem;
-  line-height: 1.1;
-  white-space: nowrap;
-}}
-
-.fourth-badge-high {{
-  background: rgba(197, 107, 92, 0.13);
-  color: var(--fourth-clay);
-  border-color: rgba(197, 107, 92, 0.28);
-}}
-
-.fourth-badge-medium {{
-  background: var(--fourth-primary-soft);
-  color: #755F20;
-  border-color: rgba(214, 168, 58, 0.34);
-}}
-
-.fourth-badge-low {{
-  background: rgba(127, 168, 120, 0.16);
-  color: #5F7F5B;
-  border-color: rgba(127, 168, 120, 0.32);
-}}
-
-.fourth-badge-blue, .fourth-badge-state {{
-  background: var(--fourth-secondary-soft);
-  color: #3F6970;
-  border-color: rgba(140, 185, 189, 0.36);
-}}
-
-.fourth-badge-sage, .fourth-badge-hospital {{
-  background: rgba(127, 168, 120, 0.15);
-  color: #5C7857;
-  border-color: rgba(127, 168, 120, 0.3);
-}}
-
-.fourth-badge-neutral, .fourth-badge-missing {{
-  background: rgba(111, 116, 114, 0.09);
-  color: var(--fourth-muted);
-}}
-
+/* ── Detail grid ────────────────────────────────────────────────────── */
 .fourth-detail-grid {{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -716,14 +688,15 @@ hr {{
 
 .fourth-detail-item {{
   background: var(--fourth-surface);
-  border: 1px solid var(--fourth-border);
-  border-radius: 8px;
-  padding: 0.84rem 0.92rem;
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
 }}
 
 .fourth-detail-label {{
   color: var(--fourth-muted);
-  font-size: 0.76rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 0.32rem;
 }}
@@ -731,19 +704,74 @@ hr {{
 .fourth-detail-value {{
   color: var(--fourth-text);
   font-size: 1rem;
-  font-weight: 650;
+  font-weight: 700;
 }}
 
-/* Between phone and full desktop the device visual crowds the headline —
-   drop it earlier than the full mobile breakpoint. */
-@media (max-width: 1150px) {{
-  .fourth-hero {{
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }}
+/* ── Provenance donut ───────────────────────────────────────────────── */
+.fourth-donut-wrap {{
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 1.2rem;
+}}
 
-  .fourth-visual {{
-    display: none;
+.fourth-donut {{
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}}
+
+.fourth-donut-hole {{
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  background: var(--fourth-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}}
+
+.fourth-donut-value {{
+  font-family: var(--fourth-display-font);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--fourth-text);
+  line-height: 1;
+}}
+
+.fourth-donut-label {{
+  color: var(--fourth-muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}}
+
+.fourth-legend-row {{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.42rem 0;
+  font-size: 0.86rem;
+  color: var(--fourth-text);
+}}
+
+.fourth-legend-dot {{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 1150px) {{
+  .fourth-stat-row {{
+    grid-template-columns: 1fr;
   }}
 }}
 
@@ -753,23 +781,8 @@ hr {{
     padding-right: 1rem;
   }}
 
-  h1 {{
-    font-size: 2rem;
-  }}
-
   .fourth-hero {{
-    grid-template-columns: 1fr;
-    padding: 1.1rem;
-    min-height: auto;
-  }}
-
-  .fourth-stat-strip {{
-    display: grid;
-    grid-template-columns: 1fr;
-  }}
-
-  .fourth-visual {{
-    display: none;
+    padding: 1.4rem 1.3rem;
   }}
 
   .fourth-account-row {{
@@ -838,59 +851,54 @@ def render_header(data: dict[str, Any]) -> None:
     accounts = data.get("accounts", [])
     account_count = len(accounts)
     email_count = sum(1 for account in accounts if account.get("email"))
+    validated_count = sum(
+        1
+        for account in accounts
+        if account.get("email") and account["email"].get("claim_validation") == "passed"
+    )
+    validated_pct = f"{round(100 * validated_count / email_count)}%" if email_count else "—"
     state = escape(str(data.get("state", "NY")))
-    top = max(accounts, key=lambda a: a.get("gap_score") or 0, default={})
-    top_name = escape(str(top.get("facility_name", "—")))
-    top_score = int(top.get("gap_score") or 0)
+
     st.markdown(
         f"""
 <section class="fourth-hero">
+  <div class="fourth-eyebrow">Fourth / {state} maternal health GTM</div>
+  <h1>Account intelligence that puts maternal care first.</h1>
+  <p class="fourth-hero-copy">
+    CMS account signals, postpartum context, and claim-validated Babyscripts
+    drafts in one review workspace. Every number traces to a public source.
+  </p>
   <div>
-    <div class="fourth-eyebrow">Fourth / {state} maternal health GTM</div>
-    <h1>Maternal health<br>account intelligence.</h1>
-    <p class="fourth-hero-copy">
-      CMS account signals, postpartum context, and claim-validated Babyscripts drafts
-      in one review workspace.
-    </p>
-    <div class="fourth-stat-strip">
-      <div class="fourth-stat">
-        <div class="fourth-stat-value">{account_count}</div>
-        <div class="fourth-stat-label">accounts</div>
-      </div>
-      <div class="fourth-stat">
-        <div class="fourth-stat-value">{email_count}</div>
-        <div class="fourth-stat-label">drafts</div>
-      </div>
-      <div class="fourth-stat">
-        <div class="fourth-stat-value">CMS</div>
-        <div class="fourth-stat-label">grounded</div>
-      </div>
-    </div>
-  </div>
-  <div class="fourth-visual" aria-hidden="true">
-    <div class="fourth-device fourth-device-side">
-      <div class="fourth-device-tag">Review</div>
-      <div class="fourth-device-title">Claim check</div>
-      <div class="fourth-device-line"></div>
-      <div class="fourth-device-line short"></div>
-      <div class="fourth-device-line"></div>
-      <div class="fourth-device-line short"></div>
-    </div>
-    <div class="fourth-device fourth-device-main">
-      <div class="fourth-device-tag">Priority</div>
-      <div class="fourth-device-title">{top_name}</div>
-      <div class="fourth-device-line"></div>
-      <div class="fourth-device-line"></div>
-      <div class="fourth-device-line short"></div>
-      <div class="fourth-device-line"></div>
-    </div>
-    <div class="fourth-mini-controls">
-      <div class="fourth-mini-control"><span class="fourth-mini-value">{top_score}</span><span class="fourth-mini-label">gap score</span></div>
-      <div class="fourth-mini-control"><span class="fourth-mini-value">BF</span><span class="fourth-mini-label">CMS flag</span></div>
-      <div class="fourth-mini-control"><span class="fourth-mini-value">NY</span><span class="fourth-mini-label">market</span></div>
-    </div>
+    <a class="fourth-btn fourth-btn-filled" href="https://github.com/LubaKaper/FOURTH" target="_blank">View the pipeline</a>
+    <a class="fourth-btn fourth-btn-ghost" href="https://data.cms.gov/provider-data/" target="_blank">CMS data sources</a>
   </div>
 </section>
+""",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        f"""
+<div class="fourth-stat-row">
+  <div class="fourth-stat-card">
+    <div class="fourth-icon-chip"><span class="material-symbols-outlined">apartment</span></div>
+    <div class="fourth-stat-label">Ranked accounts</div>
+    <div class="fourth-stat-value">{account_count}</div>
+    <div class="fourth-stat-note">CMS Birthing-Friendly hospitals in {state}.</div>
+  </div>
+  <div class="fourth-stat-card">
+    <div class="fourth-icon-chip"><span class="material-symbols-outlined">edit_note</span></div>
+    <div class="fourth-stat-label">Drafts pending review</div>
+    <div class="fourth-stat-value">{email_count}</div>
+    <div class="fourth-stat-note">Every draft waits for a human. Nothing auto-sends.</div>
+  </div>
+  <div class="fourth-stat-card">
+    <div class="fourth-icon-chip"><span class="material-symbols-outlined">verified</span></div>
+    <div class="fourth-stat-label">Claims validated</div>
+    <div class="fourth-stat-value">{validated_pct}</div>
+    <div class="fourth-stat-note">Drafted emails that passed source-grounding checks.</div>
+  </div>
+</div>
 """,
         unsafe_allow_html=True,
     )
@@ -919,30 +927,99 @@ def _breakdown_panel(title: str, values: dict[str, Any] | None) -> str:
     )
 
 
-def render_accounts(data: dict[str, Any]) -> None:
-    st.markdown(f'<h2 class="fourth-section-title">Top accounts — {escape(data["state"])}</h2>', unsafe_allow_html=True)
-    st.markdown(
-        f'<p class="fourth-kicker">Generated {escape(data["generated_at"])} from CMS public data.</p>',
-        unsafe_allow_html=True,
+def _initials(name: str) -> str:
+    words = [w for w in name.split() if w[:1].isalpha()]
+    return (words[0][0] + (words[1][0] if len(words) > 1 else "")).upper() if words else "–"
+
+
+def _provenance_card() -> str:
+    """Signal-provenance donut — the honest version of a 'health heatmap'.
+
+    Counts come from SIGNAL_PROVENANCE so the chart always matches the
+    methodology table.
+    """
+    hospital = sum(1 for _, p, _ in SIGNAL_PROVENANCE if p == "Hospital-level")
+    state = sum(1 for _, p, _ in SIGNAL_PROVENANCE if "State" in p)
+    missing = sum(1 for _, p, _ in SIGNAL_PROVENANCE if p == "Not yet available")
+    total = hospital + state + missing
+    h_pct = round(100 * hospital / total)
+    s_pct = round(100 * state / total)
+    donut = (
+        f"conic-gradient(var(--fourth-primary) 0% {h_pct}%, "
+        f"var(--fourth-secondary) {h_pct}% {h_pct + s_pct}%, "
+        f"var(--fourth-surface-alt) {h_pct + s_pct}% 100%)"
     )
-    rows = [
-        '<div class="fourth-account-row fourth-board-head">'
-        "<div></div><div>Hospital</div><div>Gap</div><div>Urgency</div>"
-        "<div>Lead angle</div><div>Confidence</div><div>Email</div></div>"
-    ]
-    for idx, account in enumerate(data["accounts"], start=1):
-        rows.append(
-            '<div class="fourth-account-row">'
-            f'<div><span class="fourth-rank">{idx}</span></div>'
-            f'<div class="fourth-hospital-name">{escape(account["facility_name"])}</div>'
-            f'<div class="fourth-score">{escape(str(account["gap_score"]))}</div>'
-            f'<div>{_badge(TIER_LABELS.get(account["urgency_tier"], account["urgency_tier"]), account["urgency_tier"])}</div>'
-            f'<div>{escape(ANGLE_LABELS.get(account["lead_angle"], account["lead_angle"]))}</div>'
-            f'<div>{_badge(str(account["data_confidence"]).title(), "sage" if account["data_confidence"] == "high" else "neutral")}</div>'
-            f'<div>{_badge("Drafted", "blue") if account.get("email") else "<span class=\"fourth-muted\">Not drafted</span>"}</div>'
-            "</div>"
+    return f"""
+<div class="fourth-card">
+  <div class="fourth-section-title" style="font-size: 1.15rem;">Signal provenance</div>
+  <p class="fourth-kicker" style="margin-bottom: 0.2rem;">
+    What each score is built from — and what it isn't.
+  </p>
+  <div class="fourth-donut-wrap">
+    <div class="fourth-donut" style="background: {donut};">
+      <div class="fourth-donut-hole">
+        <div class="fourth-donut-value">{h_pct}%</div>
+        <div class="fourth-donut-label">hospital-level</div>
+      </div>
+    </div>
+  </div>
+  <div class="fourth-legend-row">
+    <span><span class="fourth-legend-dot" style="background: var(--fourth-primary);"></span>Hospital-level signals</span>
+    <strong>{hospital}</strong>
+  </div>
+  <div class="fourth-legend-row">
+    <span><span class="fourth-legend-dot" style="background: var(--fourth-secondary);"></span>State-level context</span>
+    <strong>{state}</strong>
+  </div>
+  <div class="fourth-legend-row">
+    <span><span class="fourth-legend-dot" style="background: var(--fourth-surface-alt);"></span>Awaiting CMS release</span>
+    <strong>{missing}</strong>
+  </div>
+  <p class="fourth-kicker" style="margin: 0.8rem 0 0;">
+    Full definitions live in the Methodology view.
+  </p>
+</div>
+"""
+
+
+def render_accounts(data: dict[str, Any]) -> None:
+    board_col, side_col = st.columns([0.66, 0.34], gap="medium")
+
+    with board_col:
+        st.markdown(
+            f'<h2 class="fourth-section-title">Account priority — {escape(data["state"])}</h2>',
+            unsafe_allow_html=True,
         )
-    st.markdown(f'<div class="fourth-board">{"".join(rows)}</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<p class="fourth-kicker">Generated {escape(data["generated_at"])} from CMS public data.</p>',
+            unsafe_allow_html=True,
+        )
+        rows = [
+            '<div class="fourth-account-row fourth-board-head">'
+            "<div></div><div>Hospital</div><div>Gap</div><div>Urgency</div>"
+            "<div>Lead angle</div><div>Confidence</div><div>Email</div></div>"
+        ]
+        not_drafted = '<span class="fourth-muted">Not drafted</span>'
+        for account in data["accounts"]:
+            email_cell = _badge("Drafted", "blue") if account.get("email") else not_drafted
+            rows.append(
+                '<div class="fourth-account-row">'
+                f'<div><span class="fourth-rank">{escape(_initials(account["facility_name"]))}</span></div>'
+                f'<div class="fourth-hospital-name">{escape(account["facility_name"])}</div>'
+                f'<div class="fourth-score">{escape(str(account["gap_score"]))}</div>'
+                f'<div>{_badge(TIER_LABELS.get(account["urgency_tier"], account["urgency_tier"]), account["urgency_tier"])}</div>'
+                f'<div class="fourth-muted">{escape(ANGLE_LABELS.get(account["lead_angle"], account["lead_angle"]))}</div>'
+                f'<div>{_badge(str(account["data_confidence"]).title(), "sage" if account["data_confidence"] == "high" else "neutral")}</div>'
+                f"<div>{email_cell}</div>"
+                "</div>"
+            )
+        st.markdown(
+            f'<div class="fourth-card" style="padding: 12px;"><div class="fourth-board">{"".join(rows)}</div></div>',
+            unsafe_allow_html=True,
+        )
+
+    with side_col:
+        st.markdown(_provenance_card(), unsafe_allow_html=True)
 
 
 def render_account_detail(data: dict[str, Any]) -> None:

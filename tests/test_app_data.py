@@ -57,9 +57,16 @@ def test_markdown_table_empty_rows_returns_empty_string():
 def test_theme_options_are_available_for_sidebar_switching():
     from app import THEMES
 
-    assert list(THEMES) == ["mauve_editorial", "mustard_sea", "apricot_teal", "sage_butter"]
+    # "maternal_intelligence" (Stitch design system) is the default theme.
+    assert list(THEMES) == [
+        "maternal_intelligence",
+        "mauve_editorial",
+        "mustard_sea",
+        "apricot_teal",
+        "sage_butter",
+    ]
+    assert THEMES["maternal_intelligence"]["primary"] == "#593a41"
     assert THEMES["mauve_editorial"]["background"] == "#C7A2A6"
-    assert THEMES["mauve_editorial"]["primary"] == "#7C4C55"
     assert THEMES["mustard_sea"]["secondary"] == "#8CB9BD"
 
 
