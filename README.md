@@ -69,11 +69,11 @@ or pipeline imports required to view it.
 
 | Source | Level | Provides |
 |---|---|---|
-| CMS Birthing-Friendly registry | Hospital | Birthing-Friendly designation universe |
-| CMS HCAHPS (NY) | Hospital | Discharge info %, care transition star, overall star |
-| CMS Maternal Health file | Hospital | SMM rate (PC_07a — Not Available in current CMS release) |
-| CMS HRRP FY2026 | Hospital | Readmission penalty via Excess Readmission Ratio |
-| CMS Medicaid Core Sets, NY 2023 | State | Postpartum visit average (82.4%), well-baby proxy (91.5%) |
+| [CMS Birthing-Friendly registry](https://data.cms.gov/provider-data/dataset/hbf-map) | Hospital | Birthing-Friendly designation universe |
+| [CMS HCAHPS (NY)](https://data.cms.gov/provider-data/dataset/dgck-syfz) | Hospital | Discharge info %, care transition star, overall star |
+| [CMS Maternal Health file](https://data.cms.gov/provider-data/dataset/nrdb-3fcy) | Hospital | SMM rate (PC_07a — Not Available in current CMS release) |
+| [CMS HRRP FY2026](https://data.cms.gov/provider-data/topics/hospitals/hospital-readmissions) | Hospital | Readmission penalty via Excess Readmission Ratio |
+| [CMS Medicaid Core Sets, NY 2023](https://www.medicaid.gov/medicaid/quality-of-care/core-set-data-dashboard/welcome) | State | Postpartum visit average (82.4%), well-baby proxy (91.5%) |
 
 ## Run it
 

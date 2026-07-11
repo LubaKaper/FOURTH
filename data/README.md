@@ -28,10 +28,10 @@ For refreshing files when they get out of date.
 
 ### CMS
 
-- **Birthing-Friendly registry:** https://data.cms.gov/provider-data/dataset/yfqv-i3dy
+- **Birthing-Friendly registry:** https://data.cms.gov/provider-data/dataset/hbf-map
 - **HCAHPS-Hospital (full national file):** https://data.cms.gov/provider-data/dataset/dgck-syfz
   - After download, run `python scripts/filter_hcahps_to_ny.py` to produce the NY-only file. Do not commit the full national file (~102 MB).
-- **Maternal Health - Hospital:** https://data.cms.gov/provider-data/dataset/7jhg-6m2d
+- **Maternal Health - Hospital:** https://data.cms.gov/provider-data/dataset/nrdb-3fcy
 - **Hospital Readmissions Reduction Program:** https://data.cms.gov/provider-data/topics/hospitals/hospital-readmissions
 - **Medicaid Core Set Data Dashboard:** https://www.medicaid.gov/medicaid/quality-of-care/core-set-data-dashboard/welcome
   - Pick measure (PPC-AD, PPC-CH, PPC2-AD, PPC2-CH, or CCP-CH), filter to NY, export CSV
@@ -46,7 +46,7 @@ For refreshing files when they get out of date.
 
 ### NCHS
 
-- **Health E-Stat 113:** https://www.cdc.gov/nchs/products/databriefs/db113.htm
+- **Health E-Stat 113 / maternal mortality source:** needs re-verification before citation. The previously listed `https://www.cdc.gov/nchs/products/databriefs/db113.htm` URL resolves to an unrelated data brief and should not be used as the maternal mortality source.
 
 ### Cureus
 

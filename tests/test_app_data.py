@@ -52,3 +52,32 @@ def test_markdown_table_empty_rows_returns_empty_string():
     from app import _markdown_table
 
     assert _markdown_table([]) == ""
+
+
+def test_theme_options_are_available_for_sidebar_switching():
+    from app import THEMES
+
+    assert list(THEMES) == ["mauve_editorial", "mustard_sea", "apricot_teal", "sage_butter"]
+    assert THEMES["mauve_editorial"]["background"] == "#C7A2A6"
+    assert THEMES["mauve_editorial"]["primary"] == "#7C4C55"
+    assert THEMES["mustard_sea"]["secondary"] == "#8CB9BD"
+
+
+def test_theme_css_uses_selected_palette_values():
+    from app import THEMES, _theme_css
+
+    css = _theme_css(THEMES["apricot_teal"])
+
+    assert "--fourth-bg: #FAF4EF" in css
+    assert "--fourth-primary: #E8A87C" in css
+    assert "--fourth-secondary: #7DA9A3" in css
+
+
+def test_badge_escapes_html():
+    from app import _badge
+
+    badge = _badge("<script>", "high")
+
+    assert "<script>" not in badge
+    assert "&lt;script&gt;" in badge
+    assert "fourth-badge-high" in badge
