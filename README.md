@@ -1,10 +1,13 @@
 # Fourth — Account Intelligence for Maternal Health GTM
 
-Fourth finds CMS Birthing-Friendly hospitals whose discharge-readiness and
+Fourth is an **AI agent for maternal health GTM**: an eight-tool pipeline
+that finds CMS Birthing-Friendly hospitals whose discharge-readiness and
 patient-experience signals lag their public maternal health commitments,
-ranks them with a 3-layer gap score, and drafts claim-validated outbound
-email for a GTM engineer to review. Built for maternal health companies
-like Babyscripts; hospitals are the sales targets.
+ranks them with a 3-layer gap score, and drafts outbound email for a GTM
+engineer to review. The LLM writes only the email body — deterministic
+guardrails validate every claim, and a human approves every send. Built
+for maternal health companies like Babyscripts; hospitals are the sales
+targets.
 
 **Live demo:** https://fourth.streamlit.app · ![CI](https://github.com/LubaKaper/FOURTH/actions/workflows/ci.yml/badge.svg)
 
