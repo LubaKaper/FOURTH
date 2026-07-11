@@ -1,61 +1,48 @@
-# ECHO Standalone Context
+# Fourth — Standalone Context
 
 ## Current Direction
 
-Fourth (formerly ECHO) is Luba's standalone continuation of the original class project. Current ownership for all files is Luba.
+Fourth (formerly ECHO) is Luba's standalone continuation of the original
+class project. Current ownership for all files is Luba.
 
-The product now has a concrete seller context:
+Seller context:
 
-- Seller: **NurtureBridge Health**
-- Service: **Postpartum Handoff Navigation**
-- Buyer: hospitals and health systems with maternity/postpartum quality responsibility
-- User: a NurtureBridge GTM Engineer reviewing priority hospital accounts
+- Seller: **Babyscripts** (and companies like it — Delfina, Wildflower Health, Mahmee, Bloomlife)
+- Service: **remote postpartum monitoring** — BP monitoring kit, mobile app, OB-specialized care managers, RPM CPT billing support
+- Buyer: CMOs and VPs of Patient Experience at CMS Birthing-Friendly hospitals
+- User: a GTM Engineer reviewing priority hospital accounts
 
-Postpartum Handoff Navigation helps maternity teams manage the discharge-to-postpartum transition with a shared follow-up work queue, patient check-ins, escalation routing, and visit-readiness tracking.
+## What Fourth Does
 
-## What ECHO Does
+Fourth finds CMS Birthing-Friendly hospitals whose discharge-readiness and
+patient-experience signals lag their public maternal health commitments,
+ranks them with a 3-layer gap score, drafts one claim-validated outbound
+email per account, and presents everything for human review — in the
+terminal checkpoint, a static dashboard, and a read-only Streamlit demo app.
 
-ECHO finds CMS Birthing-Friendly hospitals where hospital-level HCAHPS patient experience lags against state postpartum visit strength. It ranks the best accounts for a NurtureBridge GTM Engineer, generates grounded outreach variants for Postpartum Handoff Navigation, displays a human checkpoint, and generates a static dashboard.
-
-The core v1 story remains:
+The core story:
 
 ```text
-NY achieves 82.4% postpartum visit completion.
-This Birthing-Friendly hospital scores 1 star on HCAHPS discharge information.
-NurtureBridge can speak to the discharge-to-postpartum handoff gap.
+NY completes 82.4% of its Medicaid postpartum visits statewide.
+At this Birthing-Friendly hospital, far fewer patients report receiving
+the information they needed for their own recovery at discharge.
 ```
 
-## v1 Guardrails
+## Guardrails (built, enforced by tests)
 
-- No automated email sending.
-- No CRM integration.
-- No live web scraping.
-- No patient-facing features.
-- No unsupported hospital-level financial, readmission, morbidity, or Medicaid payer-mix claims.
-- Hospital-specific claims must come from ECHO's schema fields and source files.
-- Low-confidence hospitals are skipped by Tool 5.
-- Generated outreach is reviewed by a human before use.
-
-## Long-Term Direction
-
-The long-term product can move toward automated sending, but only after the system has stronger controls:
-
-- Prompt reliability tests
-- Claim validation against source-grounded facts
-- Source links beneath generated claims
-- Safety checks for unsupported clinical, financial, or accusatory language
-- Account suppressions and watchlists
-- Explicit human approvals
-- Send throttles and daily caps
-- Audit logs for prompts, facts, outputs, and sends
-- Kill switch and rollback controls
-
-Until those controls exist, ECHO drafts only.
+- The LLM writes only the email body; deterministic code owns every other field.
+- Claim validation rejects ungrounded percentages, star ratings, and unsupported claim language.
+- Copy-honesty tests forbid presenting the discharge-info measure as visit completion.
+- Review mode never sends. `--send` requires SMTP credentials and passes the
+  approval gate → send gate → 30-day dedup cooldown → append-only audit log chain.
+- Low-confidence hospitals are skipped by the outbound generator.
+- The demo app is read-only: no keys, no pipeline imports, no send path.
 
 ## Next Product Work
 
-1. Update `src/outbound_generator.py` prompts and cached fallback copy to use NurtureBridge Health and Postpartum Handoff Navigation instead of generic company placeholders.
-2. Update tests for Tool 5 so specificity is required while unsupported claims remain blocked.
-3. Add source grounding to dashboard/email claims.
-4. Improve review workflow: approve, suppress, watchlist, copy selected variant.
-5. Add persistence for notes, suppressions, and review decisions.
+1. Hospital-level SMM when CMS ships PC_07a (tests/test_smm_data_availability.py fails loudly when it lands).
+2. Hospital-level well-baby visit sourcing to replace the state proxy.
+3. Multi-state expansion beyond NY.
+4. Curated per-hospital commitment tags (the dataset moat).
+5. Review workflow: approve, suppress, watchlist; persistence for review decisions.
+6. CRM integration.
