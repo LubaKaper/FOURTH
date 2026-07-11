@@ -38,3 +38,6 @@ dashboard/fourth_dashboard.html
 
 # local PowerPoint inspection/copy artifacts
 tmp/
+
+# local agent-skill symlinks (point into .venv)
+.agents/
